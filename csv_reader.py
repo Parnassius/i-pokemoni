@@ -11,6 +11,8 @@ class CsvReader:
         self.table = table
         self.file = join(dirname(__file__), "veekun", f"{self.table}.csv")
         self.primary_key = {
+            "ability_flavor_text": (0, 1, 2),
+            "ability_names": (0, 1),
             "generation_names": (0, 1),
             "pokedex_prose": (0, 1),
             "pokedex_version_groups": (0, 1),

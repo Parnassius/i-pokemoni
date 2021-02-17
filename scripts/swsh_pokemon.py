@@ -104,6 +104,9 @@ class SwShPokemon:
         self.personal_table = PersonalTable(self.path, self.file_format)
 
         self._create_base_records()
+
+        self._dump_abilities()
+
         self._dump_pokemon()
         self._create_evolution_chains()
         self._update_pokemon_order()
@@ -145,6 +148,171 @@ class SwShPokemon:
             f = TextFile(self.path, language, filename, self.file_format).lines
             self.text_files[key] = f
         return self.text_files[key]
+
+    def _create_base_records(self) -> None:
+        regions_csv = self._open_table("regions")
+        region_names_csv = self._open_table("region_names")
+
+        regions_csv.set_row(
+            id=8,
+            identifier="galar",
+        )
+        region_names_csv.set_row(  # TODO
+            region_id=8,
+            local_language_id=9,
+            name="Galar",
+        )
+
+        generations_csv = self._open_table("generations")
+        generation_names_csv = self._open_table("generation_names")
+
+        generations_csv.set_row(
+            id=8,
+            main_region_id=8,
+            identifier="generation-viii",
+        )
+        generation_names_csv.set_row(  # TODO
+            generation_id=8,
+            local_language_id=9,
+            name="Generation VIII",
+        )
+
+        version_groups_csv = self._open_table("version_groups")
+        version_group_regions_csv = self._open_table("version_group_regions")
+
+        version_groups_csv.set_row(
+            id=20,
+            identifier="sword-shield",
+            generation_id=8,
+            order=20,
+        )
+        version_group_regions_csv.set_row(
+            version_group_id=20,
+            region_id=8,
+        )
+
+        versions_csv = self._open_table("versions")
+        version_names_csv = self._open_table("version_names")
+
+        versions_csv.set_row(
+            id=33,
+            version_group_id=20,
+            identifier="sword",
+        )
+        version_names_csv.set_row(
+            version_id=33,
+            local_language_id=9,
+            name="Sword",
+        )
+        versions_csv.set_row(
+            id=34,
+            version_group_id=20,
+            identifier="shield",
+        )
+        version_names_csv.set_row(
+            version_id=34,
+            local_language_id=9,
+            name="Shield",
+        )
+
+        pokedexes_csv = self._open_table("pokedexes")
+        pokedex_prose_csv = self._open_table("pokedex_prose")
+        pokedex_version_groups_csv = self._open_table("pokedex_version_groups")
+
+        pokedexes_csv.set_row(
+            id=27,
+            region_id=8,
+            identifier="galar",
+            is_main_series=1,
+        )
+        pokedex_prose_csv.set_row(  # TODO
+            pokedex_id=27,
+            local_language_id=9,
+            name="Galar",
+        )
+        pokedex_version_groups_csv.set_row(
+            pokedex_id=27,
+            version_group_id=20,
+        )
+        pokedexes_csv.set_row(
+            id=28,
+            region_id=8,
+            identifier="isle-of-armor",
+            is_main_series=1,
+        )
+        pokedex_prose_csv.set_row(  # TODO
+            pokedex_id=28,
+            local_language_id=9,
+            name="Isle of Armor",
+        )
+        pokedex_version_groups_csv.set_row(
+            pokedex_id=28,
+            version_group_id=20,
+        )
+        pokedexes_csv.set_row(
+            id=29,
+            region_id=8,
+            identifier="crown-tundra",
+            is_main_series=1,
+        )
+        pokedex_prose_csv.set_row(  # TODO
+            pokedex_id=29,
+            local_language_id=9,
+            name="Crown Tundra",
+        )
+        pokedex_version_groups_csv.set_row(
+            pokedex_id=29,
+            version_group_id=20,
+        )
+
+    def _dump_abilities(self) -> None:
+        abilities_csv = self._open_table("abilities")
+
+        abilities_en = self._open_text_file("English", "tokusei")
+        for ability in abilities_en:
+            ability_id = int(ability[0][-3:])
+            if ability_id == 0:
+                continue
+            identifier = to_id(ability[1])
+            if ability_id == 266:
+                identifier += "-glastrier"
+            elif ability_id == 267:
+                identifier += "-spectrier"
+            abilities_csv.set_row(
+                id=ability_id,
+                identifier=identifier,
+                generation_id_fallback_=8,
+                is_main_series_fallback_=1,
+            )
+
+        ability_names_csv = self._open_table("ability_names")
+
+        lang_abilities = self._open_text_files("tokusei")
+        for language_id, abilities in lang_abilities.items():
+            for ability in abilities:
+                ability_id = int(ability[0][-3:])
+                if ability_id == 0:
+                    continue
+                ability_names_csv.set_row(
+                    ability_id=ability_id,
+                    local_language_id=language_id,
+                    name=ability[1],
+                )
+
+        ability_flavor_text_csv = self._open_table("ability_flavor_text")
+
+        lang_ability_flavor_text = self._open_text_files("tokuseiinfo")
+        for language_id, flavor_text in lang_ability_flavor_text.items():
+            for flavor in flavor_text:
+                ability_id = int(flavor[0][-3:])
+                if ability_id == 0:
+                    continue
+                ability_flavor_text_csv.set_row(
+                    ability_id=ability_id,
+                    version_group_id=20,
+                    language_id=language_id,
+                    flavor_text=flavor[1],
+                )
 
     def _pokemon_stats(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_stats_csv = self._open_table("pokemon_stats")
@@ -411,122 +579,6 @@ class SwShPokemon:
             order += 1
             pokemon_species_csv.entries[(pokemon_id,)]["order"] = str(order)
 
-    def _create_base_records(self) -> None:
-        regions_csv = self._open_table("regions")
-        region_names_csv = self._open_table("region_names")
-
-        regions_csv.set_row(
-            id=8,
-            identifier="galar",
-        )
-        region_names_csv.set_row(  # TODO
-            region_id=8,
-            local_language_id=9,
-            name="Galar",
-        )
-
-        generations_csv = self._open_table("generations")
-        generation_names_csv = self._open_table("generation_names")
-
-        generations_csv.set_row(
-            id=8,
-            main_region_id=8,
-            identifier="generation-viii",
-        )
-        generation_names_csv.set_row(  # TODO
-            generation_id=8,
-            local_language_id=9,
-            name="Generation VIII",
-        )
-
-        version_groups_csv = self._open_table("version_groups")
-        version_group_regions_csv = self._open_table("version_group_regions")
-
-        version_groups_csv.set_row(
-            id=20,
-            identifier="sword-shield",
-            generation_id=8,
-            order=20,
-        )
-        version_group_regions_csv.set_row(
-            version_group_id=20,
-            region_id=8,
-        )
-
-        versions_csv = self._open_table("versions")
-        version_names_csv = self._open_table("version_names")
-
-        versions_csv.set_row(
-            id=33,
-            version_group_id=20,
-            identifier="sword",
-        )
-        version_names_csv.set_row(
-            version_id=33,
-            local_language_id=9,
-            name="Sword",
-        )
-        versions_csv.set_row(
-            id=34,
-            version_group_id=20,
-            identifier="shield",
-        )
-        version_names_csv.set_row(
-            version_id=34,
-            local_language_id=9,
-            name="Shield",
-        )
-
-        pokedexes_csv = self._open_table("pokedexes")
-        pokedex_prose_csv = self._open_table("pokedex_prose")
-        pokedex_version_groups_csv = self._open_table("pokedex_version_groups")
-
-        pokedexes_csv.set_row(
-            id=27,
-            region_id=8,
-            identifier="galar",
-            is_main_series=1,
-        )
-        pokedex_prose_csv.set_row(  # TODO
-            pokedex_id=27,
-            local_language_id=9,
-            name="Galar",
-        )
-        pokedex_version_groups_csv.set_row(
-            pokedex_id=27,
-            version_group_id=20,
-        )
-        pokedexes_csv.set_row(
-            id=28,
-            region_id=8,
-            identifier="isle-of-armor",
-            is_main_series=1,
-        )
-        pokedex_prose_csv.set_row(  # TODO
-            pokedex_id=28,
-            local_language_id=9,
-            name="Isle of Armor",
-        )
-        pokedex_version_groups_csv.set_row(
-            pokedex_id=28,
-            version_group_id=20,
-        )
-        pokedexes_csv.set_row(
-            id=29,
-            region_id=8,
-            identifier="crown-tundra",
-            is_main_series=1,
-        )
-        pokedex_prose_csv.set_row(  # TODO
-            pokedex_id=29,
-            local_language_id=9,
-            name="Crown Tundra",
-        )
-        pokedex_version_groups_csv.set_row(
-            pokedex_id=29,
-            version_group_id=20,
-        )
-
 
 # TODO
 # pokemon_moves                         # learnsets
@@ -542,6 +594,3 @@ class SwShPokemon:
 # location_areas/location_area_prose
 # items SON TROPPI GUARDA DOPO
 # encounters SON TROPPI GUARDA DOPO
-# abilities/ability_names
-# ability_prose                         # in-depth descriptions
-# ability_flavor_text                   # in-game descriptions
