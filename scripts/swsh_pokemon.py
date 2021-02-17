@@ -103,7 +103,7 @@ class SwShPokemon:
 
         self.personal_table = PersonalTable(self.path, self.file_format)
 
-        self._create_games()
+        self._create_base_records()
         self._dump_pokemon()
         self._create_evolution_chains()
         self._update_pokemon_order()
@@ -262,6 +262,23 @@ class SwShPokemon:
                     self._pokemon_stats(forme_pokemon_id, forme)
                     self._pokemon_types(forme_pokemon_id, forme)
 
+    def _pokemon_dex_numbers(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
+        pokemon_dex_numbers_csv = self._open_table("pokemon_dex_numbers")
+
+        dex_numbers = {
+            1: pokemon_id,
+            27: pokemon.pokedex_index,
+            28: pokemon.armordex_index,
+            29: pokemon.crowndex_index,
+        }
+        for pokedex_id, pokedex_number in dex_numbers.items():
+            if pokedex_number:
+                pokemon_dex_numbers_csv.set_row(
+                    species_id=pokemon_id,
+                    pokedex_id=pokedex_id,
+                    pokedex_number=pokedex_number,
+                )
+
     def _dump_pokemon(self) -> None:
         names_en = self._open_text_file("English", "monsname")
         pokemon_csv = self._open_table("pokemon")
@@ -320,6 +337,8 @@ class SwShPokemon:
                 self._pokemon_species_flavor_text(pokemon_id)
 
                 self._pokemon_formes(pokemon_id, pokemon)
+
+                self._pokemon_dex_numbers(pokemon_id, pokemon)
 
     def _create_evolution_chains(self) -> None:
         pokemon_species_csv = self._open_table("pokemon_species")
@@ -392,7 +411,7 @@ class SwShPokemon:
             order += 1
             pokemon_species_csv.entries[(pokemon_id,)]["order"] = str(order)
 
-    def _create_games(self) -> None:
+    def _create_base_records(self) -> None:
         regions_csv = self._open_table("regions")
         region_names_csv = self._open_table("region_names")
 
@@ -442,18 +461,88 @@ class SwShPokemon:
             version_group_id=20,
             identifier="sword",
         )
+        version_names_csv.set_row(
+            version_id=33,
+            local_language_id=9,
+            name="Sword",
+        )
         versions_csv.set_row(
             id=34,
             version_group_id=20,
             identifier="shield",
         )
         version_names_csv.set_row(
-            version_id=33,
-            local_language_id=9,
-            name="Sword",
-        )
-        version_names_csv.set_row(
             version_id=34,
             local_language_id=9,
             name="Shield",
         )
+
+        pokedexes_csv = self._open_table("pokedexes")
+        pokedex_prose_csv = self._open_table("pokedex_prose")
+        pokedex_version_groups_csv = self._open_table("pokedex_version_groups")
+
+        pokedexes_csv.set_row(
+            id=27,
+            region_id=8,
+            identifier="galar",
+            is_main_series=1,
+        )
+        pokedex_prose_csv.set_row(  # TODO
+            pokedex_id=27,
+            local_language_id=9,
+            name="Galar",
+        )
+        pokedex_version_groups_csv.set_row(
+            pokedex_id=27,
+            version_group_id=20,
+        )
+        pokedexes_csv.set_row(
+            id=28,
+            region_id=8,
+            identifier="isle-of-armor",
+            is_main_series=1,
+        )
+        pokedex_prose_csv.set_row(  # TODO
+            pokedex_id=28,
+            local_language_id=9,
+            name="Isle of Armor",
+        )
+        pokedex_version_groups_csv.set_row(
+            pokedex_id=28,
+            version_group_id=20,
+        )
+        pokedexes_csv.set_row(
+            id=29,
+            region_id=8,
+            identifier="crown-tundra",
+            is_main_series=1,
+        )
+        pokedex_prose_csv.set_row(  # TODO
+            pokedex_id=29,
+            local_language_id=9,
+            name="Crown Tundra",
+        )
+        pokedex_version_groups_csv.set_row(
+            pokedex_id=29,
+            version_group_id=20,
+        )
+
+
+# TODO
+# pokemon_moves                         # learnsets
+# pokemon_items                         # wild held items
+# pokemon_forms/pokemon_form_names
+# pokemon_form_generations
+# pokemon_evolution                     # evolution methods
+# pokemon_egg_groups
+# pokemon_dex_numbers
+# pokemon_abilities
+# moves SON TROPPI GUARDA DOPO
+# machines                              # tr?
+# locations/location_names
+# location_areas/location_area_prose
+# items SON TROPPI GUARDA DOPO
+# encounters SON TROPPI GUARDA DOPO
+# abilities/ability_names
+# ability_prose                         # in-depth descriptions
+# ability_flavor_text                   # in-game descriptions
