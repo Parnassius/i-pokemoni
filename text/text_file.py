@@ -12,6 +12,8 @@ class TextLine(NamedTuple):
 
 
 class TextFile:
+    _PATHS = {"swsh": ["bin", "message", None, "common"]}
+
     _KEY_TBLMAGIC = 0x42544841
 
     _KEY_BASE = 0x7C89
@@ -23,8 +25,13 @@ class TextFile:
     _KEY_TEXTWAIT = 0xBE02
     _KEY_TEXTNULL = 0xBDFF
 
-    def __init__(self, path: str, filename: str) -> None:
+    def __init__(
+        self, path: str, language: str, filename: str, file_format: str
+    ) -> None:
         self._filename = filename
+        self._format = file_format
+
+        path = join(path, *[i if i else language for i in self._PATHS[self._format]])
         with open(join(path, filename + ".tbl"), "rb") as f:
             self._labels = f.read()
         with open(join(path, filename + ".dat"), "rb") as f:
@@ -52,11 +59,11 @@ class TextFile:
         return read_as_int(4, self._labels, 0x4)
 
     @property
-    def _parsed_labels(self) -> list[tuple[int, str]]:
+    def _parsed_labels(self) -> list[str]:
         offset = 0x8
         result = []
         for _ in range(0, self._labels_line_count):
-            label_hash = read_as_int(8, self._labels, offset)
+            # label_hash = read_as_int(8, self._labels, offset)
             offset += 0x8
             name_length = read_as_int(2, self._labels, offset)
             offset += 0x2
@@ -64,7 +71,7 @@ class TextFile:
             offset += name_length
 
             if name != "msg_" + self._filename + "_max":
-                result.append((label_hash, name))
+                result.append(name)
 
         return result
 
@@ -188,9 +195,9 @@ class TextFile:
         return result
 
     @property
-    def lines(self) -> dict[tuple[int, str], str]:
+    def lines(self) -> list[tuple[str, str]]:
         labels = self._parsed_labels
         data = self._parsed_data
         if len(labels) != len(data):
             raise Exception("tbl and dat line counts do not match")
-        return dict(zip(labels, data))
+        return list(zip(labels, data))

@@ -1,21 +1,29 @@
 from __future__ import annotations
 
+from functools import cached_property
+
+from evolution.evolution_set import Evolution, EvolutionSet
 from utils import get_flag, read_as_int
 
 
 class PersonalInfo:
     SIZES = {
-        #GameVersion.BW => PersonalInfoBW.SIZE,
-        #GameVersion.B2W2 => PersonalInfoB2W2.SIZE,
-        #GameVersion.XY => PersonalInfoXY.SIZE,
-        #GameVersion.ORAS => PersonalInfoORAS.SIZE,
-        #GameVersion.SM or GameVersion.USUM or GameVersion.GG => PersonalInfoSM.SIZE,
+        # GameVersion.BW => PersonalInfoBW.SIZE,
+        # GameVersion.B2W2 => PersonalInfoB2W2.SIZE,
+        # GameVersion.XY => PersonalInfoXY.SIZE,
+        # GameVersion.ORAS => PersonalInfoORAS.SIZE,
+        # GameVersion.SM or GameVersion.USUM or GameVersion.GG => PersonalInfoSM.SIZE,
         "swsh": 0xB0
     }
 
-    def __init__(self, data: bytes, format: str) -> None:
+    def __init__(
+        self, table, path: str, pokemon_id: int, data: bytes, file_format: str
+    ) -> None:
+        self._table = table
+        self._path = path
+        self._id = pokemon_id
         self._data = data
-        self._format = format
+        self._format = file_format
 
         self.tmhm = [False] * 200
         for i in range(len(self.tmhm) // 2):
@@ -54,6 +62,16 @@ class PersonalInfo:
     def special_defense(self) -> int:
         return int(self._data[0x05])
 
+    def stat(self, stat_id: int) -> int:
+        return {
+            1: self.hp,
+            2: self.attack,
+            3: self.defense,
+            4: self.special_attack,
+            5: self.special_defense,
+            6: self.speed,
+        }[stat_id]
+
     @property
     def type_1(self) -> int:
         return int(self._data[0x06])
@@ -61,6 +79,12 @@ class PersonalInfo:
     @property
     def type_2(self) -> int:
         return int(self._data[0x07])
+
+    def type(self, slot: int) -> int:
+        return {
+            1: self.type_1,
+            2: self.type_2,
+        }[slot] + 1
 
     @property
     def catch_rate(self) -> int:
@@ -98,6 +122,16 @@ class PersonalInfo:
     def ev_special_defense(self) -> int:
         return self._ev_yield >> 10 & 0x3
 
+    def ev_stat(self, stat_id: int) -> int:
+        return {
+            1: self.ev_hp,
+            2: self.ev_attack,
+            3: self.ev_defense,
+            4: self.ev_special_attack,
+            5: self.ev_special_defense,
+            6: self.ev_speed,
+        }[stat_id]
+
     @property
     def item_1(self) -> int:
         return read_as_int(2, self._data, 0x0C)
@@ -124,7 +158,15 @@ class PersonalInfo:
 
     @property
     def exp_growth(self) -> int:
-        return int(self._data[0x15])
+        rates = {
+            0: 1,
+            1: 5,
+            2: 6,
+            3: 4,
+            4: 3,
+            5: 1,
+        }
+        return rates[int(self._data[0x15])]
 
     @property
     def egg_group_1(self) -> int:
@@ -164,7 +206,19 @@ class PersonalInfo:
 
     @property
     def color(self) -> int:
-        return int(self._data[0x21] & 0x3F)
+        colors = {
+            0: 8,
+            1: 2,
+            2: 10,
+            3: 5,
+            4: 1,
+            5: 3,
+            6: 7,
+            7: 4,
+            8: 9,
+            9: 6,
+        }
+        return colors[int(self._data[0x21] & 0x3F)]
 
     @property
     def is_present_in_game(self) -> bool:
@@ -180,11 +234,11 @@ class PersonalInfo:
 
     @property
     def height(self) -> int:
-        return read_as_int(2, self._data, 0x23)
+        return read_as_int(2, self._data, 0x24)
 
     @property
     def weight(self) -> int:
-        return read_as_int(2, self._data, 0x24)
+        return read_as_int(2, self._data, 0x26)
 
     @property
     def sprite_index(self) -> int:
@@ -219,7 +273,7 @@ class PersonalInfo:
     def forme_index(self, species: int, forme: int) -> int:
         if forme <= 0:  # no forme requested
             return species
-        if self._form_stats_index <= 0:  # // no formes present
+        if self._form_stats_index <= 0:  # no formes present
             return species
         if forme >= self.forme_count:  # beyond range of species' formes
             return species
@@ -255,3 +309,29 @@ class PersonalInfo:
     @property
     def has_formes(self) -> bool:
         return self.forme_count > 1
+
+    @property
+    def gender_ratio(self) -> int:
+        ratios = {
+            0: 0,
+            31: 1,
+            63: 2,
+            127: 4,
+            191: 6,
+            254: 8,
+            255: -1,
+        }
+        return ratios[self.gender]
+
+    @cached_property
+    def evos(self) -> list[Evolution]:
+        return EvolutionSet(self._path, self._id, self._format).possible_evolutions
+
+    @property
+    def is_baby(self) -> bool:
+        if self.evo_stage == 1 and self.egg_group_1 == 15:  # undiscovered
+            for evo in self.evos:
+                evo_data = self._table.get_forme_entry(evo.species, evo.form)
+                if evo_data.egg_group_1 != 15:  # undiscovered
+                    return True
+        return False
