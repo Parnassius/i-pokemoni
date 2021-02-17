@@ -11,10 +11,14 @@ class CsvReader:
         self.table = table
         self.file = join(dirname(__file__), "veekun", f"{self.table}.csv")
         self.primary_key = {
-            "pokemon_species_names": (0, 1),
+            "generation_names": (0, 1),
             "pokemon_species_flavor_text": (0, 1, 2),
+            "pokemon_species_names": (0, 1),
             "pokemon_stats": (0, 1),
             "pokemon_types": (0, 2),
+            "region_names": (0, 1),
+            "version_group_regions": (0, 1),
+            "version_names": (0, 1),
         }.get(table, (0,))
 
         with open(self.file, "r", encoding="utf-8", newline="") as csv_file:

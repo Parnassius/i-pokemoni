@@ -14,6 +14,7 @@ from utils import to_id
 class SwShPokemon:
     def __init__(self) -> None:
         self.path = PATHS["sword"]
+        self.file_format = "swsh"
 
         self.form_names: dict[str, list[str | None | Literal[False]]] = {
             # fmt: off
@@ -100,18 +101,9 @@ class SwShPokemon:
         self.tables: dict[str, CsvReader] = {}
         self.text_files: dict[tuple[str, ...], list[tuple[str, str]]] = {}
 
-        self.pokemon_csv = self._open_table("pokemon")
-        self.pokemon_species_csv = self._open_table("pokemon_species")
-        self.evolution_chains_csv = self._open_table("evolution_chains")
-        self.pokemon_species_names_csv = self._open_table("pokemon_species_names")
-        self.pokemon_species_flavor_text_csv = self._open_table(
-            "pokemon_species_flavor_text"
-        )
-        self.pokemon_stats_csv = self._open_table("pokemon_stats")
-        self.pokemon_types_csv = self._open_table("pokemon_types")
+        self.personal_table = PersonalTable(self.path, self.file_format)
 
-        self.personal_table = PersonalTable(self.path, "swsh")
-
+        self._create_games()
         self._dump_pokemon()
         self._create_evolution_chains()
         self._update_pokemon_order()
@@ -120,17 +112,16 @@ class SwShPokemon:
         self._save_all_tables()
 
     def _open_table(self, table: str) -> CsvReader:
-        t = CsvReader(table)
-        self.tables[table] = t
-        return t
+        if table not in self.tables:
+            t = CsvReader(table)
+            self.tables[table] = t
+        return self.tables[table]
 
     def _save_all_tables(self) -> None:
         for t in self.tables.values():
             t.save()
 
-    def _open_text_files(
-        self, filename: str, format: str
-    ) -> dict[int, list[tuple[str, str]]]:
+    def _open_text_files(self, filename: str) -> dict[int, list[tuple[str, str]]]:
         languages = {
             "JPN": 1,
             "Korean": 3,
@@ -145,22 +136,22 @@ class SwShPokemon:
         }
         result = {}
         for language, language_id in languages.items():
-            result[language_id] = self._open_text_file(language, filename, format)
+            result[language_id] = self._open_text_file(language, filename)
         return result
 
-    def _open_text_file(
-        self, language: str, filename: str, format: str
-    ) -> list[tuple[str, str]]:
-        key = (language, filename, format)
+    def _open_text_file(self, language: str, filename: str) -> list[tuple[str, str]]:
+        key = (language, filename)
         if key not in self.text_files:
-            f = TextFile(self.path, language, filename, format).lines
+            f = TextFile(self.path, language, filename, self.file_format).lines
             self.text_files[key] = f
         return self.text_files[key]
 
     def _pokemon_stats(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
+        pokemon_stats_csv = self._open_table("pokemon_stats")
+
         for i in range(6):
             stat_id = i + 1
-            self.pokemon_stats_csv.set_row(
+            pokemon_stats_csv.set_row(
                 pokemon_id=pokemon_id,
                 stat_id=stat_id,
                 base_stat=pokemon.stat(stat_id),
@@ -168,22 +159,26 @@ class SwShPokemon:
             )
 
     def _pokemon_types(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
+        pokemon_types_csv = self._open_table("pokemon_types")
+
         for i in range(2):
             slot = i + 1
             if slot == 2 and pokemon.type_1 == pokemon.type_2:
                 continue
-            self.pokemon_types_csv.set_row(
+            pokemon_types_csv.set_row(
                 pokemon_id=pokemon_id,
                 type_id=pokemon.type(slot),
                 slot=slot,
             )
 
     def _pokemon_species_names(self, pokemon_id: int) -> None:
-        lang_names = self._open_text_files("monsname", "swsh")
+        pokemon_species_names_csv = self._open_table("pokemon_species_names")
+
+        lang_names = self._open_text_files("monsname")
         for language_id, names in lang_names.items():
             for name in names:
                 if name[0] == f"MONSNAME_{pokemon_id:0>3}":
-                    self.pokemon_species_names_csv.set_row(
+                    pokemon_species_names_csv.set_row(
                         pokemon_species_id=pokemon_id,
                         local_language_id=language_id,
                         name=name[1],
@@ -191,11 +186,13 @@ class SwShPokemon:
                     continue
 
     def _pokemon_species_genera(self, pokemon_id: int) -> None:
-        lang_genera = self._open_text_files("zkn_type", "swsh")
+        pokemon_species_names_csv = self._open_table("pokemon_species_names")
+
+        lang_genera = self._open_text_files("zkn_type")
         for language_id, genera in lang_genera.items():
             for genus in genera:
                 if genus[0] == f"ZKN_TYPE_{pokemon_id:0>3}":
-                    self.pokemon_species_names_csv.set_row(
+                    pokemon_species_names_csv.set_row(
                         pokemon_species_id=pokemon_id,
                         local_language_id=language_id,
                         genus=genus[1],
@@ -203,11 +200,33 @@ class SwShPokemon:
                     continue
 
     def _pokemon_species_flavor_text(self, pokemon_id: int) -> None:
-        flavor_text_sword = self._open_text_files("zukan_comment_A", "swsh")
-        flavor_text_shield = self._open_text_files("zukan_comment_B", "swsh")
+        pokemon_species_flavor_text_csv = self._open_table(
+            "pokemon_species_flavor_text"
+        )
+
+        files = {
+            "A": 33,  # sword
+            "B": 34,  # shield
+        }
+        for version_letter, version_id in files.items():
+            lang_flavor_text = self._open_text_files(f"zukan_comment_{version_letter}")
+            for language_id, flavor_text in lang_flavor_text.items():
+                for flavor in flavor_text:
+                    if (
+                        flavor[0]
+                        == f"ZKN_COMMENT_{version_letter}_{pokemon_id:0>3}_000"
+                    ):
+                        pokemon_species_flavor_text_csv.set_row(
+                            species_id=pokemon_id,
+                            version_id=version_id,
+                            language_id=language_id,
+                            flavor_text=flavor[1],
+                        )
+                        continue
 
     def _pokemon_formes(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
-        names_en = self._open_text_file("English", "monsname", "swsh")
+        names_en = self._open_text_file("English", "monsname")
+        pokemon_csv = self._open_table("pokemon")
 
         if pokemon.has_formes:
             for forme_id in range(1, pokemon.forme_count):
@@ -224,12 +243,12 @@ class SwShPokemon:
                     forme_pokemon_id = next(
                         (
                             int(i["id"])
-                            for i in self.pokemon_csv.entries.values()
+                            for i in pokemon_csv.entries.values()
                             if i["identifier"] == identifier
                         ),
-                        int(max(self.pokemon_csv.entries.keys())[0]) + 1,
+                        int(max(pokemon_csv.entries.keys())[0]) + 1,
                     )
-                    self.pokemon_csv.set_row(
+                    pokemon_csv.set_row(
                         id=forme_pokemon_id,
                         identifier=identifier,
                         species_id=pokemon_id,
@@ -244,7 +263,9 @@ class SwShPokemon:
                     self._pokemon_types(forme_pokemon_id, forme)
 
     def _dump_pokemon(self) -> None:
-        names_en = self._open_text_file("English", "monsname", "swsh")
+        names_en = self._open_text_file("English", "monsname")
+        pokemon_csv = self._open_table("pokemon")
+        pokemon_species_csv = self._open_table("pokemon_species")
 
         for pokemon_id in range(1, self.personal_table.last_species_id + 1):
             pokemon = self.personal_table.get_forme_entry(pokemon_id)
@@ -256,7 +277,7 @@ class SwShPokemon:
                     if form_name:
                         identifier += "-" + form_name
 
-                self.pokemon_csv.set_row(
+                pokemon_csv.set_row(
                     id=pokemon_id,
                     identifier=identifier,
                     species_id=pokemon_id,
@@ -267,7 +288,7 @@ class SwShPokemon:
                     is_default=1,
                 )
 
-                self.pokemon_species_csv.set_row(
+                pokemon_species_csv.set_row(
                     id=pokemon_id,
                     identifier=identifier_species,
                     generation_id_fallback_=7 if identifier in self.gen7 else 8,
@@ -301,65 +322,138 @@ class SwShPokemon:
                 self._pokemon_formes(pokemon_id, pokemon)
 
     def _create_evolution_chains(self) -> None:
-        max_chain = int(max(self.evolution_chains_csv.entries.keys())[0])
-        for key in self.pokemon_species_csv.entries.keys():
-            entry = self.pokemon_species_csv.entries[key]
+        pokemon_species_csv = self._open_table("pokemon_species")
+        evolution_chains_csv = self._open_table("evolution_chains")
+
+        max_chain = int(max(evolution_chains_csv.entries.keys())[0])
+        for key in pokemon_species_csv.entries.keys():
+            entry = pokemon_species_csv.entries[key]
             if entry["evolution_chain_id"] == "_":
                 if entry["evolves_from_species_id"] == "_":
                     entry["evolves_from_species_id"] = ""
                     max_chain += 1
-                    self.evolution_chains_csv.set_row(id=max_chain)
+                    evolution_chains_csv.set_row(id=max_chain)
                     chain = max_chain
                 else:
                     chain = int(
-                        self.pokemon_species_csv.entries[
+                        pokemon_species_csv.entries[
                             (int(entry["evolves_from_species_id"]),)
                         ]["evolution_chain_id"]
                     )
                 entry["evolution_chain_id"] = str(chain)
                 pokemon = self.personal_table.get_personal_info(int(key[0]))
                 for evo in pokemon.evos:
-                    self.pokemon_species_csv.entries[(evo.species,)][
+                    pokemon_species_csv.entries[(evo.species,)][
                         "evolves_from_species_id"
                     ] = str(key[0])
 
     def _update_pokemon_order(self) -> None:
+        pokemon_csv = self._open_table("pokemon")
+
         ordered_pokemon = sorted(
-            [i[0] for i in self.pokemon_csv.entries.keys() if int(i[0]) < 10000],
+            [i[0] for i in pokemon_csv.entries.keys() if int(i[0]) < 10000],
             key=lambda x: (
-                int(self.pokemon_csv.entries[(x,)]["order"]),
-                int(self.pokemon_csv.entries[(x,)]["id"]),
+                int(pokemon_csv.entries[(x,)]["order"]),
+                int(pokemon_csv.entries[(x,)]["id"]),
             ),
         )
         order = 0
         for pokemon_id in ordered_pokemon:
             order += 1
-            self.pokemon_csv.entries[(pokemon_id,)]["order"] = str(order)
+            pokemon_csv.entries[(pokemon_id,)]["order"] = str(order)
 
             ordered_alternate_formes = sorted(
                 [
                     k[0]
-                    for k, v in self.pokemon_csv.entries.items()
+                    for k, v in pokemon_csv.entries.items()
                     if int(v["species_id"]) == pokemon_id and int(v["is_default"]) == 0
                 ],
                 key=lambda x: (
-                    int(self.pokemon_csv.entries[(x,)]["order"]),
-                    int(self.pokemon_csv.entries[(x,)]["id"]),
+                    int(pokemon_csv.entries[(x,)]["order"]),
+                    int(pokemon_csv.entries[(x,)]["id"]),
                 ),
             )
             for pokemon_forme_id in ordered_alternate_formes:
                 order += 1
-                self.pokemon_csv.entries[(pokemon_forme_id,)]["order"] = str(order)
+                pokemon_csv.entries[(pokemon_forme_id,)]["order"] = str(order)
 
     def _update_pokemon_species_order(self) -> None:
+        pokemon_species_csv = self._open_table("pokemon_species")
+
         ordered_pokemon_species = sorted(
-            [i[0] for i in self.pokemon_species_csv.entries.keys()],
+            [i[0] for i in pokemon_species_csv.entries.keys()],
             key=lambda x: (
-                int(self.pokemon_species_csv.entries[(x,)]["order"]),
-                int(self.pokemon_species_csv.entries[(x,)]["id"]),
+                int(pokemon_species_csv.entries[(x,)]["order"]),
+                int(pokemon_species_csv.entries[(x,)]["id"]),
             ),
         )
         order = 0
         for pokemon_id in ordered_pokemon_species:
             order += 1
-            self.pokemon_species_csv.entries[(pokemon_id,)]["order"] = str(order)
+            pokemon_species_csv.entries[(pokemon_id,)]["order"] = str(order)
+
+    def _create_games(self) -> None:
+        regions_csv = self._open_table("regions")
+        region_names_csv = self._open_table("region_names")
+
+        regions_csv.set_row(
+            id=8,
+            identifier="galar",
+        )
+        region_names_csv.set_row(  # TODO
+            region_id=8,
+            local_language_id=9,
+            name="Galar",
+        )
+
+        generations_csv = self._open_table("generations")
+        generation_names_csv = self._open_table("generation_names")
+
+        generations_csv.set_row(
+            id=8,
+            main_region_id=8,
+            identifier="generation-viii",
+        )
+        generation_names_csv.set_row(  # TODO
+            generation_id=8,
+            local_language_id=9,
+            name="Generation VIII",
+        )
+
+        version_groups_csv = self._open_table("version_groups")
+        version_group_regions_csv = self._open_table("version_group_regions")
+
+        version_groups_csv.set_row(
+            id=20,
+            identifier="sword-shield",
+            generation_id=8,
+            order=20,
+        )
+        version_group_regions_csv.set_row(
+            version_group_id=20,
+            region_id=8,
+        )
+
+        versions_csv = self._open_table("versions")
+        version_names_csv = self._open_table("version_names")
+
+        versions_csv.set_row(
+            id=33,
+            version_group_id=20,
+            identifier="sword",
+        )
+        versions_csv.set_row(
+            id=34,
+            version_group_id=20,
+            identifier="shield",
+        )
+        version_names_csv.set_row(
+            version_id=33,
+            local_language_id=9,
+            name="Sword",
+        )
+        version_names_csv.set_row(
+            version_id=34,
+            local_language_id=9,
+            name="Shield",
+        )
