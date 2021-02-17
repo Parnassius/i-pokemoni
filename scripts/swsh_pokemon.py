@@ -535,7 +535,6 @@ class SwShPokemon:
 # pokemon_form_generations
 # pokemon_evolution                     # evolution methods
 # pokemon_egg_groups
-# pokemon_dex_numbers
 # pokemon_abilities
 # moves SON TROPPI GUARDA DOPO
 # machines                              # tr?
