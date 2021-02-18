@@ -394,6 +394,28 @@ class SwShPokemon:
                         )
                         continue
 
+    def _pokemon_form_names(
+        self, pokemon_id: int, forme_id: int, pokemon_form_id: int
+    ) -> None:
+        if 10075 <= pokemon_form_id <= 10078:  # genesect doesn't have form names
+            return
+
+        pokemon_form_names_csv = self._open_table("pokemon_form_names")
+
+        lang_names = self._open_text_files("zkn_form")
+        for language_id, names in lang_names.items():
+            for name in names:
+                if name[0] == f"ZKN_FORM_{pokemon_id:0>3}_{forme_id:0>3}":
+                    pokemon_form_names_csv.set_row(
+                        pokemon_form_id=pokemon_form_id,
+                        local_language_id=language_id,
+                        form_name=""
+                        if pokemon_form_id == 10357  # eternamax
+                        else name[1].strip(),
+                        # pokemon_name  # TODO
+                    )
+                    continue
+
     def _pokemon_formes(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         names_en = self._open_text_file("English", "monsname")
         pokemon_forms_csv = self._open_table("pokemon_forms")
@@ -507,6 +529,11 @@ class SwShPokemon:
                     form_order_fallback_=10000,
                     order_fallback_=10000,
                 )
+
+                if pokemon.forme_count > 1:
+                    self._pokemon_form_names(
+                        pokemon_id, forme_id, forme_pokemon_form_id
+                    )
 
     def _pokemon_dex_numbers(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_dex_numbers_csv = self._open_table("pokemon_dex_numbers")
@@ -712,7 +739,6 @@ class SwShPokemon:
 # TODO
 # pokemon_moves                         # learnsets
 # pokemon_items                         # wild held items
-# pokemon_forms/pokemon_form_names
 # pokemon_form_generations
 # pokemon_evolution                     # evolution methods
 # moves SON TROPPI GUARDA DOPO
