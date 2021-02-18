@@ -420,6 +420,7 @@ class SwShPokemon:
         names_en = self._open_text_file("English", "monsname")
         pokemon_forms_csv = self._open_table("pokemon_forms")
         pokemon_csv = self._open_table("pokemon")
+        pokemon_form_generations_csv = self._open_table("pokemon_form_generations")
 
         default_pokemon_list = []
 
@@ -535,6 +536,12 @@ class SwShPokemon:
                         pokemon_id, forme_id, forme_pokemon_form_id
                     )
 
+                pokemon_form_generations_csv.set_row(
+                    pokemon_form_id=forme_pokemon_form_id,
+                    generation_id=8,
+                    game_index=0,
+                )
+
     def _pokemon_dex_numbers(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_dex_numbers_csv = self._open_table("pokemon_dex_numbers")
 
@@ -580,7 +587,6 @@ class SwShPokemon:
 
     def _dump_pokemon(self) -> None:
         names_en = self._open_text_file("English", "monsname")
-        pokemon_csv = self._open_table("pokemon")
         pokemon_species_csv = self._open_table("pokemon_species")
 
         for pokemon_id in range(1, self.personal_table.last_species_id + 1):
@@ -739,7 +745,6 @@ class SwShPokemon:
 # TODO
 # pokemon_moves                         # learnsets
 # pokemon_items                         # wild held items
-# pokemon_form_generations
 # pokemon_evolution                     # evolution methods
 # moves SON TROPPI GUARDA DOPO
 # machines                              # tr?
