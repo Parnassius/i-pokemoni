@@ -465,6 +465,16 @@ class SwShPokemon:
                 slot=slot,
             )
 
+    def _pokemon_egg_groups(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
+        pokemon_egg_groups_csv = self._open_table("pokemon_egg_groups")
+
+        egg_groups = {pokemon.egg_group_1, pokemon.egg_group_2}
+        for egg_group in egg_groups:
+            pokemon_egg_groups_csv.set_row(
+                species_id=pokemon_id,
+                egg_group_id=egg_group,
+            )
+
     def _dump_pokemon(self) -> None:
         names_en = self._open_text_file("English", "monsname")
         pokemon_csv = self._open_table("pokemon")
@@ -526,6 +536,7 @@ class SwShPokemon:
 
                 self._pokemon_dex_numbers(pokemon_id, pokemon)
                 self._pokemon_abilities(pokemon_id, pokemon)
+                self._pokemon_egg_groups(pokemon_id, pokemon)
 
     def _create_evolution_chains(self) -> None:
         pokemon_species_csv = self._open_table("pokemon_species")
