@@ -66,7 +66,7 @@ class SwShPokemon:
             "pumpkaboo": ["average", "small", "large", "super"],
             "gourgeist": ["average", "small", "large", "super"],
             "xerneas": ["", False],
-            "zygarde": ["", "10", False, "50", "Complete"],
+            "zygarde": ["", False, "10", "50", "Complete"],
             "rockruff": ["", "own-tempo"],
             "lycanroc": ["midday", "midnight", "dusk"],
             "wishiwashi": ["solo", "school"],
@@ -430,6 +430,8 @@ class SwShPokemon:
                     self._pokemon_stats(forme_pokemon_id, forme)
                     self._pokemon_types(forme_pokemon_id, forme)
 
+                    self._pokemon_abilities(forme_pokemon_id, forme)
+
     def _pokemon_dex_numbers(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_dex_numbers_csv = self._open_table("pokemon_dex_numbers")
 
@@ -446,6 +448,22 @@ class SwShPokemon:
                     pokedex_id=pokedex_id,
                     pokedex_number=pokedex_number,
                 )
+
+    def _pokemon_abilities(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
+        pokemon_abilities_csv = self._open_table("pokemon_abilities")
+
+        abilities = {1: pokemon.ability_1}
+        if pokemon.ability_2 not in abilities.values():
+            abilities[2] = pokemon.ability_2
+        if pokemon.ability_h not in abilities.values():
+            abilities[3] = pokemon.ability_h
+        for slot, ability in abilities.items():
+            pokemon_abilities_csv.set_row(
+                pokemon_id=pokemon_id,
+                ability_id=ability,
+                is_hidden=int(slot == 3),
+                slot=slot,
+            )
 
     def _dump_pokemon(self) -> None:
         names_en = self._open_text_file("English", "monsname")
@@ -507,6 +525,7 @@ class SwShPokemon:
                 self._pokemon_formes(pokemon_id, pokemon)
 
                 self._pokemon_dex_numbers(pokemon_id, pokemon)
+                self._pokemon_abilities(pokemon_id, pokemon)
 
     def _create_evolution_chains(self) -> None:
         pokemon_species_csv = self._open_table("pokemon_species")
@@ -587,7 +606,6 @@ class SwShPokemon:
 # pokemon_form_generations
 # pokemon_evolution                     # evolution methods
 # pokemon_egg_groups
-# pokemon_abilities
 # moves SON TROPPI GUARDA DOPO
 # machines                              # tr?
 # locations/location_names
