@@ -16,9 +16,9 @@ class SwShPokemon:
         self.path = PATHS["sword"]
         self.file_format = "swsh"
 
-        self.form_names: dict[str, list[str | None | Literal[False]]] = {
+        self.form_names: dict[str, list[str]] = {
             # fmt: off
-            "pikachu": ["", "original-cap", "hoenn-cap", "sinnoh-cap", "unova-cap", "kalos-cap", "alola-cap", "partner-cap", None, "world-cap"],
+            "pikachu": ["", "original-cap", "hoenn-cap", "sinnoh-cap", "unova-cap", "kalos-cap", "alola-cap", "partner-cap", "", "world-cap"],
             "raichu": ["", "alola"],
             "sandshrew": ["", "alola"],
             "sandslash": ["", "alola"],
@@ -45,9 +45,9 @@ class SwShPokemon:
             "zigzagoon": ["", "galar"],
             "linoone": ["", "galar"],
             "rayquaza": [""],
-            "cherrim": ["", False],
-            "shellos": ["", False],
-            "gastrodon": ["", False],
+            "cherrim": ["overcast_", "sunshine_"],
+            "shellos": ["west_", "east_"],
+            "gastrodon": ["west_", "east_"],
             "rotom": ["", "heat", "wash", "frost", "fan", "mow"],
             "giratina": ["altered", "origin"],
             "basculin": ["red-striped", "blue-striped"],
@@ -60,12 +60,12 @@ class SwShPokemon:
             "landorus": ["incarnate", "therian"],
             "kyurem": ["", "white", "black"],
             "keldeo": ["ordinary", "resolute"],
-            "genesect": ["", False, False, False, False],
+            "genesect": ["", "douse_", "shock_", "burn_", "chill_"],  # ?
             "meowstic": ["male", "female"],
             "aegislash": ["shield", "blade"],
             "pumpkaboo": ["average", "small", "large", "super"],
             "gourgeist": ["average", "small", "large", "super"],
-            "xerneas": ["", False],
+            "xerneas": ["neutral_", "active_"],  # active is the main one
             "zygarde": [
                 "50", "10",  # base
                 "10-power-construct", "50-power-construct", "complete",  # power construct
@@ -73,15 +73,15 @@ class SwShPokemon:
             "rockruff": ["", "own-tempo"],
             "lycanroc": ["midday", "midnight", "dusk"],
             "wishiwashi": ["solo", "school"],
-            "silvally": ["", False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+            "silvally": ["normal_", "fighting_", "flying_", "poison_", "ground_", "rock_", "bug_", "ghost_", "steel_", "fire_", "water_", "grass_", "electric_", "psychic_", "ice_", "dragon_", "dark_", "fairy_"],
             "mimikyu": ["disguised", "busted"],
             "necrozma": ["", "dusk", "dawn", "ultra"],
             "magearna": ["", "original"],
             "cramorant": ["", "gulping", "gorging"],
             "toxtricity": ["amped", "low-key"],
-            "sinistea": ["", False],
-            "polteageist": ["", False],
-            "alcremie": ["", False, False, False, False, False, False, False, False],
+            "sinistea": ["phony_", "antique_"],  # TODO: check if order is correct
+            "polteageist": ["phony_", "antique_"],  # TODO: check if order is correct
+            "alcremie": ["vanilla-cream_", "ruby-cream_", "matcha-cream_", "mint-cream_", "lemon-cream_", "salted-cream_", "ruby-swirl_", "caramel-swirl_", "rainbow-swirl_"],
             "eiscue": ["ice", "noice"],
             "indeedee": ["male", "female"],
             "morpeko": ["full-belly", "hangry"],
@@ -113,7 +113,6 @@ class SwShPokemon:
         self._dump_pokemon()
         self._create_evolution_chains()
         self._update_pokemon_order()
-        self._update_pokemon_species_order()
 
         self._save_all_tables()
 
@@ -397,37 +396,55 @@ class SwShPokemon:
 
     def _pokemon_formes(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         names_en = self._open_text_file("English", "monsname")
+        pokemon_forms_csv = self._open_table("pokemon_forms")
         pokemon_csv = self._open_table("pokemon")
 
-        if pokemon.has_formes:
-            for forme_id in range(1, pokemon.forme_count):
-                forme_index = pokemon.forme_index(pokemon_id, forme_id)
-                forme = self.personal_table.get_personal_info(forme_index)
-                if forme.is_present_in_game:
-                    identifier = to_id(names_en[pokemon_id][1])
-                    form_name = self.form_names[identifier][forme_id]
-                    if form_name is False:
-                        continue
-                    if form_name:
-                        identifier += "-" + form_name
+        default_pokemon_list = []
 
+        for forme_id in range(pokemon.forme_count):
+            forme_index = pokemon.forme_index(pokemon_id, forme_id)
+            forme = self.personal_table.get_personal_info(forme_index)
+            if forme.is_present_in_game:
+                identifier = to_id(names_en[pokemon_id][1])
+                identifier_forme = identifier
+                try:
+                    form_name = self.form_names[identifier][forme_id]
+                except KeyError:
+                    form_name = ""
+                if form_name:
+                    if not form_name.endswith("_"):
+                        identifier += "-" + form_name
+                    identifier_forme += "-" + form_name.strip("_")
+
+                forme_pokemon_id = pokemon_id
+
+                if not form_name.endswith("_") or forme_id == 0:
                     forme_pokemon_id = next(
                         (
                             int(i["id"])
                             for i in pokemon_csv.entries.values()
                             if i["identifier"] == identifier
                         ),
-                        int(max(pokemon_csv.entries.keys())[0]) + 1,
+                        0,
                     )
 
                     # hardcode new zygarde ids
+                    if identifier == "zygarde-50":
+                        forme_pokemon_id = 718
                     if identifier == "zygarde-10-power-construct":
                         forme_pokemon_id = 10118
                     if identifier == "zygarde-50-power-construct":
                         forme_pokemon_id = 10119
                     if identifier == "zygarde-10":
-                        forme_pokemon_id = 10179
+                        forme_pokemon_id = 0
 
+                    if forme_pokemon_id == 0:
+                        if forme_id == 0:
+                            forme_pokemon_id = pokemon_id
+                        else:
+                            forme_pokemon_id = (
+                                int(max(pokemon_csv.entries.keys())[0]) + 1
+                            )
 
                     pokemon_csv.set_row(
                         id=forme_pokemon_id,
@@ -437,13 +454,59 @@ class SwShPokemon:
                         weight=forme.weight,
                         base_experience=forme.base_exp,
                         order_fallback_=10000,
-                        is_default=0,
+                        is_default=int(forme_id == 0),
                     )
 
                     self._pokemon_stats(forme_pokemon_id, forme)
                     self._pokemon_types(forme_pokemon_id, forme)
-
                     self._pokemon_abilities(forme_pokemon_id, forme)
+
+                forme_pokemon_form_id = next(
+                    (
+                        int(i["id"])
+                        for i in pokemon_forms_csv.entries.values()
+                        if i["identifier"] == identifier_forme
+                    ),
+                    0,
+                )
+
+                # hardcode new zygarde ids
+                if identifier_forme == "zygarde-50":
+                    forme_pokemon_form_id = 718
+                if identifier_forme == "zygarde-10-power-construct":
+                    forme_pokemon_form_id = 10220
+                if identifier_forme == "zygarde-50-power-construct":
+                    forme_pokemon_form_id = 10221
+                if identifier_forme == "zygarde-10":
+                    forme_pokemon_form_id = 0
+
+                if forme_pokemon_form_id == 0:
+                    if forme_id == 0:
+                        forme_pokemon_form_id = pokemon_id
+                    else:
+                        forme_pokemon_form_id = (
+                            int(max(pokemon_forms_csv.entries.keys())[0]) + 1
+                        )
+
+                is_default = int(forme_pokemon_id not in default_pokemon_list)
+                if identifier_forme.startswith("xerneas"):
+                    is_default = int(identifier_forme == "xerneas-normal")
+
+                if is_default:
+                    default_pokemon_list.append(forme_pokemon_id)
+
+                pokemon_forms_csv.set_row(
+                    id=forme_pokemon_form_id,
+                    identifier=identifier_forme,
+                    form_identifier=form_name.strip("_"),
+                    pokemon_id=forme_pokemon_id,
+                    introduced_in_version_group_id_fallback_=20,
+                    is_default=is_default,
+                    is_battle_only_fallback_=0,  # TODO
+                    is_mega_fallback_=0,
+                    form_order_fallback_=10000,
+                    order_fallback_=10000,
+                )
 
     def _pokemon_dex_numbers(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_dex_numbers_csv = self._open_table("pokemon_dex_numbers")
@@ -497,26 +560,10 @@ class SwShPokemon:
             pokemon = self.personal_table.get_forme_entry(pokemon_id)
             if pokemon.is_present_in_game:
                 identifier = to_id(names_en[pokemon_id][1])
-                identifier_species = identifier
-                if pokemon.has_formes:
-                    form_name = self.form_names[identifier][0]
-                    if form_name:
-                        identifier += "-" + form_name
-
-                pokemon_csv.set_row(
-                    id=pokemon_id,
-                    identifier=identifier,
-                    species_id=pokemon_id,
-                    height=pokemon.height // 10,
-                    weight=pokemon.weight,
-                    base_experience=pokemon.base_exp,
-                    order_fallback_=10000,
-                    is_default=1,
-                )
 
                 pokemon_species_csv.set_row(
                     id=pokemon_id,
-                    identifier=identifier_species,
+                    identifier=identifier,
                     generation_id_fallback_=7 if identifier in self.gen7 else 8,
                     evolves_from_species_id_fallback_="_",
                     evolution_chain_id_fallback_="_",
@@ -531,24 +578,22 @@ class SwShPokemon:
                     has_gender_differences_fallback_=0,  # TODO
                     growth_rate_id=pokemon.exp_growth,
                     forms_switchable_fallback_=0,  # TODO
-                    is_legendary_fallback_=1
-                    if identifier in self.legendary_list
-                    else 0,
-                    is_mythical_fallback_=1 if identifier in self.mythical_list else 0,
+                    is_legendary_fallback_=int(identifier in self.legendary_list),
+                    is_mythical_fallback_=int(identifier in self.mythical_list),
                     order_fallback_=10000,
                     conquest_order_fallback_="",
                 )
 
-                self._pokemon_stats(pokemon_id, pokemon)
-                self._pokemon_types(pokemon_id, pokemon)
+                self._pokemon_formes(pokemon_id, pokemon)
+
+                # self._pokemon_stats(pokemon_id, pokemon)
+                # self._pokemon_types(pokemon_id, pokemon)
                 self._pokemon_species_names(pokemon_id)
                 self._pokemon_species_genera(pokemon_id)
                 self._pokemon_species_flavor_text(pokemon_id)
 
-                self._pokemon_formes(pokemon_id, pokemon)
-
                 self._pokemon_dex_numbers(pokemon_id, pokemon)
-                self._pokemon_abilities(pokemon_id, pokemon)
+                # self._pokemon_abilities(pokemon_id, pokemon)
                 self._pokemon_egg_groups(pokemon_id, pokemon)
 
     def _create_evolution_chains(self) -> None:
@@ -578,8 +623,49 @@ class SwShPokemon:
                     ] = str(key[0])
 
     def _update_pokemon_order(self) -> None:
+        pokemon_forms_csv = self._open_table("pokemon_forms")
         pokemon_csv = self._open_table("pokemon")
+        pokemon_species_csv = self._open_table("pokemon_species")
 
+        # pokemon_forms
+        ordered_pokemon_forms = sorted(
+            [i[0] for i in pokemon_forms_csv.entries.keys() if int(i[0]) < 10000],
+            key=lambda x: (
+                int(pokemon_forms_csv.entries[(x,)]["order"]),
+                int(pokemon_forms_csv.entries[(x,)]["id"]),
+            ),
+        )
+        order = 0
+        for pokemon_id in ordered_pokemon_forms:
+            order += 1
+            pokemon_forms_csv.entries[(pokemon_id,)]["order"] = str(order)
+            pokemon_forms_csv.entries[(pokemon_id,)]["form_order"] = "1"
+
+            ordered_alternate_formes = sorted(
+                [
+                    k[0]
+                    for k, v in pokemon_forms_csv.entries.items()
+                    if int(pokemon_csv.entries[(int(v["pokemon_id"]),)]["species_id"])
+                    == pokemon_id
+                    and k[0] != pokemon_id
+                ],
+                key=lambda x: (
+                    # hardcode zygarde-10 order
+                    (pokemon_forms_csv.entries[(x,)]["identifier"] != "zygarde-10"),
+                    int(pokemon_forms_csv.entries[(x,)]["order"]),
+                    int(pokemon_forms_csv.entries[(x,)]["id"]),
+                ),
+            )
+            form_order = 1
+            for pokemon_forme_id in ordered_alternate_formes:
+                form_order += 1
+                pokemon_forms_csv.entries[(pokemon_forme_id,)]["form_order"] = str(
+                    form_order
+                )
+                order += 1
+                pokemon_forms_csv.entries[(pokemon_forme_id,)]["order"] = str(order)
+
+        # pokemon
         ordered_pokemon = sorted(
             [i[0] for i in pokemon_csv.entries.keys() if int(i[0]) < 10000],
             key=lambda x: (
@@ -596,7 +682,7 @@ class SwShPokemon:
                 [
                     k[0]
                     for k, v in pokemon_csv.entries.items()
-                    if int(v["species_id"]) == pokemon_id and int(v["is_default"]) == 0
+                    if int(v["species_id"]) == pokemon_id and k[0] != pokemon_id
                 ],
                 key=lambda x: (
                     # hardcode zygarde-10 order
@@ -609,9 +695,7 @@ class SwShPokemon:
                 order += 1
                 pokemon_csv.entries[(pokemon_forme_id,)]["order"] = str(order)
 
-    def _update_pokemon_species_order(self) -> None:
-        pokemon_species_csv = self._open_table("pokemon_species")
-
+        # pokemon_species
         ordered_pokemon_species = sorted(
             [i[0] for i in pokemon_species_csv.entries.keys()],
             key=lambda x: (
@@ -631,7 +715,6 @@ class SwShPokemon:
 # pokemon_forms/pokemon_form_names
 # pokemon_form_generations
 # pokemon_evolution                     # evolution methods
-# pokemon_egg_groups
 # moves SON TROPPI GUARDA DOPO
 # machines                              # tr?
 # locations/location_names
