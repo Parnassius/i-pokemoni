@@ -66,7 +66,10 @@ class SwShPokemon:
             "pumpkaboo": ["average", "small", "large", "super"],
             "gourgeist": ["average", "small", "large", "super"],
             "xerneas": ["", False],
-            "zygarde": ["", False, "10", "50", "Complete"],
+            "zygarde": [
+                "50", "10",  # base
+                "10-power-construct", "50-power-construct", "complete",  # power construct
+            ],
             "rockruff": ["", "own-tempo"],
             "lycanroc": ["midday", "midnight", "dusk"],
             "wishiwashi": ["solo", "school"],
@@ -416,6 +419,16 @@ class SwShPokemon:
                         ),
                         int(max(pokemon_csv.entries.keys())[0]) + 1,
                     )
+
+                    # hardcode new zygarde ids
+                    if identifier == "zygarde-10-power-construct":
+                        forme_pokemon_id = 10118
+                    if identifier == "zygarde-50-power-construct":
+                        forme_pokemon_id = 10119
+                    if identifier == "zygarde-10":
+                        forme_pokemon_id = 10179
+
+
                     pokemon_csv.set_row(
                         id=forme_pokemon_id,
                         identifier=identifier,
@@ -586,6 +599,8 @@ class SwShPokemon:
                     if int(v["species_id"]) == pokemon_id and int(v["is_default"]) == 0
                 ],
                 key=lambda x: (
+                    # hardcode zygarde-10 order
+                    (pokemon_csv.entries[(x,)]["identifier"] != "zygarde-10"),
                     int(pokemon_csv.entries[(x,)]["order"]),
                     int(pokemon_csv.entries[(x,)]["id"]),
                 ),

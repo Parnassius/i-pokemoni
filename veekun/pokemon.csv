@@ -716,7 +716,7 @@ id,identifier,species_id,height,weight,base_experience,order,is_default
 715,noivern,715,15,850,187,853,1
 716,xerneas,716,30,2150,340,854,1
 717,yveltal,717,58,2030,340,855,1
-718,zygarde,718,50,3050,300,856,1
+718,zygarde-50,718,50,3050,300,856,1
 719,diancie,719,7,88,300,861,1
 720,hoopa,720,5,90,270,863,1
 721,volcanion,721,17,1950,300,865,1
@@ -1014,9 +1014,9 @@ id,identifier,species_id,height,weight,base_experience,order,is_default
 10115,marowak-alola,105,10,340,149,164,0
 10116,greninja-battle-bond,658,15,400,239,787,0
 10117,greninja-ash,658,15,400,288,788,0
-10118,zygarde-10,718,12,335,243,857,0
-10119,zygarde-50,718,50,3050,300,858,0
-10120,zygarde-complete,718,45,6100,319,859,0
+10118,zygarde-10-power-construct,718,12,335,243,858,0
+10119,zygarde-50-power-construct,718,50,3050,300,859,0
+10120,zygarde-complete,718,45,6100,354,860,0
 10121,gumshoos-totem,735,14,600,146,880,0
 10122,vikavolt-totem,738,26,1475,225,884,0
 10123,oricorio-pom-pom,741,6,34,167,888,0
@@ -1075,7 +1075,7 @@ id,identifier,species_id,height,weight,base_experience,order,is_default
 10176,darmanitan-galar-zen,555,17,1200,189,674,0
 10177,yamask-galar,562,5,15,61,682,0
 10178,stunfisk-galar,618,7,205,165,739,0
-10179,zygarde-Complete,718,45,6100,354,860,0
+10179,zygarde-10,718,12,335,243,857,0
 10180,cramorant-gulping,845,8,180,166,1025,0
 10181,cramorant-gorging,845,8,180,166,1026,0
 10182,toxtricity-low-key,849,16,400,176,1031,0
