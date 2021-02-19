@@ -1,4 +1,6 @@
-from scripts.swsh_pokemon import SwShPokemon
+from scripts.dump_letsgo import DumpLetsGo
+from scripts.dump_swsh import DumpSwSh
 
 if __name__ == "__main__":
-    SwShPokemon()
+    DumpLetsGo()
+    #DumpSwSh()
