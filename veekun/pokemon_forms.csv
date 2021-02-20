@@ -664,7 +664,7 @@ id,identifier,form_identifier,pokemon_id,introduced_in_version_group_id,is_defau
 663,talonflame,,663,15,1,0,0,1,838
 664,scatterbug-icy-snow,icy-snow,664,15,1,0,0,1,839
 665,spewpa-icy-snow,icy-snow,665,15,1,0,0,1,859
-666,vivillon-meadow,meadow,666,15,0,0,0,1,879
+666,vivillon-meadow,meadow,666,15,0,0,0,7,885
 667,litleo,,667,15,1,0,0,1,899
 668,pyroar,,668,15,1,0,0,1,900
 669,flabebe-red,red,669,15,1,0,0,1,901
@@ -714,7 +714,7 @@ id,identifier,form_identifier,pokemon_id,introduced_in_version_group_id,is_defau
 713,avalugg,,713,15,1,0,0,1,974
 714,noibat,,714,15,1,0,0,1,975
 715,noivern,,715,15,1,0,0,1,976
-716,xerneas-active,active,716,15,0,1,0,1,977
+716,xerneas-active,active,716,15,0,1,0,2,978
 717,yveltal,,717,15,1,0,0,1,979
 718,zygarde-50,50,718,15,1,0,0,1,980
 719,diancie,,719,15,1,0,0,1,985
@@ -893,12 +893,12 @@ id,identifier,form_identifier,pokemon_id,introduced_in_version_group_id,is_defau
 10083,kyurem-white,white,10023,14,1,0,0,2,812
 10084,keldeo-resolute,resolute,10024,14,1,0,0,2,815
 10085,arceus-fairy,fairy,493,15,0,0,0,18,645
-10086,vivillon-icy-snow,icy-snow,666,15,1,0,0,2,880
-10087,vivillon-polar,polar,666,15,0,0,0,3,881
-10088,vivillon-tundra,tundra,666,15,0,0,0,4,882
-10089,vivillon-continental,continental,666,15,0,0,0,5,883
-10090,vivillon-garden,garden,666,15,0,0,0,6,884
-10091,vivillon-elegant,elegant,666,15,0,0,0,7,885
+10086,vivillon-icy-snow,icy-snow,666,15,1,0,0,1,879
+10087,vivillon-polar,polar,666,15,0,0,0,2,880
+10088,vivillon-tundra,tundra,666,15,0,0,0,3,881
+10089,vivillon-continental,continental,666,15,0,0,0,4,882
+10090,vivillon-garden,garden,666,15,0,0,0,5,883
+10091,vivillon-elegant,elegant,666,15,0,0,0,6,884
 10092,vivillon-modern,modern,666,15,0,0,0,8,886
 10093,vivillon-marine,marine,666,15,0,0,0,9,887
 10094,vivillon-archipelago,archipelago,666,15,0,0,0,10,888
@@ -939,7 +939,7 @@ id,identifier,form_identifier,pokemon_id,introduced_in_version_group_id,is_defau
 10129,gourgeist-small,small,10030,15,1,0,0,2,970
 10130,gourgeist-large,large,10031,15,1,0,0,3,971
 10131,gourgeist-super,super,10032,15,1,0,0,4,972
-10132,xerneas-neutral,neutral,716,15,0,0,0,2,978
+10132,xerneas-neutral,neutral,716,15,0,0,0,1,977
 10133,venusaur-mega,mega,10033,15,1,1,1,2,4
 10134,charizard-mega-x,mega-x,10034,15,1,1,1,2,8
 10135,charizard-mega-y,mega-y,10035,15,1,1,1,3,9

@@ -124,7 +124,7 @@ class DumpBase:
         "keldeo": ["ordinary", "resolute"],
         "meloetta": ["aria", "pirouette"],
         "genesect": ["", "douse_", "shock_", "burn_", "chill_"],  # ?
-        "greninja": ["", "battle-bond", "ash"],  # TODO: check battle-bond and ash differences
+        "greninja": ["", "battle-bond", "ash"],
         "scatterbug": ["icy-snow_", "polar_", "tundra_", "continental_", "garden_", "elegant_", "meadow_", "modern_", "marine_", "archipelago_", "high-plains_", "sandstorm_", "river_", "monsoon_", "savanna_", "sun_", "ocean_", "jungle_", "fancy_", "poke-ball_"],
         "spewpa": ["icy-snow_", "polar_", "tundra_", "continental_", "garden_", "elegant_", "meadow_", "modern_", "marine_", "archipelago_", "high-plains_", "sandstorm_", "river_", "monsoon_", "savanna_", "sun_", "ocean_", "jungle_", "fancy_", "poke-ball_"],
         "vivillon": ["icy-snow_", "polar_", "tundra_", "continental_", "garden_", "elegant_", "meadow_", "modern_", "marine_", "archipelago_", "high-plains_", "sandstorm_", "river_", "monsoon_", "savanna_", "sun_", "ocean_", "jungle_", "fancy_", "poke-ball_"],  # TODO: fancy and pokeball abilities
@@ -765,11 +765,11 @@ class DumpBase:
                 pokemon_species_csv.set_row(
                     id=pokemon_id,
                     identifier=identifier,
-                    generation_id_fallback_=self._generation_id,  # TODO: check melmetal
+                    generation_id_fallback_=self._generation_id,
                     evolves_from_species_id_fallback_="_",
                     evolution_chain_id_fallback_="_",
                     color_id=pokemon.color,
-                    shape_id_fallback_="",  # TODO
+                    shape_id_fallback_="0",
                     habitat_id_fallback_="",  # it's a fr/lg thing
                     gender_rate=pokemon.gender_ratio,
                     capture_rate=pokemon.catch_rate,
@@ -839,8 +839,14 @@ class DumpBase:
         order = 0
         for pokemon_id in ordered_pokemon_forms:
             order += 1
-            pokemon_forms_csv.entries[(pokemon_id,)]["order"] = str(order)
-            pokemon_forms_csv.entries[(pokemon_id,)]["form_order"] = "1"
+            offset = 0
+            if pokemon_id == 716:  # xerneas
+                offset = 1
+            elif pokemon_id == 666:  # vivillon
+                offset = 6
+
+            pokemon_forms_csv.entries[(pokemon_id,)]["order"] = str(order + offset)
+            pokemon_forms_csv.entries[(pokemon_id,)]["form_order"] = str(1 + offset)
 
             ordered_alternate_formes = sorted(
                 [
@@ -859,12 +865,15 @@ class DumpBase:
             )
             form_order = 1
             for pokemon_forme_id in ordered_alternate_formes:
-                form_order += 1
-                pokemon_forms_csv.entries[(pokemon_forme_id,)]["form_order"] = str(
-                    form_order
-                )
                 order += 1
-                pokemon_forms_csv.entries[(pokemon_forme_id,)]["order"] = str(order)
+                form_order += 1
+                form_offset = int(offset >= form_order - 1)
+                pokemon_forms_csv.entries[(pokemon_forme_id,)]["order"] = str(
+                    order - form_offset
+                )
+                pokemon_forms_csv.entries[(pokemon_forme_id,)]["form_order"] = str(
+                    form_order - form_offset
+                )
 
         # pokemon
         ordered_pokemon = sorted(
