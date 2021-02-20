@@ -54,7 +54,7 @@ class PersonalInfo:
         self._form_stats_index: int
         self.forme_sprite: int
         self.base_exp: int
-        self.color: int
+        self._color: int
 
         self.height: int
         self.weight: int
@@ -174,3 +174,9 @@ class PersonalInfo:
             5: self.ev_special_defense,
             6: self.ev_speed,
         }[stat_id]
+
+    @property
+    def color(self) -> int:
+        return {0: 8, 1: 2, 2: 10, 3: 5, 4: 1, 5: 3, 6: 7, 7: 4, 8: 9, 9: 6}[
+            self._color
+        ]

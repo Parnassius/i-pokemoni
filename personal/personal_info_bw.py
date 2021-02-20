@@ -61,9 +61,7 @@ class PersonalInfoBW(PersonalInfo):
         self._form_stats_index = read_as_int(2, self._data, 0x1C)
         self.forme_sprite = read_as_int(2, self._data, 0x1E)  # ???
         self.base_exp = read_as_int(2, self._data, 0x22)
-        self.color = {0: 8, 1: 2, 2: 10, 3: 5, 4: 1, 5: 3, 6: 7, 7: 4, 8: 9, 9: 6}[
-            int(self._data[0x21])
-        ]
+        self._color = int(self._data[0x21])
         self.height = read_as_int(2, self._data, 0x24)
         self.weight = read_as_int(2, self._data, 0x26)
 

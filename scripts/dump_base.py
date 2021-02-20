@@ -127,7 +127,7 @@ class DumpBase:
         "greninja": ["", "battle-bond", "ash"],
         "scatterbug": ["icy-snow_", "polar_", "tundra_", "continental_", "garden_", "elegant_", "meadow_", "modern_", "marine_", "archipelago_", "high-plains_", "sandstorm_", "river_", "monsoon_", "savanna_", "sun_", "ocean_", "jungle_", "fancy_", "poke-ball_"],
         "spewpa": ["icy-snow_", "polar_", "tundra_", "continental_", "garden_", "elegant_", "meadow_", "modern_", "marine_", "archipelago_", "high-plains_", "sandstorm_", "river_", "monsoon_", "savanna_", "sun_", "ocean_", "jungle_", "fancy_", "poke-ball_"],
-        "vivillon": ["icy-snow_", "polar_", "tundra_", "continental_", "garden_", "elegant_", "meadow_", "modern_", "marine_", "archipelago_", "high-plains_", "sandstorm_", "river_", "monsoon_", "savanna_", "sun_", "ocean_", "jungle_", "fancy_", "poke-ball_"],  # TODO: fancy and pokeball abilities
+        "vivillon": ["icy-snow_", "polar_", "tundra_", "continental_", "garden_", "elegant_", "meadow_", "modern_", "marine_", "archipelago_", "high-plains_", "sandstorm_", "river_", "monsoon_", "savanna_", "sun_", "ocean_", "jungle_", "fancy_", "poke-ball_"],
         "flabebe": ["red_", "yellow_", "orange_", "blue_", "white_"],
         "floette": ["red_", "yellow_", "orange_", "blue_", "white_", "eternal"],
         "florges": ["red_", "yellow_", "orange_", "blue_", "white_"],
@@ -232,7 +232,7 @@ class DumpBase:
 
         self._dump_abilities()
 
-        # self._dump_items()
+        self._dump_items()
 
         self._dump_pokemon()
         self._create_evolution_chains()
@@ -343,7 +343,7 @@ class DumpBase:
                 version_group_id=self._version_group_id,
             )
             for language_id, pokedex_name in pokedex_names.items():
-                pokedex_prose_csv.set_row(  # TODO
+                pokedex_prose_csv.set_row(
                     pokedex_id=pokedex_id,
                     local_language_id=language_id,
                     name=pokedex_name[0],
@@ -742,8 +742,8 @@ class DumpBase:
             )
 
     def _pokemon_evolutions(self, pokemon_id: int, evos: list[Evolution]) -> None:
-        for evo in evos:
-            if evo.method == 16:
+        if pokemon_id == 854:
+            for evo in evos:
                 print(
                     f"{pokemon_id=}",
                     f"{evo.method=}",
@@ -795,7 +795,7 @@ class DumpBase:
                 self._pokemon_dex_numbers(pokemon_id, pokemon)
                 self._pokemon_egg_groups(pokemon_id, pokemon)
 
-                # self._pokemon_evolutions(pokemon_id, pokemon.evos)  # TODO
+                self._pokemon_evolutions(pokemon_id, pokemon.evos)  # TODO
 
     def _create_evolution_chains(self) -> None:
         pokemon_species_csv = self._open_table("pokemon_species")

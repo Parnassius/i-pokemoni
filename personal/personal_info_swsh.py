@@ -35,9 +35,7 @@ class PersonalInfoSwSh(PersonalInfoXY):
         self.abilities = [read_as_int(2, self._data, 0x18 + (i * 2)) for i in range(3)]
         self.escape_rate = 0  # moved?
         self._form_stats_index = read_as_int(2, self._data, 0x1E)
-        self.color = {0: 8, 1: 2, 2: 10, 3: 5, 4: 1, 5: 3, 6: 7, 7: 4, 8: 9, 9: 6}[
-            int(self._data[0x21] & 0x3F)
-        ]
+        self._color = int(self._data[0x21] & 0x3F)
 
         self.tmhm = [
             get_flag(self._data, 0x28 + (i >> 3), i) for i in range(100)  # TMs
