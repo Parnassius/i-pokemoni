@@ -12,7 +12,10 @@ class TextLine(NamedTuple):
 
 
 class TextFile:
-    _PATHS = {"swsh": ["bin", "message", None, "common"]}
+    _PATHS = {
+        "letsgo": ["bin", "message", None, "common"],
+        "swsh": ["bin", "message", None, "common"],
+    }
 
     _KEY_TBLMAGIC = 0x42544841
 

@@ -106,10 +106,13 @@ class Evolution:
 
 
 class EvolutionSet:
-    _PATHS = {"swsh": ["bin", "pml", "evolution", "evo_{id:0>3}.bin"]}
+    _PATHS = {
+        "letsgo": ["bin", "pokelib", "evolution", "evo_{id:0>3}.bin"],
+        "swsh": ["bin", "pml", "evolution", "evo_{id:0>3}.bin"],
+    }
 
-    _ENTRY_SIZES = {"swsh": 8}
-    _ENTRY_COUNTS = {"swsh": 9}
+    _ENTRY_SIZES = {"letsgo": 8, "swsh": 8}
+    _ENTRY_COUNTS = {"letsgo": 8, "swsh": 9}
     SIZES = {
         i[0]: i[1] * i[2]
         for i in zip(_ENTRY_SIZES.keys(), _ENTRY_SIZES.values(), _ENTRY_COUNTS.values())

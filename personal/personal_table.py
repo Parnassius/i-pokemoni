@@ -1,28 +1,34 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from os.path import join
+from typing import Literal, overload
 
 from utils import get_flag, read_as_int
 
 from .personal_info import PersonalInfo
+from .personal_info_letsgo import PersonalInfoLetsGo
+from .personal_info_swsh import PersonalInfoSwSh
 
 
 class PersonalTable:
-    _PATHS = {"swsh": join("bin", "pml", "personal", "personal_total.bin")}
-    _LAST_SPECIES_ID = {"swsh": 898}
-
     def __init__(self, path: str, file_format: str) -> None:
+        self._PersonalInfo: type[PersonalInfo] = {
+            "letsgo": PersonalInfoLetsGo,
+            "swsh": PersonalInfoSwSh,
+        }[file_format]
+        self._path = path
         self._format = file_format
-        with open(join(path, self._PATHS[self._format]), "rb") as f:
+        with open(join(path, self._PersonalInfo._PATH), "rb") as f:
             self._data = f.read()
-        self._size = PersonalInfo.SIZES[self._format]
+        self._size = self._PersonalInfo._SIZE
         self._entries = [
             self._data[i : i + self._size]
             for i in range(0, len(self._data), self._size)
         ]
         self._table = [
-            PersonalInfo(self, path, i, data, self._format)
-            for i, data in enumerate(self._entries)
+            self._PersonalInfo(self, self._path, pokemon_id, data)
+            for pokemon_id, data in enumerate(self._entries)
         ]
 
     def get_personal_info(self, index: int) -> PersonalInfo:
@@ -41,4 +47,19 @@ class PersonalTable:
 
     @property
     def last_species_id(self) -> int:
-        return self._LAST_SPECIES_ID[self._format]
+        return self._PersonalInfo._LAST_SPECIES_ID
+
+    @overload
+    @classmethod
+    def get(cls, path: str, file_format: Literal["letsgo"]) -> list[PersonalInfoLetsGo]:
+        ...
+
+    @overload
+    @classmethod
+    def get(cls, path: str, file_format: Literal["swsh"]) -> list[PersonalInfoSwSh]:
+        ...
+
+    # suppress "Overloaded function implementation cannot produce return type ..."
+    @classmethod  # type: ignore[misc]
+    def get(cls, path: str, file_format: str) -> Sequence[PersonalInfo]:
+        return cls(path, file_format)._table
