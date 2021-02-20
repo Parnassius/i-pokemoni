@@ -8,7 +8,7 @@ from evolution.evolution_set import Evolution
 from item.item_table import ItemTable
 from personal.personal_table import PersonalTable
 from text.text_file import TextFile
-from utils import to_id, read_as_int
+from utils import read_as_int, to_id
 
 if TYPE_CHECKING:
     from personal.personal_info import PersonalInfo
@@ -195,6 +195,9 @@ class DumpBase:
         "Simp_Chinese": 12,
     }
 
+    _new_items: set[int] = set()
+    _changed_items: dict[int, int | tuple[int, str]] = {}
+
     _region_id: int
     _region_identifier: str
     _region_names: dict[int, str]
@@ -226,7 +229,7 @@ class DumpBase:
         self._text_files: dict[tuple[str, ...], list[tuple[str, str]]] = {}
 
         self._personal_table = PersonalTable(self._path, self._format)
-        # self.item_table = ItemTable(self.path, self._format)
+        self._item_table = ItemTable(self._path, self._format)
 
         self._create_base_records()
 
@@ -416,7 +419,7 @@ class DumpBase:
 
         items_en = self._open_text_file("English", "itemname")
         for item in items_en:
-            game_index = int(item[0][-3:])
+            game_index = int(item[0][item[0].find("_") + 1 :])
             if game_index == 0:
                 continue
             identifier = to_id(item[1])
@@ -429,7 +432,7 @@ class DumpBase:
                 for i in item_game_indices_csv.entries.values()
                 if int(i["game_index"]) == game_index
             }
-            item_id = {
+            item_id: set[int] | int = {
                 int(i["id"])
                 for i in items_csv.entries.values()
                 if int(i["id"]) in items and i["identifier"] == identifier
@@ -440,29 +443,52 @@ class DumpBase:
                     for i in items_csv.entries.values()
                     if i["identifier"] == identifier
                 }
-
-            if len(item_id) == 1:
-                continue  # ok
-            print(
-                game_index,
-                identifier,
-                {
-                    i["identifier"]
+            if not item_id:
+                item_id_and_identifier = {
+                    (int(i["id"]), i["identifier"])
                     for i in items_csv.entries.values()
                     if int(i["id"]) in items
-                },
-            )
+                    and i["identifier"].startswith(f"{identifier}--")
+                }
+                if len(item_id_and_identifier) == 1:
+                    item_id, identifier = list(item_id_and_identifier)[0]
 
-            """if ability_id == 266:
-                identifier += "-glastrier"
-            elif ability_id == 267:
-                identifier += "-spectrier"
-            abilities_csv.set_row(
-                id=ability_id,
+            if game_index in self._changed_items:
+                item_ = self._changed_items[game_index]
+                if isinstance(item_, int):
+                    item_id = item_
+                else:
+                    item_id = item_[0]
+                    identifier = item_[1]
+
+            # new items
+            if game_index in self._new_items:
+                item_id = int(max(items_csv.entries.keys())[0]) + 1
+
+            if isinstance(item_id, set) and len(item_id) != 1:
+                print(
+                    game_index,
+                    identifier,
+                    {
+                        k[0]: v["identifier"]
+                        for k, v in items_csv.entries.items()
+                        if int(v["id"]) in items
+                    },
+                )
+
+            if isinstance(item_id, set):
+                item_id = list(item_id)[0]
+
+            item_info = self._item_table.get_item_info(game_index)
+
+            items_csv.set_row(
+                id=item_id,
                 identifier=identifier,
-                generation_id_fallback_=8,
-                is_main_series_fallback_=1,
-            )"""
+                # category_id=category_id,  # TODO
+                cost=item_info.buy_price,
+                fling_power=item_info.fling_power or "",
+                fling_effect_id=item_info.fling_effect_id or "",
+            )
 
     def _pokemon_stats(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_stats_csv = self._open_table("pokemon_stats")

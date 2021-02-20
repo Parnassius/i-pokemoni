@@ -6,6 +6,51 @@ from .dump_base import DumpBase
 
 
 class DumpLetsGo(DumpBase):
+    _new_items = {
+        115,
+        121,
+        122,
+        124,
+        125,
+        126,
+        127,
+        128,
+        861,
+        862,
+        863,
+        864,
+        865,
+        866,
+        885,
+        886,
+        887,
+        888,
+        889,
+        890,
+        891,
+        892,
+        893,
+        894,
+        895,
+        896,
+        900,
+        901,
+        902,
+        903,
+    }
+    _new_items.update(range(960, 1057 + 1))
+    _changed_items = {
+        450: 919,
+        713: 929,
+        739: 780,
+        740: 934,
+        947: 993,
+        943: 989,
+        944: 990,
+        945: 991,
+        946: 992,
+    }
+
     _region_id = 1
     _region_identifier = "kanto"
     _region_names = {9: "Kanto"}

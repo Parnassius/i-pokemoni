@@ -8,9 +8,11 @@ def get_flag(data: bytes, offset: int, bit_index: int) -> bool:
     return (data[offset] >> bit_index & 1) != 0
 
 
-def read_as_int(size: int, data: bytes, offset: int = 0) -> int:
-    formats = {2: "H", 4: "I", 8: "Q"}
-    return int(struct.unpack_from("<" + formats[size], data, offset)[0])
+def read_as_int(size: int, data: bytes, offset: int = 0, signed: bool = False) -> int:
+    format = {1: "B", 2: "H", 4: "I", 8: "Q"}[size]
+    if signed:
+        format = format.lower()
+    return int(struct.unpack_from("<" + format, data, offset)[0])
 
 
 def to_id(text: str) -> str:
