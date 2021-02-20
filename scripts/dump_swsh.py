@@ -54,8 +54,6 @@ class DumpSwSh(DumpBase):
 # location_areas/location_area_prose
 
 
-# items/item_names/item_prose/item_flavor_text
-# item_game_indices
 # item_flag_map
 # item_categories
 

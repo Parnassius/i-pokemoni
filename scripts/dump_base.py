@@ -433,20 +433,32 @@ class DumpBase:
                         name=item[1],
                     )
 
-        """ability_flavor_text_csv = self._open_table("ability_flavor_text")
+        item_flavor_text_csv = self._open_table("item_flavor_text")
 
-        lang_ability_flavor_text = self._open_text_files("tokuseiinfo")
-        for language_id, flavor_text in lang_ability_flavor_text.items():
+        lang_item_flavor_text = self._open_text_files("iteminfo")
+        for language_id, flavor_text in lang_item_flavor_text.items():
             for flavor in flavor_text:
-                item_id = int(flavor[0][-3:])
-                if item_id == 0:
+                game_index = int(flavor[0][flavor[0].find("_") + 1 :])
+                if game_index == 0:
                     continue
-                ability_flavor_text_csv.set_row(
-                    ability_id=item_id,
-                    version_group_id=self._version_group_id,
-                    language_id=language_id,
-                    flavor_text=flavor[1],
-                )"""
+
+                item_id = next(
+                    (
+                        int(i["item_id"])
+                        for i in item_game_indices_csv.entries.values()
+                        if int(i["generation_id"]) == self._generation_id
+                        and int(i["game_index"]) == game_index
+                    ),
+                    None,
+                )
+
+                if item_id:
+                    item_flavor_text_csv.set_row(
+                        item_id=item_id,
+                        version_group_id=self._version_group_id,
+                        language_id=language_id,
+                        flavor_text=flavor[1],
+                    )
 
     def _dump_items(self) -> None:
         """
