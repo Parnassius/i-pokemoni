@@ -15,6 +15,7 @@ class CsvReader:
             "ability_names": (0, 1),
             "generation_names": (0, 1),
             "item_game_indices": (0, 1),
+            "item_names": (0, 1),
             "pokedex_prose": (0, 1),
             "pokedex_version_groups": (0, 1),
             "pokemon_abilities": (0, 3),

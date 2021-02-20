@@ -15,40 +15,28 @@ class DumpLetsGo(DumpBase):
         126,
         127,
         128,
-        861,
-        862,
-        863,
-        864,
-        865,
-        866,
-        885,
-        886,
-        887,
-        888,
-        889,
-        890,
-        891,
-        892,
-        893,
-        894,
-        895,
-        896,
+        872,
+        873,
+        875,
+        876,
         900,
         901,
         902,
         903,
     }
+    _new_items.update(range(861, 866 + 1))
+    _new_items.update(range(885, 896 + 1))
     _new_items.update(range(960, 1057 + 1))
     _changed_items = {
-        450: 919,
-        713: 929,
-        739: 780,
-        740: 934,
-        947: 993,
-        943: 989,
-        944: 990,
-        945: 991,
-        946: 992,
+        113: 555,  # tea
+        123: 550,  # tm case
+        873: 433,  # ss-ticket
+        874: 548,  # silph-scope
+        875: 436,  # parcel
+        876: 475,  # card-key
+        877: 546,  # gold-teeth
+        878: 547,  # lift-key
+        947: 993,  # ilima-normalium-z
     }
 
     _region_id = 1

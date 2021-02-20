@@ -196,7 +196,7 @@ class DumpBase:
     }
 
     _new_items: set[int] = set()
-    _changed_items: dict[int, int | tuple[int, str]] = {}
+    _changed_items: dict[int, int] = {}
 
     _region_id: int
     _region_identifier: str
@@ -405,6 +405,49 @@ class DumpBase:
                     flavor_text=flavor[1],
                 )
 
+    def _item_names(self) -> None:
+        item_game_indices_csv = self._open_table("item_game_indices")
+        item_names_csv = self._open_table("item_names")
+
+        lang_items = self._open_text_files("itemname")
+        for language_id, items in lang_items.items():
+            for item in items:
+                game_index = int(item[0][item[0].find("_") + 1 :])
+                if game_index == 0:
+                    continue
+
+                item_id = next(
+                    (
+                        int(i["item_id"])
+                        for i in item_game_indices_csv.entries.values()
+                        if int(i["generation_id"]) == self._generation_id
+                        and int(i["game_index"]) == game_index
+                    ),
+                    None,
+                )
+
+                if item_id:
+                    item_names_csv.set_row(
+                        item_id=item_id,
+                        local_language_id=language_id,
+                        name=item[1],
+                    )
+
+        """ability_flavor_text_csv = self._open_table("ability_flavor_text")
+
+        lang_ability_flavor_text = self._open_text_files("tokuseiinfo")
+        for language_id, flavor_text in lang_ability_flavor_text.items():
+            for flavor in flavor_text:
+                item_id = int(flavor[0][-3:])
+                if item_id == 0:
+                    continue
+                ability_flavor_text_csv.set_row(
+                    ability_id=item_id,
+                    version_group_id=self._version_group_id,
+                    language_id=language_id,
+                    flavor_text=flavor[1],
+                )"""
+
     def _dump_items(self) -> None:
         """
         itemname                        item names
@@ -427,6 +470,10 @@ class DumpBase:
             if identifier == "???":
                 continue
 
+            if game_index == 626:
+                # "xtransceiver" in the game files, "xtranceiver--yellow" (without the s) in the csvs
+                continue
+
             items = {
                 int(i["item_id"])
                 for i in item_game_indices_csv.entries.values()
@@ -437,12 +484,6 @@ class DumpBase:
                 for i in items_csv.entries.values()
                 if int(i["id"]) in items and i["identifier"] == identifier
             }
-            if not item_id:
-                item_id = {
-                    int(i["id"])
-                    for i in items_csv.entries.values()
-                    if i["identifier"] == identifier
-                }
             if not item_id:
                 item_id_and_identifier = {
                     (int(i["id"]), i["identifier"])
@@ -489,6 +530,14 @@ class DumpBase:
                 fling_power=item_info.fling_power or "",
                 fling_effect_id=item_info.fling_effect_id or "",
             )
+
+            item_game_indices_csv.set_row(
+                item_id=item_id,
+                generation_id=self._generation_id,
+                game_index=game_index,
+            )
+
+        self._item_names()
 
     def _pokemon_stats(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_stats_csv = self._open_table("pokemon_stats")
