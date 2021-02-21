@@ -4,6 +4,7 @@ import csv
 from collections.abc import Sequence
 from copy import copy
 from os.path import dirname, join
+from typing import Literal
 
 
 class CsvReader:
@@ -54,7 +55,7 @@ class CsvReader:
                 key.append(row[int(col)])
         return tuple(key)
 
-    def set_row(self, **val: int | str) -> None:
+    def set_row(self, **val: int | str | Literal[False]) -> None:
         key = self._get_primary_key(val)
         if key not in self.entries:
             self.entries[key] = {
@@ -62,7 +63,11 @@ class CsvReader:
             }
 
         self.entries[key].update(
-            {k: str(v) for k, v in val.items() if not k.endswith("_fallback_")}
+            {
+                k: str(v)
+                for k, v in val.items()
+                if not k.endswith("_fallback_") and v is not False
+            }
         )
 
     def save(self) -> None:

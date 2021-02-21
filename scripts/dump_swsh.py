@@ -6,6 +6,22 @@ from .dump_base import DumpBase
 
 
 class DumpSwSh(DumpBase):
+    _new_items = set(range(1074, 1607 + 1))
+
+    _changed_items = {
+        121: 1007,  # pokemon-box => pokemon-box-link
+        252: 229,  # up-grade => upgrade
+        259: 236,  # stick => leek
+        565: 606,  # health-wing => health-feather
+        566: 607,  # muscle-wing => muscle-feather
+        567: 608,  # resist-wing => resist-feather
+        568: 609,  # genius-wing => genius-feather
+        569: 610,  # clever-wing => clever-feather
+        570: 611,  # swift-wing => swift-feather
+        571: 612,  # pretty-wing => pretty-feather
+        703: 732,  # adventure-rules => adventure-guide
+    }
+
     _region_id = 8
     _region_identifier = "galar"
     _region_names = {9: "Galar"}
@@ -39,22 +55,3 @@ class DumpSwSh(DumpBase):
         self._format = "swsh"
 
         super().__init__()
-
-
-# TODO
-# pokemon_evolution                     # evolution methods
-
-
-# pokemon_moves                         # learnsets
-# pokemon_items                         # wild held items
-
-# moves SON TROPPI GUARDA DOPO
-# machines                              # tr?
-# locations/location_names
-# location_areas/location_area_prose
-
-
-# item_flag_map
-# item_categories
-
-# encounters SON TROPPI GUARDA DOPO

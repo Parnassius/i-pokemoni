@@ -21,8 +21,8 @@ class ItemTable:
         self._format = file_format
         self._size = self._ItemInfo._SIZE
 
+        self._table = []
         if self._size is None:  # different file for each item
-            self._table = []
             for item_id in range(self._ItemInfo._MAX_ITEM_ID + 1):
                 with open(
                     join(path, self._ItemInfo._PATH.format(item_id=item_id)), "rb"
@@ -31,15 +31,18 @@ class ItemTable:
         else:  # single file
             with open(join(path, self._ItemInfo._PATH), "rb") as f:
                 self._data = f.read()
-            entries_start = read_as_int(4, self._data, 0x40)
-            self._entries = [
-                self._data[i : i + self._size]
-                for i in range(entries_start, len(self._data), self._size)
-            ]
-            self._table = [
-                self._ItemInfo(self, path, item_id, data)
-                for item_id, data in enumerate(self._entries)
-            ]
+            num_entries = read_as_int(2, self._data, 0x0)
+            max_entry_index = read_as_int(2, self._data, 0x4)
+            entries_start = read_as_int(4, self._data, 0x40, True)
+            for item_id in range(num_entries):
+                entry_index = read_as_int(2, self._data, 0x44 + (2 * item_id))
+                if entry_index >= max_entry_index:
+                    raise Exception
+                start = entries_start + (entry_index * self._size)
+                end = start + self._size
+                self._table.append(
+                    self._ItemInfo(self, path, item_id, self._data[start:end])
+                )
 
     def get_item_info(self, index: int) -> ItemInfo:
         return self._table[index]

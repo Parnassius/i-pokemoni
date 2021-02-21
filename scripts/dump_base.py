@@ -540,7 +540,8 @@ class DumpBase:
                 # category_id=category_id,  # TODO
                 cost=item_info.buy_price,
                 fling_power=item_info.fling_power or "",
-                fling_effect_id=item_info.fling_effect_id or "",
+                fling_effect_id=item_info.fling_effect_id or False,
+                fling_effect_id_fallback_=item_info.fling_effect_id or "",
             )
 
             item_game_indices_csv.set_row(
@@ -1004,3 +1005,22 @@ class DumpBase:
         for pokemon_id in ordered_pokemon_species:
             order += 1
             pokemon_species_csv.entries[(pokemon_id,)]["order"] = str(order)
+
+
+# TODO
+# pokemon_evolution                     # evolution methods
+
+
+# pokemon_moves                         # learnsets
+# pokemon_items                         # wild held items
+
+# moves SON TROPPI GUARDA DOPO
+# machines                              # tr?
+# locations/location_names
+# location_areas/location_area_prose
+
+
+# item_flag_map
+# item_categories
+
+# encounters SON TROPPI GUARDA DOPO

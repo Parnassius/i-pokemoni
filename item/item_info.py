@@ -14,66 +14,51 @@ class ItemInfo:
         self._id = item_id
         self._data = data
 
-        self._price = read_as_int(2, self._data, 0x00)
+        self._price: int
 
-        self.held_effect = int(self._data[0x02])
-        self.held_argument = int(self._data[0x03])
-        self.natural_gift_effect = int(self._data[0x04])
-        self.fling_effect = int(self._data[0x05])
-        self.fling_power = int(self._data[0x06])
-        self.natural_gift_power = int(self._data[0x07])
-        self.packed = read_as_int(2, self._data, 0x08)
+        self.held_effect: int
+        self.held_argument: int
+        self.natural_gift_effect: int
+        self.fling_effect: int
+        self.fling_power: int
+        self.natural_gift_power: int
+        self.packed: int
 
         # Routine # to call when used; 0=unusable.
-        self.effect_field = int(self._data[0x0A])
-        self.effect_battle = int(self._data[0x0B])
+        self.effect_field: int
+        self.effect_battle: int
 
-        self.unk_0xC = int(self._data[0x0C])  # 0 or 1
-        self.unk_0xD = int(
-            self._data[0x0D]
-        )  # Classification (0-3 Battle, 4 Balls, 5 Mail)
-        self._consumable = int(self._data[0x0E])
-        self.sort_index = int(self._data[0x0F])
-        self.cure_inflict = int(
-            self._data[0x10]
-        )  # https://github.com/kwsch/pkNX/blob/2c990d2b7dc2189f524417e741d46fc763f194d9/pkNX.Structures/Item/BattleStatusFlags.cs
-        self._boost_0 = int(
-            self._data[0x11]
-        )  # Revive 1, Sacred Ash 3, Rare Candy 5, EvoStone 8, upper4 for BoostAtk
-        self._boost_1 = int(self._data[0x12])  # DEF, SPA
-        self._boost_2 = int(self._data[0x13])  # SPD, SPE
-        self._boost_3 = int(self._data[0x14])  # ACC, CRIT PPUpFlags
-        self.function_flags_0 = int(
-            self._data[0x15]
-        )  # https://github.com/kwsch/pkNX/blob/2c990d2b7dc2189f524417e741d46fc763f194d9/pkNX.Structures/Item/ItemFlags1.cs
-        self.function_flags_1 = int(
-            self._data[0x16]
-        )  # https://github.com/kwsch/pkNX/blob/2c990d2b7dc2189f524417e741d46fc763f194d9/pkNX.Structures/Item/ItemFlags2.cs
+        self._consumable: int
+        self.sort_index: int
+        self.cure_inflict: int  # sleep poison burn freeze paralysis confusion infatuation guard_spec
+        self._boost_0: int  # revive revive_all rare_exp_candy evo_stone attack(4)
+        self._boost_1: int  # defense(4) special_attack(4)
+        self._boost_2: int  # special_defense(4) speed(4)
+        self._boost_3: int  # accuracy(4) crit(2) pp_up pp_max
+        self.function_flags_0: int  # restore_pp restore_pp_all restore_hp add_ev_hp add_ev_attack add_ev_defense add_ev_speed add_ev_special_attack
+        self.function_flags_1: int  # add_ev_special_defense add_ev_above_100 add_friendship_1 add_friendship_2 add_friendship_3 unused_1 unused_2 unused_3
 
-        self.ev_hp = read_as_int(1, self._data, 0x17, True)
-        self.ev_attack = read_as_int(1, self._data, 0x18, True)
-        self.ev_defense = read_as_int(1, self._data, 0x19, True)
-        self.ev_speed = read_as_int(1, self._data, 0x1A, True)
-        self.ev_special_attack = read_as_int(1, self._data, 0x1B, True)
-        self.ev_special_defense = read_as_int(1, self._data, 0x1C, True)
+        self.ev_hp: int
+        self.ev_attack: int
+        self.ev_defense: int
+        self.ev_speed: int
+        self.ev_special_attack: int
+        self.ev_special_defense: int
 
-        self.heal_amount = int(
-            self._data[0x1D]
-        )  # https://github.com/kwsch/pkNX/blob/2c990d2b7dc2189f524417e741d46fc763f194d9/pkNX.Structures/Misc/Heal.cs
-        self.pp_gain = int(self._data[0x1E])
+        self.heal_amount: int  # 0 = none, 253 = quarter, 254 = half, 255 = full, otherwise raw hps
+        self.pp_gain: int
 
-        self.friendship_1 = read_as_int(1, self._data, 0x1F, True)
-        self.friendship_2 = read_as_int(1, self._data, 0x20, True)
-        self.friendship_3 = read_as_int(1, self._data, 0x21, True)
-        # public byte _0x23, _0x24;
+        self.friendship_1: int
+        self.friendship_2: int
+        self.friendship_3: int
 
     @property
     def buy_price(self) -> int:
-        return self._price * 10
+        return self._price
 
     @property
     def sell_price(self) -> int:
-        return self._price * 5
+        return self._price // 2
 
     @property
     def natural_gift_type(self) -> int:
@@ -99,14 +84,14 @@ class ItemInfo:
 
     @property
     def revive(self) -> bool:
-        return not bool((self._boost_0 >> 0) & 0x1)
+        return bool((self._boost_0 >> 0) & 0x1)
 
     @property
     def revive_all(self) -> bool:
         return bool((self._boost_0 >> 1) & 0x1)
 
     @property
-    def level_up(self) -> bool:
+    def rare_exp_candy(self) -> bool:
         return bool((self._boost_0 >> 2) & 0x1)
 
     @property
