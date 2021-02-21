@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from os.path import join
 
 from utils import read_as_int
@@ -10,99 +12,204 @@ class Evolution:
         self, method: int, argument: int, species: int, form: int, level: int
     ) -> None:
         self._method = method
-        self.argument = argument
+        self._argument = argument
         self.species = species
         self.form = form
-        self.level = level
+        self._level = level
+
+        """
+        self._method
+        1 => level + friendship
+        2 => level + friendship + day
+        3 => level + friendship + night
+        4 => level
+        5 => trade
+        6 => trade + held item
+        7 => trade with pokemon  # hardcoded, shelmet/karrablast
+        8 => use item
+        9 => level + atk>def
+        10 => level + atk=def
+        11 => level + atk<def
+        12 => level + personality  # wurmple => silcoon
+        13 => level + personality  # wurmple => cascoon
+        14 => shed
+        16 => beauty
+        17 => use item + male
+        18 => use item + female
+        19 => level + held item + day
+        20 => level + held item + night
+        21 => level + learnt move
+        22 => level + pokemon in party
+        23 => level + male
+        24 => level + female
+        25 => level + magnetic field
+        28 => level + upside down
+        29 => level + learnt type of move + friendship
+        30 => level + dark type pokemon in party
+        31 => level + rain
+        32 => level + day
+        33 => level + night
+        34 => level + female
+        36 => level + game  # solgaleo in sun/ultrasun/sword (argument 44), lunala in moon/ultramoon/shield (argument 45)
+        37 => level + day + game  # sun/ultrasun
+        38 => level + night + game  # moon/ultramoon
+        39 => level + mount lanakila
+        45 => spin  # form should be hardcoded
+        46 => level + amped nature
+        47 => level + low key nature
+        48 => single strike tower
+        49 => rapid strike tower
+        """
 
     @property
-    def method(self) -> int:
-        """
-        1 => golbat (level + friendship)
-        2 => budew (level + friendship + day)
-        3 => snom (level + friendship + night)
-        4 => bulbasaur (level)
-        5 => kadabra (trade)
-        6 => poliwhirl (trade + item)
-        7 => karrablast (trade with pokemon)  # hardcoded?
-        8 => pikachu (item)
-        9 => tyrogue (level + atk>def)
-        10 => tyrogue (level + atk=def)
-        11 => tyrogue (level + atk<def)
-        14 => nincada (shed)
-        16 => feebas (beauty)  # argument = min beauty
-        17 => kirlia (dawn stone + male)  # argument = 109, dawn stone?
-        18 => snorunt (dawn stone + female)  # argument = 109, dawn stone?
-        19 => happiny (level + item + day)
-        20 => sneasel (level + item)
-        21 => lickitung (level + move)
-        22 => mantyke (level + pokemon in party)  # argument is the needed pokemon
-        23 => espurr (level + male)
-        24 => combee (level + female)
-        28 => inkay (level + upside down)
-        29 => sylveon (level + fairy move + affection/friendship)  # argument = 17, maybe fairy?
-        30 => pancham (level + dark type pokemon in party)  # argument is 0, so dark should be hardcoded
-        31 => sliggoo (level + rain or fog)
-        32 => tyrunt (level + day)
-        33 => amaura (level + night)
-        34 => espurr (level + female)
-        36 => cosmoem (level + game)  # solgaleo in sun/ultrasun/sword (argument 44), lunala in moon/ultramoon/shield (argument 45)
-        45 => milcery (spin)  # hardcoded?
-        46 => toxel (level + amped nature)
-        47 => toxel (level + low key nature)
-        48 => kubfu (single strike tower)
-        49 => kubfu (rapid strike tower)
+    def skip_record(self) -> bool:
+        return self._method in (25, 39)
 
-        items
-        221 => kings rock
-        233 => metal coat
-        235 => dragon scale
-        252 => up-grade
-        321 => protector
-        322 => electrizer
-        323 => magmarizer
-        324 => dubious disk
-        325 => reaper cloth
-        537 => prism scale
-        646 => whipped dream
-        647 => sachet
-        """
-        return {
-            1: 1,
-            2: 2,
-            3: 3,
-            4: 4,
-            5: 5,
-            6: 6,
-            7: 7,
-            8: 8,
-            9: 9,
-            10: 10,
-            11: 11,
-            14: 14,
-            16: 16,
-            17: 17,
-            18: 18,
-            19: 19,
-            20: 20,
-            21: 21,
-            22: 22,
-            23: 23,
-            24: 24,
-            28: 28,
-            29: 29,
-            30: 30,
-            31: 31,
-            32: 32,
-            33: 33,
-            34: 34,
-            36: 36,
-            45: 45,
-            46: 46,
-            47: 47,
-            48: 48,
-            49: 49,
-        }.get(self._method, 1000 + self._method)
+    @property
+    def trigger_id(self) -> int:
+        if self._method in (
+            1,
+            2,
+            3,
+            4,
+            9,
+            10,
+            11,
+            12,
+            13,
+            16,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            36,
+            37,
+            38,
+            39,
+            46,
+            47,
+        ):
+            return 1  # level-up
+        if self._method in (5, 6, 7):
+            return 2  # trade
+        if self._method in (8, 17, 18):
+            return 3  # use-item
+        if self._method == 14:
+            return 4  # shed
+        if self._method == 45:
+            return 5  # spin
+        if self._method == 48:
+            return 6  # tower-of-darkness
+        if self._method == 49:
+            return 7  # tower-of-waters
+        raise Exception("missing evolution_trigger_id: " + str(self._method))
+
+    @property
+    def trigger_item_id(self) -> int:
+        if self.trigger_id == 3:  # use-item
+            return self._argument
+        return 0
+
+    @property
+    def level(self) -> int:
+        if self.trigger_id == 1:  # level-up
+            return self._level
+        return 0
+
+    @property
+    def gender_id(self) -> int:
+        if self._method in (17, 23):
+            return 1  # male
+        if self._method in (18, 24, 34):
+            return 2  # female
+        return 0
+
+    @property
+    def held_item_id(self) -> int:
+        if self._method in (6, 19, 20):
+            return self._argument
+        return 0
+
+    @property
+    def time_of_day(self) -> str:
+        if self._method in (2, 19, 32, 37):
+            return "day"
+        if self._method in (3, 20, 33, 38):
+            return "night"
+        return ""
+
+    @property
+    def known_move_id(self) -> int:
+        if self._method == 21:
+            return self._argument
+        return 0
+
+    @property
+    def known_move_type_id(self) -> int:
+        if self._method == 29:
+            return self._argument + 1
+        return 0
+
+    @property
+    def minimum_happiness(self) -> int:
+        if self._method in (1, 2, 3, 29):
+            return 160
+        return 0
+
+    @property
+    def minimum_beauty(self) -> int:
+        if self._method == 16:
+            return self._argument
+        return 0
+
+    @property
+    def relative_physical_stats(self) -> int | Literal[""]:
+        if self._method == 9:
+            return 1
+        if self._method == 10:
+            return 0
+        if self._method == 11:
+            return -1
+        return ""
+
+    @property
+    def party_species_id(self) -> int:
+        if self._method == 22:
+            return self._argument
+        return 0
+
+    @property
+    def party_type_id(self) -> int:
+        if self._method == 30:
+            return 17  # dark
+        return 0
+
+    @property
+    def trade_species_id(self) -> int:
+        if self._method == 7:
+            return {
+                589: 616,  # escavalier: shelmet
+                617: 588,  # accelgor: karrablast
+            }[self.species]
+        return 0
+
+    @property
+    def needs_overworld_rain(self) -> bool:
+        return self._method == 31
+
+    @property
+    def turn_upside_down(self) -> bool:
+        return self._method == 28
 
 
 class EvolutionSet:

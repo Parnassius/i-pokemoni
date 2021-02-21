@@ -198,6 +198,8 @@ class DumpBase:
     _new_items: set[int] = set()
     _changed_items: dict[int, int] = {}
 
+    _new_evolution_methods: dict[int, tuple[str, dict[int, str]]] = {}
+
     _region_id: int
     _region_identifier: str
     _region_names: dict[int, str]
@@ -265,6 +267,18 @@ class DumpBase:
             f = TextFile(self._path, language, filename, self._format).lines
             self._text_files[key] = f
         return self._text_files[key]
+
+    def _get_item_id_from_game_index(self, game_index: int) -> int | None:
+        item_game_indices_csv = self._open_table("item_game_indices")
+        return next(
+            (
+                int(i["item_id"])
+                for i in item_game_indices_csv.entries.values()
+                if int(i["generation_id"]) == self._generation_id
+                and int(i["game_index"]) == game_index
+            ),
+            None,
+        )
 
     def _create_base_records(self) -> None:
         regions_csv = self._open_table("regions")
@@ -353,6 +367,22 @@ class DumpBase:
                     description=pokedex_name[1],
                 )
 
+        if self._new_evolution_methods:
+            evolution_triggers_csv = self._open_table("evolution_triggers")
+            evolution_trigger_prose_csv = self._open_table("evolution_trigger_prose")
+
+            for (trigger_id, trigger_data) in self._new_evolution_methods.items():
+                evolution_triggers_csv.set_row(
+                    id=trigger_id,
+                    identifier=trigger_data[0],
+                )
+                for language_id, trigger_name in trigger_data[1].items():
+                    evolution_trigger_prose_csv.set_row(
+                        evolution_trigger_id=trigger_id,
+                        local_language_id=language_id,
+                        name=trigger_name,
+                    )
+
     def _dump_abilities(self) -> None:
         abilities_csv = self._open_table("abilities")
 
@@ -406,7 +436,6 @@ class DumpBase:
                 )
 
     def _item_names(self) -> None:
-        item_game_indices_csv = self._open_table("item_game_indices")
         item_names_csv = self._open_table("item_names")
 
         lang_items = self._open_text_files("itemname")
@@ -416,15 +445,7 @@ class DumpBase:
                 if game_index == 0:
                     continue
 
-                item_id = next(
-                    (
-                        int(i["item_id"])
-                        for i in item_game_indices_csv.entries.values()
-                        if int(i["generation_id"]) == self._generation_id
-                        and int(i["game_index"]) == game_index
-                    ),
-                    None,
-                )
+                item_id = self._get_item_id_from_game_index(game_index)
 
                 if item_id:
                     item_names_csv.set_row(
@@ -442,15 +463,7 @@ class DumpBase:
                 if game_index == 0:
                     continue
 
-                item_id = next(
-                    (
-                        int(i["item_id"])
-                        for i in item_game_indices_csv.entries.values()
-                        if int(i["generation_id"]) == self._generation_id
-                        and int(i["game_index"]) == game_index
-                    ),
-                    None,
-                )
+                item_id = self._get_item_id_from_game_index(game_index)
 
                 if item_id:
                     item_flavor_text_csv.set_row(
@@ -832,17 +845,53 @@ class DumpBase:
             )
 
     def _pokemon_evolutions(self, pokemon_id: int, evos: list[Evolution]) -> None:
-        # TODO
-        if pokemon_id == 854:
-            for evo in evos:
-                print(
-                    f"{pokemon_id=}",
-                    f"{evo.method=}",
-                    f"{evo.species=}",
-                    f"{evo.form=}",
-                    f"{evo.argument=}",
-                    f"{evo.level=}",
-                )
+        pokemon_evolution_csv = self._open_table("pokemon_evolution")
+
+        for evo in evos:
+
+            if evo.skip_record:
+                continue
+
+            evolution_id = next(
+                (
+                    k[0]
+                    for k, v in pokemon_evolution_csv.entries.items()
+                    if int(v["evolved_species_id"]) == evo.species
+                    and int(v["evolution_trigger_id"]) == evo.trigger_id
+                    and v["time_of_day"] == evo.time_of_day
+                    # and int(v["location_id"]) == evo.location_id
+                    and v["gender_id"] == str(evo.gender_id or "")
+                    and v["minimum_beauty"]
+                    == str(
+                        evo.minimum_beauty or ""
+                    )  # milotic has 2 minimum_beauty rows, one with 171 and the other with 170
+                ),
+                int(max(pokemon_evolution_csv.entries.keys())[0]) + 1,
+            )
+
+            pokemon_evolution_csv.set_row(
+                id=evolution_id,
+                evolved_species_id=evo.species,
+                evolution_trigger_id=evo.trigger_id,
+                trigger_item_id=self._get_item_id_from_game_index(evo.trigger_item_id)
+                or "",
+                minimum_level=evo.level or "",
+                gender_id=evo.gender_id or "",
+                # location_id=location_id,  # magnetic field, mossy stone, icy stone, mount lanakila
+                held_item_id=self._get_item_id_from_game_index(evo.held_item_id) or "",
+                time_of_day=evo.time_of_day,
+                known_move_id=evo.known_move_id or "",
+                known_move_type_id=evo.known_move_type_id or "",
+                minimum_happiness=evo.minimum_happiness or "",
+                minimum_beauty=evo.minimum_beauty or "",
+                # minimum_affection=minimum_affection,  # affection doesn't exist anymore
+                relative_physical_stats=evo.relative_physical_stats,
+                party_species_id=evo.party_species_id or "",
+                party_type_id=evo.party_type_id or "",
+                trade_species_id=evo.trade_species_id or "",
+                needs_overworld_rain=int(evo.needs_overworld_rain),
+                turn_upside_down=int(evo.turn_upside_down),
+            )
 
     def _dump_pokemon(self) -> None:
         names_en = self._open_text_file("English", "monsname")
@@ -1011,9 +1060,6 @@ class DumpBase:
 
 
 # TODO
-# pokemon_evolution                     # evolution methods
-
-
 # pokemon_moves                         # learnsets
 # pokemon_items                         # wild held items
 

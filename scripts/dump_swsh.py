@@ -22,6 +22,27 @@ class DumpSwSh(DumpBase):
         703: 732,  # adventure-rules => adventure-guide
     }
 
+    _new_evolution_methods = {
+        5: (
+            "spin",
+            {
+                9: "Spin",
+            },
+        ),
+        6: (
+            "tower-of-darkness",
+            {
+                9: "Train in the Tower of Darkness",
+            },
+        ),
+        7: (
+            "tower-of-waters",
+            {
+                9: "Train in the Tower of Waters",
+            },
+        ),
+    }
+
     _region_id = 8
     _region_identifier = "galar"
     _region_names = {9: "Galar"}
