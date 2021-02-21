@@ -538,8 +538,10 @@ class DumpBase:
                 id=item_id,
                 identifier=identifier,
                 # category_id=category_id,  # TODO
-                cost=item_info.buy_price,
-                fling_power=item_info.fling_power or "",
+                cost=item_info.buy_price or False,
+                cost_fallback_=item_info.buy_price,
+                fling_power=item_info.fling_power or False,
+                fling_power_fallback_=item_info.fling_power or "",
                 fling_effect_id=item_info.fling_effect_id or False,
                 fling_effect_id_fallback_=item_info.fling_effect_id or "",
             )
@@ -787,7 +789,7 @@ class DumpBase:
                 pokemon_form_generations_csv.set_row(
                     pokemon_form_id=forme_pokemon_form_id,
                     generation_id=self._generation_id,
-                    game_index=0,  # TODO
+                    game_index=0,
                 )
 
     def _pokemon_dex_numbers(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
@@ -830,6 +832,7 @@ class DumpBase:
             )
 
     def _pokemon_evolutions(self, pokemon_id: int, evos: list[Evolution]) -> None:
+        # TODO
         if pokemon_id == 854:
             for evo in evos:
                 print(
@@ -883,7 +886,7 @@ class DumpBase:
                 self._pokemon_dex_numbers(pokemon_id, pokemon)
                 self._pokemon_egg_groups(pokemon_id, pokemon)
 
-                self._pokemon_evolutions(pokemon_id, pokemon.evos)  # TODO
+                self._pokemon_evolutions(pokemon_id, pokemon.evos)
 
     def _create_evolution_chains(self) -> None:
         pokemon_species_csv = self._open_table("pokemon_species")
