@@ -155,7 +155,7 @@ class BaseTable(Generic[T]):
 
             if compression_type == 1:  # Zlib
                 raise  # not implemented
-            if compression_type == 2:  # Lz4
+            elif compression_type == 2:  # Lz4
                 entry = lz4.block.decompress(entry, size_decompressed)
 
             entries.append(entry)
