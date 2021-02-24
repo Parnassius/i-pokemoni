@@ -43,6 +43,15 @@ class DumpSwSh(DumpBase):
         ),
     }
 
+    _new_move_meta_ailments = {
+        42: (
+            "tar-shot",
+            {
+                9: "Tar shot",
+            },
+        ),
+    }
+
     _region_id = 8
     _region_identifier = "galar"
     _region_names = {9: "Galar"}

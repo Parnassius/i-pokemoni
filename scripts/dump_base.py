@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Literal
 from csv_reader import CsvReader
 from evolution.evolution_set import Evolution
 from item.item_table import ItemTable
+from move.move_table import MoveTable
 from personal.personal_table import PersonalTable
 from text.text_file import TextFile
 from utils import read_as_int, to_id
@@ -200,6 +201,8 @@ class DumpBase:
 
     _new_evolution_methods: dict[int, tuple[str, dict[int, str]]] = {}
 
+    _new_move_meta_ailments: dict[int, tuple[str, dict[int, str]]] = {}
+
     _region_id: int
     _region_identifier: str
     _region_names: dict[int, str]
@@ -230,18 +233,19 @@ class DumpBase:
         self._tables: dict[str, CsvReader] = {}
         self._text_files: dict[tuple[str, ...], list[tuple[str, str]]] = {}
 
-        self._personal_table = PersonalTable(self._path, self._format)
+        self._move_table = MoveTable(self._path, self._format)
         self._item_table = ItemTable(self._path, self._format)
+        self._personal_table = PersonalTable(self._path, self._format)
 
         self._create_base_records()
+
+        self._dump_moves()
 
         self._dump_abilities()
 
         self._dump_items()
 
         self._dump_pokemon()
-        self._create_evolution_chains()
-        self._update_pokemon_order()
 
         self._save_all_tables()
 
@@ -371,7 +375,7 @@ class DumpBase:
             evolution_triggers_csv = self._open_table("evolution_triggers")
             evolution_trigger_prose_csv = self._open_table("evolution_trigger_prose")
 
-            for (trigger_id, trigger_data) in self._new_evolution_methods.items():
+            for trigger_id, trigger_data in self._new_evolution_methods.items():
                 evolution_triggers_csv.set_row(
                     id=trigger_id,
                     identifier=trigger_data[0],
@@ -382,6 +386,157 @@ class DumpBase:
                         local_language_id=language_id,
                         name=trigger_name,
                     )
+
+        if self._new_move_meta_ailments:
+            move_meta_ailments_csv = self._open_table("move_meta_ailments")
+            move_meta_ailment_names_csv = self._open_table("move_meta_ailment_names")
+
+            for ailment_id, ailment_data in self._new_move_meta_ailments.items():
+                move_meta_ailments_csv.set_row(
+                    id=ailment_id,
+                    identifier=ailment_data[0],
+                )
+                for language_id, ailment_name in ailment_data[1].items():
+                    move_meta_ailment_names_csv.set_row(
+                        move_meta_ailment_id=ailment_id,
+                        local_language_id=language_id,
+                        name=ailment_name,
+                    )
+
+    def _move_names(self) -> None:
+        move_names_csv = self._open_table("move_names")
+
+        lang_moves = self._open_text_files("wazaname")
+        for language_id, moves in lang_moves.items():
+            for move in moves:
+                move_id = int(move[0][move[0].find("_") + 1 :])
+                if move_id == 0:
+                    continue
+
+                move_names_csv.set_row(
+                    move_id=move_id,
+                    local_language_id=language_id,
+                    name=move[1],
+                )
+
+        move_flavor_text_csv = self._open_table("move_flavor_text")
+
+        lang_move_flavor_text = self._open_text_files("wazainfo")
+        for language_id, flavor_text in lang_move_flavor_text.items():
+            for flavor in flavor_text:
+                move_id = int(flavor[0][flavor[0].find("_") + 1 :])
+                if move_id == 0:
+                    continue
+
+                move_flavor_text_csv.set_row(
+                    move_id=move_id,
+                    version_group_id=self._version_group_id,
+                    language_id=language_id,
+                    flavor_text=flavor[1],
+                )
+
+    def _dump_moves(self) -> None:
+        """
+        move_changelog.csv  # TODO
+
+        move_effect_changelog.csv
+        move_effect_changelog_prose.csv
+        move_effect_prose.csv
+        move_effects.csv
+        """
+        moves_csv = self._open_table("moves")
+        move_meta_csv = self._open_table("move_meta")
+        move_flag_map_csv = self._open_table("move_flag_map")
+        move_meta_stat_changes_csv = self._open_table("move_meta_stat_changes")
+
+        moves_en = self._open_text_file("English", "wazaname")
+        for move in moves_en:
+            move_id = int(move[0][move[0].find("_") + 1 :])
+            if move_id == 0:
+                continue
+            identifier = to_id(move[1])
+
+            move_info = self._move_table.get_move_info(move_id)
+
+            if 622 <= move_id <= 657:  # z-moves
+                identifier += (
+                    "--" + {2: "physical", 3: "special"}[move_info.damage_class_id]
+                )
+
+            moves_csv.set_row(
+                id=move_id,
+                identifier=identifier,
+                generation_id_fallback_=self._generation_id,
+                type_id=move_info.type,
+                power=move_info.power or "",
+                pp=move_info.pp,
+                accuracy=move_info.accuracy or "",
+                priority=move_info.priority,
+                target_id=move_info.target_id,
+                damage_class_id=move_info.damage_class_id,
+                effect_id=move_info.effect_id,
+                effect_chance=move_info.effect_chance or "",
+                # contest_type_id
+                # contest_effect_id
+                # super_contest_effect_id
+            )
+
+            move_meta_csv.set_row(
+                move_id=move_id,
+                meta_category_id=move_info.meta_category_id,
+                meta_ailment_id=move_info.meta_ailment_id,
+                min_hits=move_info.hit_min or "",
+                max_hits=move_info.hit_max or "",
+                min_turns=move_info.turn_min or "",
+                max_turns=move_info.turn_max or "",
+                drain=move_info.recoil,
+                healing=move_info.healing,
+                crit_rate=move_info.crit_stage,
+                ailment_chance=move_info.inflict_percent,
+                flinch_chance=move_info.flinch,
+                stat_chance=move_info.stat_chance,
+            )
+
+            chances = [
+                move_info.inflict_percent,
+                move_info.flinch,
+                move_info.stat_1_percent,
+                move_info.stat_2_percent,
+                move_info.stat_3_percent,
+            ]
+            if len(set(i for i in chances if i)) > 1:
+                print(
+                    f"{identifier:20}",
+                    move_info.inflict_percent,
+                    move_info.flinch,
+                    move_info.stat_1_percent,
+                    move_info.stat_2_percent,
+                    move_info.stat_3_percent,
+                )
+
+            for flag_id in move_info.flags(identifier):
+                move_flag_map_csv.set_row(
+                    move_id=move_id,
+                    move_flag_id=flag_id,
+                )
+            for entry in list(move_flag_map_csv.entries):
+                if entry[0] == move_id and entry[1] not in move_info.flags(identifier):
+                    del move_flag_map_csv.entries[entry]
+
+            for i in range(3):
+                stat_ids, change = move_info.stat_change(i)
+                if change:
+                    for stat_id in stat_ids:
+                        move_meta_stat_changes_csv.set_row(
+                            move_id=move_id,
+                            stat_id=stat_id,
+                            change=change,
+                        )
+            for entry in list(move_meta_stat_changes_csv.entries):
+                if entry[0] == move_id and entry[1] not in move_info.stat_changes:
+                    del move_meta_stat_changes_csv.entries[entry]
+
+        self._move_names()
 
     def _dump_abilities(self) -> None:
         abilities_csv = self._open_table("abilities")
@@ -565,7 +720,18 @@ class DumpBase:
                 game_index=game_index,
             )
 
+            # TODO: machines
+            if identifier.startswith("tm------"):
+                try:
+                    int(identifier[2:])
+                except:
+                    pass
+                else:
+                    print(f"{identifier:5}", game_index, item_info._data[0x1D])
+
         self._item_names()
+
+        # TODO: item_categories?
 
     def _pokemon_stats(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_stats_csv = self._open_table("pokemon_stats")
@@ -893,50 +1059,6 @@ class DumpBase:
                 turn_upside_down=int(evo.turn_upside_down),
             )
 
-    def _dump_pokemon(self) -> None:
-        names_en = self._open_text_file("English", "monsname")
-        pokemon_species_csv = self._open_table("pokemon_species")
-
-        for pokemon_id in range(1, self._personal_table.last_species_id + 1):
-            pokemon = self._personal_table.get_forme_entry(pokemon_id)
-            if pokemon.is_present_in_game:
-                identifier = to_id(names_en[pokemon_id][1])
-
-                pokemon_species_csv.set_row(
-                    id=pokemon_id,
-                    identifier=identifier,
-                    generation_id_fallback_=self._generation_id,
-                    evolves_from_species_id_fallback_="_",
-                    evolution_chain_id_fallback_="_",
-                    color_id=pokemon.color,
-                    shape_id_fallback_="0",
-                    habitat_id_fallback_="",  # it's a fr/lg thing
-                    gender_rate=pokemon.gender_ratio,
-                    capture_rate=pokemon.catch_rate,
-                    base_happiness=pokemon.base_friendship,
-                    is_baby=int(pokemon.is_baby),
-                    hatch_counter=pokemon.hatch_cycles,
-                    has_gender_differences_fallback_=0,  # TODO
-                    growth_rate_id=pokemon.exp_growth,
-                    forms_switchable_fallback_=0,  # TODO
-                    is_legendary_fallback_=int(identifier in self._legendary_list),
-                    is_mythical_fallback_=int(identifier in self._mythical_list),
-                    order_fallback_=10000,
-                    conquest_order_fallback_="",
-                )
-
-                self._pokemon_formes(pokemon_id, pokemon)
-
-                self._pokemon_species_names(pokemon_id)
-                self._pokemon_species_genera(pokemon_id)
-                self._pokemon_species_flavor_text(pokemon_id)
-
-                # print(identifier)
-                self._pokemon_dex_numbers(pokemon_id, pokemon)
-                self._pokemon_egg_groups(pokemon_id, pokemon)
-
-                self._pokemon_evolutions(pokemon_id, pokemon.evos)
-
     def _create_evolution_chains(self) -> None:
         pokemon_species_csv = self._open_table("pokemon_species")
         evolution_chains_csv = self._open_table("evolution_chains")
@@ -1058,18 +1180,60 @@ class DumpBase:
             order += 1
             pokemon_species_csv.entries[(pokemon_id,)]["order"] = str(order)
 
+    def _dump_pokemon(self) -> None:
+        names_en = self._open_text_file("English", "monsname")
+        pokemon_species_csv = self._open_table("pokemon_species")
+
+        for pokemon_id in range(1, self._personal_table.last_species_id + 1):
+            pokemon = self._personal_table.get_forme_entry(pokemon_id)
+            if pokemon.is_present_in_game:
+                identifier = to_id(names_en[pokemon_id][1])
+
+                pokemon_species_csv.set_row(
+                    id=pokemon_id,
+                    identifier=identifier,
+                    generation_id_fallback_=self._generation_id,
+                    evolves_from_species_id_fallback_="_",
+                    evolution_chain_id_fallback_="_",
+                    color_id=pokemon.color,
+                    shape_id_fallback_="0",
+                    habitat_id_fallback_="",  # it's a fr/lg thing
+                    gender_rate=pokemon.gender_ratio,
+                    capture_rate=pokemon.catch_rate,
+                    base_happiness=pokemon.base_friendship,
+                    is_baby=int(pokemon.is_baby),
+                    hatch_counter=pokemon.hatch_cycles,
+                    has_gender_differences_fallback_=0,  # TODO
+                    growth_rate_id=pokemon.exp_growth,
+                    forms_switchable_fallback_=0,  # TODO
+                    is_legendary_fallback_=int(identifier in self._legendary_list),
+                    is_mythical_fallback_=int(identifier in self._mythical_list),
+                    order_fallback_=10000,
+                    conquest_order_fallback_="",
+                )
+
+                self._pokemon_formes(pokemon_id, pokemon)
+
+                self._pokemon_species_names(pokemon_id)
+                self._pokemon_species_genera(pokemon_id)
+                self._pokemon_species_flavor_text(pokemon_id)
+
+                # print(identifier)
+                self._pokemon_dex_numbers(pokemon_id, pokemon)
+                self._pokemon_egg_groups(pokemon_id, pokemon)
+
+                self._pokemon_evolutions(pokemon_id, pokemon.evos)
+
+        self._create_evolution_chains()
+        self._update_pokemon_order()
+
 
 # TODO
 # pokemon_moves                         # learnsets
 # pokemon_items                         # wild held items
 
-# moves SON TROPPI GUARDA DOPO
-# machines                              # tr?
 # locations/location_names
 # location_areas/location_area_prose
 
-
-# item_flag_map
-# item_categories
 
 # encounters SON TROPPI GUARDA DOPO

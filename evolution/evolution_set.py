@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Literal
-
 from os.path import join
+from typing import Literal
 
 from utils import read_as_int
 
