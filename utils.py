@@ -58,25 +58,6 @@ def fbs_table(data: bytes) -> flatbuffers.table.Table:
     return flatbuffers.table.Table(data, pos)
 
 
-def read_mini(data: bytes) -> list[bytes]:
-    if len(data) < 4:
-        raise Exception
-
-    ctr = 0x2
-    count = read_as_int(2, data, ctr)
-    ctr += 0x2
-    start = read_as_int(4, data, ctr, True)
-    ctr += 0x4
-
-    files = []
-    for i in range(count):
-        end = read_as_int(4, data, ctr)
-        ctr += 4
-        files.append(data[start:end])
-        start = end
-    return files
-
-
 def to_id(text: str) -> str:
     text = "".join(
         [c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c)]
