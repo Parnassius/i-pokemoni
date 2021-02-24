@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-from functools import cached_property
 from os.path import join
 from typing import TYPE_CHECKING
 
-from evolution.evolution_set import Evolution, EvolutionSet
-from utils import get_flag, read_as_int
+from utils import read_as_int
 
 from .personal_info import PersonalInfo
 
@@ -15,14 +13,12 @@ if TYPE_CHECKING:
 
 class PersonalInfoBW(PersonalInfo):
     _SIZE = 0x3C
+    _TYPE = "singlefile_noheader"
     # _PATH = join("bin", "pokelib", "personal", "personal_total.bin")
-    # _LAST_SPECIES_ID = 809
-    _FORMAT = "xy"
+    # _MAX_ID = 809
 
-    def __init__(
-        self, table: PersonalTable, path: str, pokemon_id: int, data: bytes
-    ) -> None:
-        super().__init__(table, path, pokemon_id, data)
+    def __init__(self, table: PersonalTable, path: str, id: int, data: bytes) -> None:
+        super().__init__(table, path, id, data)
 
         self.hp = int(self._data[0x00])
         self.attack = int(self._data[0x01])

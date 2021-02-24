@@ -456,7 +456,7 @@ class DumpBase:
                 continue
             identifier = to_id(move[1])
 
-            move_info = self._move_table.get_move_info(move_id)
+            move_info = self._move_table.get_info_from_index(move_id)
 
             if 622 <= move_id <= 657:  # z-moves
                 identifier += (
@@ -700,7 +700,7 @@ class DumpBase:
             if isinstance(item_id, set):
                 item_id = list(item_id)[0]
 
-            item_info = self._item_table.get_item_info(game_index)
+            item_info = self._item_table.get_info_from_index(game_index)
 
             items_csv.set_row(
                 id=item_id,
@@ -849,7 +849,7 @@ class DumpBase:
 
         for forme_id in range(pokemon.forme_count):
             forme_index = pokemon.forme_index(pokemon_id, forme_id)
-            forme = self._personal_table.get_personal_info(forme_index)
+            forme = self._personal_table.get_info_from_index(forme_index)
             if forme.is_present_in_game:
                 identifier = to_id(names_en[pokemon_id][1])
                 identifier_forme = identifier
@@ -912,6 +912,7 @@ class DumpBase:
                     self._pokemon_stats(forme_pokemon_id, forme)
                     self._pokemon_types(forme_pokemon_id, forme)
                     self._pokemon_abilities(forme_pokemon_id, forme)
+                    self._pokemon_moves(forme_pokemon_id, forme)
 
                 forme_pokemon_form_id = next(
                     (
@@ -1001,6 +1002,9 @@ class DumpBase:
                 slot=slot,
             )
 
+    def _pokemon_moves(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
+        pokemon_moves_csv = self._open_table("pokemon_moves")
+
     def _pokemon_egg_groups(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_egg_groups_csv = self._open_table("pokemon_egg_groups")
 
@@ -1079,7 +1083,7 @@ class DumpBase:
                         ]["evolution_chain_id"]
                     )
                 entry["evolution_chain_id"] = str(chain)
-                pokemon = self._personal_table.get_personal_info(int(key[0]))
+                pokemon = self._personal_table.get_info_from_index(int(key[0]))
                 for evo in pokemon.evos:
                     pokemon_species_csv.entries[(evo.species,)][
                         "evolves_from_species_id"
@@ -1184,7 +1188,7 @@ class DumpBase:
         names_en = self._open_text_file("English", "monsname")
         pokemon_species_csv = self._open_table("pokemon_species")
 
-        for pokemon_id in range(1, self._personal_table.last_species_id + 1):
+        for pokemon_id in range(1, self._personal_table.max_id + 1):
             pokemon = self._personal_table.get_forme_entry(pokemon_id)
             if pokemon.is_present_in_game:
                 identifier = to_id(names_en[pokemon_id][1])
@@ -1218,7 +1222,6 @@ class DumpBase:
                 self._pokemon_species_genera(pokemon_id)
                 self._pokemon_species_flavor_text(pokemon_id)
 
-                # print(identifier)
                 self._pokemon_dex_numbers(pokemon_id, pokemon)
                 self._pokemon_egg_groups(pokemon_id, pokemon)
 
@@ -1230,6 +1233,8 @@ class DumpBase:
 
 # TODO
 # pokemon_moves                         # learnsets
+
+
 # pokemon_items                         # wild held items
 
 # locations/location_names

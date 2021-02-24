@@ -32,6 +32,7 @@ class CsvReader:
             "pokemon_egg_groups": (0, 1),
             "pokemon_form_generations": (0, 1),
             "pokemon_form_names": (0, 1),
+            "pokemon_moves": (0, 1, 2, 3, 4),
             "pokemon_species_flavor_text": (0, 1, 2),
             "pokemon_species_names": (0, 1),
             "pokemon_stats": (0, 1),

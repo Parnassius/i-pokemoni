@@ -8,12 +8,12 @@ from .item_info import ItemInfo
 
 
 class ItemInfoLetsGo(ItemInfo):
-    _SIZE = None
-    _MAX_ITEM_ID = 1057
-    _PATH = join("bin", "pokelib", "item", "item{item_id:0>3}.dat")
+    _TYPE = "multiplefiles"
+    _MAX_ID = 1057
+    _PATH = join("bin", "pokelib", "item", "item{id:0>3}.dat")
 
-    def __init__(self, table, path: str, item_id: int, data: bytes) -> None:
-        super().__init__(table, path, item_id, data)
+    def __init__(self, table, path: str, id: int, data: bytes) -> None:
+        super().__init__(table, path, id, data)
 
         self._price = read_as_int(2, self._data, 0x00) * 10
 

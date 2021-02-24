@@ -3,26 +3,16 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
+from base import BaseInfo
 from evolution.evolution_set import Evolution, EvolutionSet
-from utils import get_flag, read_as_int
 
 if TYPE_CHECKING:
     from .personal_table import PersonalTable
 
 
-class PersonalInfo:
-    _SIZE: int
-    _PATH: str
-    _LAST_SPECIES_ID: int
-    _FORMAT: str
-
-    def __init__(
-        self, table: PersonalTable, path: str, pokemon_id: int, data: bytes
-    ) -> None:
-        self._table = table
-        self._path = path
-        self._id = pokemon_id
-        self._data = data
+class PersonalInfo(BaseInfo):
+    def __init__(self, table: PersonalTable, path: str, id: int, data: bytes) -> None:
+        super().__init__(table, path, id, data)
 
         self.hp: int
         self.attack: int
@@ -130,7 +120,9 @@ class PersonalInfo:
 
     @cached_property
     def evos(self) -> list[Evolution]:
-        return EvolutionSet(self._path, self._id, self._FORMAT).possible_evolutions
+        return EvolutionSet(
+            self._path, self._id, self._table._format
+        ).possible_evolutions
 
     @property
     def gender_ratio(self) -> int:

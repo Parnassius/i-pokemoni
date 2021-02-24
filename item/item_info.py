@@ -1,18 +1,12 @@
 from __future__ import annotations
 
+from base import BaseInfo
 from utils import read_as_int
 
 
-class ItemInfo:
-    _SIZE: int | None
-    _MAX_ITEM_ID: int
-    _PATH: str
-
-    def __init__(self, table, path: str, item_id: int, data: bytes) -> None:
-        self._table = table
-        self._path = path
-        self._id = item_id
-        self._data = data
+class ItemInfo(BaseInfo):
+    def __init__(self, table, path: str, id: int, data: bytes) -> None:
+        super().__init__(table, path, id, data)
 
         self._price: int
 

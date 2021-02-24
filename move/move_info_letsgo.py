@@ -9,11 +9,11 @@ from .move_info import MoveInfo
 
 class MoveInfoLetsGo(MoveInfo):
     _SIZE = 0x28
-    _MAX_MOVE_ID = 0
+    _TYPE = "mini"
     _PATH = join("bin", "pokelib", "waza", "waza_data.bin")
 
-    def __init__(self, table, path: str, item_id: int, data: bytes) -> None:
-        super().__init__(table, path, item_id, data)
+    def __init__(self, table, path: str, id: int, data: bytes) -> None:
+        super().__init__(table, path, id, data)
 
         self._type = int(self._data[0x00])
         self.quality = int(self._data[0x01])

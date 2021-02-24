@@ -8,12 +8,12 @@ from .move_info import MoveInfo
 
 
 class MoveInfoSwSh(MoveInfo):
-    _SIZE = None
-    _MAX_MOVE_ID = 826
-    _PATH = join("bin", "pml", "waza", "waza{move_id:0>4}.wazabin")
+    _TYPE = "multiplefiles"
+    _MAX_ID = 826
+    _PATH = join("bin", "pml", "waza", "waza{id:0>4}.wazabin")
 
-    def __init__(self, table, path: str, item_id: int, data: bytes) -> None:
-        super().__init__(table, path, item_id, data)
+    def __init__(self, table, path: str, id: int, data: bytes) -> None:
+        super().__init__(table, path, id, data)
 
         self._tab = fbs_table(self._data)
 

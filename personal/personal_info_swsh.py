@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from functools import cached_property
 from os.path import join
 from typing import TYPE_CHECKING
 
-from evolution.evolution_set import Evolution, EvolutionSet
 from utils import get_flag, read_as_int
 
 from .personal_info_xy import PersonalInfoXY
@@ -16,21 +14,10 @@ if TYPE_CHECKING:
 class PersonalInfoSwSh(PersonalInfoXY):
     _SIZE = 0xB0
     _PATH = join("bin", "pml", "personal", "personal_total.bin")
-    _LAST_SPECIES_ID = 898
-    """_PATHS = {
-        "letsgo": join("bin", "pokelib", "personal", "personal_total.bin"),
-        "swsh": join("bin", "pml", "personal", "personal_total.bin"),
-    }
-    _LAST_SPECIES_ID = {
-        "letsgo": 809,
-        "swsh": 898,
-    }"""
-    _FORMAT = "swsh"
+    _MAX_ID = 898
 
-    def __init__(
-        self, table: PersonalTable, path: str, pokemon_id: int, data: bytes
-    ) -> None:
-        super().__init__(table, path, pokemon_id, data)
+    def __init__(self, table: PersonalTable, path: str, id: int, data: bytes) -> None:
+        super().__init__(table, path, id, data)
 
         self.abilities = [read_as_int(2, self._data, 0x18 + (i * 2)) for i in range(3)]
         self.escape_rate = 0  # moved?

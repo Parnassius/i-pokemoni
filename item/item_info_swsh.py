@@ -9,10 +9,11 @@ from .item_info import ItemInfo
 
 class ItemInfoSwSh(ItemInfo):
     _SIZE = 0x30
+    _TYPE = "singlefile"
     _PATH = join("bin", "pml", "item", "item.dat")
 
-    def __init__(self, table, path: str, item_id: int, data: bytes) -> None:
-        super().__init__(table, path, item_id, data)
+    def __init__(self, table, path: str, id: int, data: bytes) -> None:
+        super().__init__(table, path, id, data)
 
         self._price = read_as_int(2, self._data, 0x00)
 

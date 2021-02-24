@@ -1,18 +1,11 @@
 from __future__ import annotations
 
-from utils import read_as_int
+from base import BaseInfo
 
 
-class MoveInfo:
-    _SIZE: int | None
-    _MAX_MOVE_ID: int
-    _PATH: str
-
-    def __init__(self, table, path: str, move_id: int, data: bytes) -> None:
-        self._table = table
-        self._path = path
-        self._id = move_id
-        self._data = data
+class MoveInfo(BaseInfo):
+    def __init__(self, table, path: str, id: int, data: bytes) -> None:
+        super().__init__(table, path, id, data)
 
         self._type: int
         self.quality: int
