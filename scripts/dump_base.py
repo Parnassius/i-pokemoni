@@ -7,6 +7,7 @@ from csv_reader import CsvReader
 from evolution.evolution_set import Evolution
 from item.item_table import ItemTable
 from learnset.learnset_table import LearnsetTable
+from machine.machine_table import MachineTable
 from move.move_table import MoveTable
 from personal.personal_table import PersonalTable
 from text.text_file import TextFile
@@ -236,6 +237,7 @@ class DumpBase:
 
         self._move_table = MoveTable(self._path, self._format)
         self._item_table = ItemTable(self._path, self._format)
+        self._machine_table = MachineTable(self._path, self._format)
         self._personal_table = PersonalTable(self._path, self._format)
         self._learnset_table = LearnsetTable(self._path, self._format)
 
@@ -246,6 +248,8 @@ class DumpBase:
         self._dump_abilities()
 
         self._dump_items()
+
+        self._dump_machines()
 
         self._dump_pokemon()
 
@@ -436,6 +440,24 @@ class DumpBase:
                     language_id=language_id,
                     flavor_text=flavor[1],
                 )
+
+    def _dump_machines(self) -> None:
+        machines_csv = self._open_table("machines")
+        items_csv = self._open_table("items")
+
+        for machine in self._machine_table._table:
+            item_id = next(
+                k[0]
+                for k, v in items_csv.entries.items()
+                if v["identifier"] == machine.machine_name
+            )
+
+            machines_csv.set_row(
+                machine_number=machine.machine_number,
+                version_group_id=self._version_group_id,
+                item_id=item_id,
+                move_id=machine.move_id,
+            )
 
     def _dump_moves(self) -> None:
         """
@@ -914,7 +936,7 @@ class DumpBase:
                     self._pokemon_stats(forme_pokemon_id, forme)
                     self._pokemon_types(forme_pokemon_id, forme)
                     self._pokemon_abilities(forme_pokemon_id, forme)
-                    self._pokemon_moves(forme_pokemon_id, forme_index)
+                    self._pokemon_moves(forme_pokemon_id, forme, forme_index)
 
                 forme_pokemon_form_id = next(
                     (
@@ -1004,11 +1026,13 @@ class DumpBase:
                 slot=slot,
             )
 
-    def _pokemon_moves(self, pokemon_id: int, forme_index: int) -> None:
+    def _pokemon_moves(
+        self, pokemon_id: int, pokemon: PersonalInfo, forme_index: int
+    ) -> None:
         pokemon_moves_csv = self._open_table("pokemon_moves")
 
+        # level-up
         learnset = self._learnset_table.get_info_from_index(forme_index)
-
         order = 0
         last_level = 0
         for i, (move_id, level) in enumerate(learnset.moves):
@@ -1030,6 +1054,23 @@ class DumpBase:
                 pokemon_move_method_id=1,  # level-up
                 level=level,
                 order=order or "",
+            )
+
+        # machine
+        machines_csv = self._open_table("machines")
+        machines = {
+            int(machines_csv.entries[k + 1, self._version_group_id]["move_id"])
+            for k, v in enumerate(pokemon.tmhm)
+            if v
+        }
+        for move_id in machines:
+            pokemon_moves_csv.set_row(
+                pokemon_id=pokemon_id,
+                version_group_id=self._version_group_id,
+                move_id=move_id,
+                pokemon_move_method_id=4,  # machine
+                level=0,
+                order="",
             )
 
     def _pokemon_egg_groups(self, pokemon_id: int, pokemon: PersonalInfo) -> None:

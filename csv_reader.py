@@ -19,6 +19,7 @@ class CsvReader:
             "item_flavor_text": (0, 1, 2),
             "item_game_indices": (0, 1),
             "item_names": (0, 1),
+            "machines": (0, 1),
             "move_flag_map": (0, 1),
             "move_flavor_text": (0, 1, 2),
             "move_meta_ailment_names": (0, 1),
