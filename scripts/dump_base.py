@@ -4,6 +4,7 @@ from os.path import join
 from typing import TYPE_CHECKING, Literal
 
 from csv_reader import CsvReader
+from egg_move.egg_move_table import EggMoveTable
 from evolution.evolution_set import Evolution
 from item.item_table import ItemTable
 from learnset.learnset_table import LearnsetTable
@@ -240,6 +241,7 @@ class DumpBase:
         self._machine_table = MachineTable(self._path, self._format)
         self._personal_table = PersonalTable(self._path, self._format)
         self._learnset_table = LearnsetTable(self._path, self._format)
+        self._egg_move_table = EggMoveTable(self._path, self._format)
 
         self._create_base_records()
 
@@ -936,7 +938,9 @@ class DumpBase:
                     self._pokemon_stats(forme_pokemon_id, forme)
                     self._pokemon_types(forme_pokemon_id, forme)
                     self._pokemon_abilities(forme_pokemon_id, forme)
-                    self._pokemon_moves(forme_pokemon_id, forme, forme_index)
+                    self._pokemon_moves(
+                        forme_pokemon_id, forme, forme_index, pokemon_id, forme_id
+                    )
 
                 forme_pokemon_form_id = next(
                     (
@@ -1027,7 +1031,12 @@ class DumpBase:
             )
 
     def _pokemon_moves(
-        self, pokemon_id: int, pokemon: PersonalInfo, forme_index: int
+        self,
+        forme_pokemon_id: int,
+        pokemon: PersonalInfo,
+        forme_index: int,
+        pokemon_id: int,
+        forme_id: int,
     ) -> None:
         pokemon_moves_csv = self._open_table("pokemon_moves")
 
@@ -1048,13 +1057,33 @@ class DumpBase:
             # TODO: should i skip the pokemon not obtainable in lets go?
 
             pokemon_moves_csv.set_row(
-                pokemon_id=pokemon_id,
+                pokemon_id=forme_pokemon_id,
                 version_group_id=self._version_group_id,
                 move_id=move_id,
                 pokemon_move_method_id=1,  # level-up
                 level=level,
                 order=order or "",
             )
+
+        # egg
+        if not self._egg_move_table._cls._SKIP:
+            egg_moves = self._egg_move_table.get_info_from_index(pokemon_id)
+            if forme_id > 0:
+                egg_moves = self._egg_move_table.get_info_from_index(
+                    egg_moves.form_table_index + forme_id - 1
+                )
+            for move_id in egg_moves.moves:
+                pokemon_moves_csv.set_row(
+                    pokemon_id=forme_pokemon_id,
+                    version_group_id=self._version_group_id,
+                    move_id=move_id,
+                    pokemon_move_method_id=2,  # egg
+                    level=0,
+                    order="",
+                )
+
+        # tutor
+        # 3
 
         # machine
         machines_csv = self._open_table("machines")
@@ -1065,13 +1094,16 @@ class DumpBase:
         }
         for move_id in machines:
             pokemon_moves_csv.set_row(
-                pokemon_id=pokemon_id,
+                pokemon_id=forme_pokemon_id,
                 version_group_id=self._version_group_id,
                 move_id=move_id,
                 pokemon_move_method_id=4,  # machine
                 level=0,
                 order="",
             )
+
+        # form-change
+        # 10
 
     def _pokemon_egg_groups(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_egg_groups_csv = self._open_table("pokemon_egg_groups")

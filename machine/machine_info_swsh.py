@@ -19,7 +19,7 @@ def match_machine_move(cls_: type[T], table_: BaseTable) -> list[T]:
         for k, v in TextFile(table_._path, "English", "itemname", "swsh").lines
         if re.match(r"^T[RM]\d\d$", v)
     ]
-    #item_names.sort(key=lambda x: (x[1][:2], x[1][2:] == "00", x[1][2:]))
+    # item_names.sort(key=lambda x: (x[1][:2], x[1][2:] == "00", x[1][2:]))
     item_names.sort(key=lambda x: x[1])
     languages = [
         "JPN",

@@ -10,6 +10,7 @@ from utils import read_as_int
 
 
 class BaseInfo:
+    _SKIP: bool = False
     _CUSTOM_FUNCTION: Callable[[type[T], BaseTable], list[T]] | None = None
     _TYPE: str
     _SIZE: int = 0
@@ -46,6 +47,8 @@ class BaseTable(Generic[T]):
         return self._cls._MAX_ID
 
     def _open_data_files(self) -> list[T]:
+        if self._cls._SKIP:
+            return []
         if self._cls._CUSTOM_FUNCTION:
             return self._cls._CUSTOM_FUNCTION(self._cls, self)
         return {
