@@ -80,6 +80,40 @@ class DumpSwSh(DumpBase):
         {9: ("Crown Tundra", "")},
     ]
 
+    _type_tutors = [
+        520,  # grass-pledge
+        519,  # fire-pledge
+        518,  # water-pledge
+        338,  # frenzy-plant
+        307,  # blast-burn
+        308,  # hydro-cannon
+        434,  # draco-meteor
+        796,  # steel-beam
+    ]
+    _special_tutors = [
+        [
+            805,  # terrain-pulse
+            807,  # burning-jealousy
+            812,  # flip-turn
+            804,  # rising-voltage
+            803,  # grassy-glide
+            813,  # triple-axel
+            811,  # coaching
+            810,  # corrosive-gas
+            815,  # scorching-sands
+            814,  # dual-wingbeat
+            797,  # expanding-force
+            806,  # skitter-smack
+            800,  # meteor-beam
+            809,  # poltergeist
+
+            799,  # scale-shot
+            808,  # lash-out
+            798,  # steel-roller
+            802,  # misty-explosion
+        ]
+    ]
+
     def __init__(self) -> None:
         self._path = PATHS["sword"]
         self._format = "swsh"

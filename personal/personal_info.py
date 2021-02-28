@@ -51,7 +51,7 @@ class PersonalInfo(BaseInfo):
 
         self.tmhm: list[bool]
         self.type_tutors: list[bool]
-        self.special_tutors: list[bool]
+        self.special_tutors: list[list[bool]]
 
         self.pokedex_numbers: dict[str, int]
 

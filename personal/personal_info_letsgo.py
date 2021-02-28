@@ -20,6 +20,11 @@ class PersonalInfoLetsGo(PersonalInfoSM):
 
         self.go_species = read_as_int(2, self._data, 0x48)
 
+        self.special_tutors = [
+            [self._id == 966] * 3  # pikachu-starter
+            + [self._id == 979] * 8  # eevee-starter
+        ]
+
         self.pokedex_numbers = {}
         if self._id <= 151:
             self.pokedex_numbers["letsgo-kanto"] = self._id

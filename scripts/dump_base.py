@@ -229,6 +229,9 @@ class DumpBase:
 
     _single_flavor_text: bool = False
 
+    _type_tutors: list[int] = []
+    _special_tutors: list[list[int]] = []
+
     def __init__(self) -> None:
         self._path: str
         self._format: str
@@ -1083,7 +1086,28 @@ class DumpBase:
                 )
 
         # tutor
-        # 3
+        tutors = {
+            int(self._type_tutors[i])
+            for i, compatible in enumerate(pokemon.type_tutors)
+            if compatible
+        }
+        for i, special_tutors in enumerate(pokemon.special_tutors):
+            tutors.update(
+                int(self._special_tutors[i][j])
+                for j, compatible in enumerate(special_tutors)
+                if compatible
+            )
+        for move_id in tutors:
+            if not move_id:
+                continue
+            pokemon_moves_csv.set_row(
+                pokemon_id=forme_pokemon_id,
+                version_group_id=self._version_group_id,
+                move_id=move_id,
+                pokemon_move_method_id=3,  # tutor
+                level=0,
+                order="",
+            )
 
         # machine
         machines_csv = self._open_table("machines")

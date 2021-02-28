@@ -33,7 +33,7 @@ class PersonalInfoSwSh(PersonalInfoXY):
         self.type_tutors = [get_flag(self._data, 0x38, i) for i in range(8)]
 
         self.special_tutors = [
-            get_flag(self._data, 0xA8 + (i >> 3), i) for i in range(18)
+            [get_flag(self._data, 0xA8 + (i >> 3), i) for i in range(18)]
         ]
 
         self.pokedex_numbers = {

@@ -67,6 +67,23 @@ class DumpLetsGo(DumpBase):
 
     _single_flavor_text = True
 
+    _type_tutors = [0] * 32
+    _special_tutors = [
+        [
+            729,  # zippy-zap
+            731,  # floaty-fall
+            730,  # splishy-splash
+            733,  # bouncy-bubble
+            734,  # buzzy-buzz
+            735,  # sizzly-slide
+            736,  # glitzy-glow
+            737,  # baddy-bad
+            738,  # sappy-seed
+            739,  # freezy-frost
+            740,  # sparkly-swirl
+        ]
+    ]
+
     def __init__(self) -> None:
         self._path = PATHS["pikachu"]
         self._format = "letsgo"
