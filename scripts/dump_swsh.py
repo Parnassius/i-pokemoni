@@ -106,7 +106,6 @@ class DumpSwSh(DumpBase):
             806,  # skitter-smack
             800,  # meteor-beam
             809,  # poltergeist
-
             799,  # scale-shot
             808,  # lash-out
             798,  # steel-roller

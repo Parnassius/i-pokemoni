@@ -1043,6 +1043,8 @@ class DumpBase:
     ) -> None:
         pokemon_moves_csv = self._open_table("pokemon_moves")
 
+        # TODO: pokemon unobtainable in let's go have their learnsets anyway, should i skip them?
+
         # level-up
         learnset = self._learnset_table.get_info_from_index(forme_index)
         order = 0
@@ -1056,8 +1058,6 @@ class DumpBase:
             else:
                 order = 0
                 last_level = 0
-
-            # TODO: should i skip the pokemon not obtainable in lets go?
 
             pokemon_moves_csv.set_row(
                 pokemon_id=forme_pokemon_id,
@@ -1126,8 +1126,36 @@ class DumpBase:
                 order="",
             )
 
-        # form-change
-        # 10
+        # form-change  # hardcoded
+        special_forme_change_move = 0
+
+        if forme_pokemon_id == 479:  # rotom
+            special_forme_change_move = 84  # thunder-shock
+        elif forme_pokemon_id == 10008:  # rotom-heat
+            special_forme_change_move = 315  # overheat
+        elif forme_pokemon_id == 10009:  # rotom-wash
+            special_forme_change_move = 56  # hydro-pump
+        elif forme_pokemon_id == 10010:  # rotom-frost
+            special_forme_change_move = 59  # blizzard
+        elif forme_pokemon_id == 10011:  # rotom-fan
+            special_forme_change_move = 403  # air-slash
+        elif forme_pokemon_id == 10012:  # rotom-mow
+            special_forme_change_move = 437  # leaf-storm
+
+        elif forme_pokemon_id == 10195:  # calyrex-ice
+            special_forme_change_move = 824  # glacial-lance
+        elif forme_pokemon_id == 10196:  # calyrex-shadow
+            special_forme_change_move = 825  # astral-barrage
+
+        if special_forme_change_move:
+            pokemon_moves_csv.set_row(
+                pokemon_id=forme_pokemon_id,
+                version_group_id=self._version_group_id,
+                move_id=special_forme_change_move,
+                pokemon_move_method_id=10,  # form-change
+                level=0,
+                order="",
+            )
 
     def _pokemon_egg_groups(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_egg_groups_csv = self._open_table("pokemon_egg_groups")
