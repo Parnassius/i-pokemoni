@@ -515,12 +515,6 @@ class DumpBase:
                 for col in changelog_columns:
                     if str(move_row[col]) != str(getattr(move_info, col)):
                         changed_columns[col] = move_row[col]
-                        print(
-                            identifier,
-                            col,
-                            str(move_row[col]),
-                            str(getattr(move_info, col)),
-                        )
                 if changed_columns:
                     move_changelog_csv.set_row(
                         move_id=move_id,
