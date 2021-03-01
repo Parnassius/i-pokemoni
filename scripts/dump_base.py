@@ -465,19 +465,24 @@ class DumpBase:
             )
 
     def _dump_moves(self) -> None:
-        """
-        # TODO
-        move_changelog.csv
-
-        move_effect_changelog.csv
-        move_effect_changelog_prose.csv
-        move_effect_prose.csv
-        move_effects.csv
-        """
         moves_csv = self._open_table("moves")
+        move_changelog_csv = self._open_table("move_changelog")
         move_meta_csv = self._open_table("move_meta")
         move_flag_map_csv = self._open_table("move_flag_map")
         move_meta_stat_changes_csv = self._open_table("move_meta_stat_changes")
+        move_effects_csv = self._open_table("move_effects")
+        move_effect_prose_csv = self._open_table("move_effect_prose")
+
+        changelog_columns = {
+            "type_id",
+            "power",
+            "pp",
+            "accuracy",
+            "priority",
+            "target_id",
+            "effect_id",
+            "effect_chance",
+        }
 
         moves_en = self._open_text_file("English", "wazaname")
         for move in moves_en:
@@ -493,19 +498,49 @@ class DumpBase:
                     "--" + {2: "physical", 3: "special"}[move_info.damage_class_id]
                 )
 
+            if (move_info.effect_id,) not in move_effects_csv.entries.keys():
+                move_effects_csv.set_row(
+                    id=move_info.effect_id,
+                )
+                move_effect_prose_csv.set_row(
+                    move_effect_id=move_info.effect_id,
+                    local_language_id=9,
+                    short_effect=f"XXX new effect for {identifier}",
+                    effect=f"XXX new effect for {identifier}",
+                )
+
+            move_row = moves_csv.entries.get((move_id,))
+            if move_row:
+                changed_columns = {}
+                for col in changelog_columns:
+                    if str(move_row[col]) != str(getattr(move_info, col)):
+                        changed_columns[col] = move_row[col]
+                        print(
+                            identifier,
+                            col,
+                            str(move_row[col]),
+                            str(getattr(move_info, col)),
+                        )
+                if changed_columns:
+                    move_changelog_csv.set_row(
+                        move_id=move_id,
+                        changed_in_version_group_id=self._version_group_id,
+                        **changed_columns,
+                    )
+
             moves_csv.set_row(
                 id=move_id,
                 identifier=identifier,
                 generation_id_fallback_=self._generation_id,
-                type_id=move_info.type,
-                power=move_info.power or "",
+                type_id=move_info.type_id,
+                power=move_info.power,
                 pp=move_info.pp,
-                accuracy=move_info.accuracy or "",
+                accuracy=move_info.accuracy,
                 priority=move_info.priority,
                 target_id=move_info.target_id,
                 damage_class_id=move_info.damage_class_id,
                 effect_id=move_info.effect_id,
-                effect_chance=move_info.effect_chance or "",
+                effect_chance=move_info.effect_chance,
                 # contest_type_id
                 # contest_effect_id
                 # super_contest_effect_id
@@ -660,12 +695,67 @@ class DumpBase:
 
     def _dump_items(self) -> None:
         """
-        itemname                        item names
-        itemname_acc                    item names
-        itemname_acc_classified         item names
-        itemname_classified             item names
-        itemname_plural                 item names plural
-        itemname_plural_classified      item names plural
+        itemname/itemname_acc (Protein)
+        itemname_classified/itemname_acc_classified (bottle of Protein)
+        itemname_plural (Proteins)
+        itemname_plural_classified (bottles of Protein)
+
+        differences in swsh between itemname / itemname_acc:
+        German:
+            ITEMNAME_110 Ovaler Stein / Ovalen Stein
+            ITEMNAME_244 Spitzer Schnabel / Spitzen Schnabel
+            ITEMNAME_260 Roter Schal / Roten Schal
+            ITEMNAME_261 Blauer Schal / Blauen Schal
+            ITEMNAME_263 Grüner Schal / Grünen Schal
+            ITEMNAME_264 Gelber Schal / Gelben Schal
+            ITEMNAME_534 Roter Edelstein / Roten Edelstein
+            ITEMNAME_535 Blauer Edelstein / Blauen Edelstein
+            ITEMNAME_584 Alter Heller / Alten Heller
+            ITEMNAME_585 Alter Taler / Alten Taler
+            ITEMNAME_586 Alter Dukat / Alten Dukaten
+            ITEMNAME_588 Alter Reif / Alten Reif
+            ITEMNAME_635 Achromat / Achromaten
+            ITEMNAME_697 Kurioser Stein / Kuriosen Stein
+            ITEMNAME_698 Normaler Stein / Normalen Stein
+            ITEMNAME_853 Roter Nektar / Roten Nektar
+            ITEMNAME_854 Gelber Nektar / Gelben Nektar
+            ITEMNAME_856 Purpurner Nektar / Purpurnen Nektar
+            ITEMNAME_1092 Dicker Lauch / Dicken Lauch
+            ITEMNAME_1103 Rostiges Schwert / Rostige Schwert
+            ITEMNAME_1104 Rostiger Schild / Rostigen Schild
+            ITEMNAME_1116 Süßer Apfel / Süßen Apfel
+            ITEMNAME_1117 Saurer Apfel / Sauren Apfel
+            ITEMNAME_1269 Vergilbter Brief / Vergilbten Brief
+        Italian:
+            ITEMNAME_467: Chiave segreta / Chiave Segreta
+        Simp_Chinese:
+            ITEMNAME_045: ＨＰ增强剂 / HP增强剂
+            ITEMNAME_728: ＧＯＧＯ护目镜 / GOGO护目镜
+
+        differences in swsh between itemname_classified / itemname_acc_classified:
+        German:
+            ITEMNAME_110 Ovaler Stein / Ovalen Stein
+            ITEMNAME_244 Spitzer Schnabel / Spitzen Schnabel
+            ITEMNAME_260 Roter Schal / Roten Schal
+            ITEMNAME_261 Blauer Schal / Blauen Schal
+            ITEMNAME_263 Grüner Schal / Grünen Schal
+            ITEMNAME_264 Gelber Schal / Gelben Schal
+            ITEMNAME_534 Roter Edelstein / Roten Edelstein
+            ITEMNAME_535 Blauer Edelstein / Blauen Edelstein
+            ITEMNAME_584 Alter Heller / Alten Heller
+            ITEMNAME_585 Alter Taler / Alten Taler
+            ITEMNAME_586 Alter Dukat / Alten Dukaten
+            ITEMNAME_588 Alter Reif / Alten Reif
+            ITEMNAME_635 Achromat / Achromaten
+            ITEMNAME_697 Kurioser Stein / Kuriosen Stein
+            ITEMNAME_698 Normaler Stein / Normalen Stein
+            ITEMNAME_1104 Rostiger Schild / Rostigen Schild
+            ITEMNAME_1116 Süßer Apfel / Süßen Apfel
+            ITEMNAME_1117 Saurer Apfel / Sauren Apfel
+            ITEMNAME_1269 Vergilbter Brief / Vergilbten Brief
+        JPN_KANJI:
+            ITEMNAME_1591: キヅナのタヅナ / キズナのタヅナ
+            ITEMNAME_1607: キヅナのタヅナ / キズナのタヅナ
         """
         items_csv = self._open_table("items")
         item_game_indices_csv = self._open_table("item_game_indices")
@@ -681,7 +771,7 @@ class DumpBase:
                 continue
 
             if game_index == 626:
-                # "xtransceiver" in the game files, "xtranceiver--yellow" (without the s) in the csvs
+                # "xtransceiver" in the game files, "xtranceiver--yellow" (without the s) in the csvs, not sure what to do here
                 continue
 
             items = {

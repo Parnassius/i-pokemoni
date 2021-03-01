@@ -21,7 +21,7 @@ class MoveInfoLetsGo(MoveInfo):
         self._power = int(self._data[0x03])
         self._accuracy = int(self._data[0x04])
         self.pp = int(self._data[0x05])
-        self.priority = read_as_int(1, self._data, 0x05, True)
+        self.priority = read_as_int(1, self._data, 0x06, True)
         self.hit_min = int(self._data[0x07] & 0x0F)
         self.hit_max = int(self._data[0x07] >> 4)
         self.inflict = read_as_int(2, self._data, 0x08)

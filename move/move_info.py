@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Literal
+
 from base import BaseInfo
 
 
@@ -125,7 +127,7 @@ class MoveInfo(BaseInfo):
         return bool(self._flags >> 0x10 & 1)
 
     @property
-    def type(self) -> int:
+    def type_id(self) -> int:
         return self._type + 1
 
     @property
@@ -152,22 +154,27 @@ class MoveInfo(BaseInfo):
         return self.category + 1
 
     @property
-    def power(self) -> int:
-        if self._power == 1:
-            return 0
+    def power(self) -> int | Literal[""]:
+        if self._power in (0, 1):
+            return ""
         return self._power
 
     @property
-    def accuracy(self) -> int:
-        return self._accuracy % 101
+    def accuracy(self) -> int | Literal[""]:
+        if self._accuracy == 101:
+            return ""
+        return self._accuracy
 
     @property
     def effect_id(self) -> int:
         return self.effect_sequence + 1
 
     @property
-    def effect_chance(self) -> int:
-        return self.inflict_percent or self.flinch or self.stat_chance
+    def effect_chance(self) -> int | Literal[""]:
+        chance = self.inflict_percent or self.flinch or self.stat_chance
+        if chance == 0:
+            return ""
+        return chance
 
     def flags(self, identifier) -> set[int]:
         result = set()
