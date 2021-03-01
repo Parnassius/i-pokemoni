@@ -112,7 +112,7 @@ class DumpBase:
         "rotom": ["", "heat", "wash", "frost", "fan", "mow"],
         "giratina": ["altered", "origin"],
         "shaymin": ["land", "sky"],
-        "arceus": ["normal_", "fighting_", "flying_", "poison_", "ground_", "rock_", "bug_", "ghost_", "steel_", "fire_", "water_", "grass_", "electric_", "psychic_", "ice_", "dragon_", "dark_", "fairy_"],  # TODO: check if order is correct
+        "arceus": ["normal_", "fighting_", "flying_", "poison_", "ground_", "rock_", "bug_", "ghost_", "steel_", "fire_", "water_", "grass_", "electric_", "psychic_", "ice_", "dragon_", "dark_", "fairy_"],
         "audino": ["", "mega"],
         "basculin": ["red-striped", "blue-striped"],
         "darumaka": ["", "galar"],
@@ -157,7 +157,7 @@ class DumpBase:
         "araquanid": ["", "totem"],
         "lurantis": ["", "totem"],
         "salazzle": ["", "totem"],
-        "silvally": ["normal_", "fighting_", "flying_", "poison_", "ground_", "rock_", "bug_", "ghost_", "steel_", "fire_", "water_", "grass_", "electric_", "psychic_", "ice_", "dragon_", "dark_", "fairy_"],  # TODO: check if order is correct
+        "silvally": ["normal_", "fighting_", "flying_", "poison_", "ground_", "rock_", "bug_", "ghost_", "steel_", "fire_", "water_", "grass_", "electric_", "psychic_", "ice_", "dragon_", "dark_", "fairy_"],
         "minior": ["red-meteor", "orange-meteor", "yellow-meteor", "green-meteor", "blue-meteor", "indigo-meteor", "violet-meteor", "red", "orange", "yellow", "green", "blue", "indigo", "violet"],
         "togedemaru": ["", "totem"],
         "mimikyu": ["disguised", "busted", "totem-disguised", "totem-busted"],
@@ -166,8 +166,8 @@ class DumpBase:
         "magearna": ["", "original"],
         "cramorant": ["", "gulping", "gorging"],
         "toxtricity": ["amped", "low-key"],
-        "sinistea": ["phony_", "antique_"],  # TODO: check if order is correct
-        "polteageist": ["phony_", "antique_"],  # TODO: check if order is correct
+        "sinistea": ["phony_", "antique_"],
+        "polteageist": ["phony_", "antique_"],
         "alcremie": ["vanilla-cream_", "ruby-cream_", "matcha-cream_", "mint-cream_", "lemon-cream_", "salted-cream_", "ruby-swirl_", "caramel-swirl_", "rainbow-swirl_"],
         "eiscue": ["ice", "noice"],
         "indeedee": ["male", "female"],
@@ -466,7 +466,8 @@ class DumpBase:
 
     def _dump_moves(self) -> None:
         """
-        move_changelog.csv  # TODO
+        # TODO
+        move_changelog.csv
 
         move_effect_changelog.csv
         move_effect_changelog_prose.csv
@@ -748,15 +749,6 @@ class DumpBase:
                 generation_id=self._generation_id,
                 game_index=game_index,
             )
-
-            # TODO: machines
-            if identifier.startswith("tm------"):
-                try:
-                    int(identifier[2:])
-                except:
-                    pass
-                else:
-                    print(f"{identifier:5}", game_index, item_info._data[0x1D])
 
         self._item_names()
 
@@ -1384,13 +1376,9 @@ class DumpBase:
 
 
 # TODO
-# pokemon_moves                         # learnsets
-
-
 # pokemon_items                         # wild held items
 
 # locations/location_names
 # location_areas/location_area_prose
-
 
 # encounters SON TROPPI GUARDA DOPO

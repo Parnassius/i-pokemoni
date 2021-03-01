@@ -130,42 +130,9 @@ class MoveInfo(BaseInfo):
 
     @property
     def target_id(self) -> int:
-        """
-        1 specific-move
-        2 selected-pokemon-me-first
-        3 ally
-        4 users-field
-        5 user-or-ally
-        6 opponents-field
-        7 user
-        8 random-opponent
-        9 all-other-pokemon
-        10 selected-pokemon
-        11 all-opponents
-        12 entire-field
-        13 user-and-allies
-        14 all-pokemon
-
-        // Specific target
-        AnyExceptSelf,
-        AllyOrSelf,
-        Ally,
-        Opponent,
-        AllAdjacent,
-        AllAdjacentOpponents,
-        AllAllies,
-        Self,
-        All,
-        RandomOpponent,
-        // No pkm target
-        SideAll,
-        SideOpponent,
-        SideSelf,
-        Counter,
-        """
         return {
-            13: 1,  # specific-move (TODO: forse invertire)
-            3: 2,  # selected-pokemon-me-first (TODO: forse invertire)
+            13: 1,  # specific-move
+            3: 2,  # selected-pokemon-me-first
             2: 3,  # ally
             12: 4,  # users-field
             1: 5,  # user-or-ally
