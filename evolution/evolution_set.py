@@ -121,16 +121,16 @@ class Evolution:
 
     @property
     def level(self) -> int:
-        if self.trigger_id == 1:  # level-up
+        if self.trigger_id in (1, 4):  # level-up, shed
             return self._level
         return 0
 
     @property
     def gender_id(self) -> int:
         if self._method in (17, 23):
-            return 1  # male
+            return 2  # male
         if self._method in (18, 24, 34):
-            return 2  # female
+            return 1  # female
         return 0
 
     @property

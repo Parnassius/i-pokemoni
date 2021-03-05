@@ -1248,12 +1248,50 @@ class DumpBase:
             if evo.skip_record:
                 continue
 
+            trigger_id = evo.trigger_id
+            if trigger_id == 4:
+                if evo.species != 291:
+                    print("non-ninjask shed")
+
+                evolution_id = next(
+                    (
+                        k[0]
+                        for k, v in pokemon_evolution_csv.entries.items()
+                        if int(v["evolved_species_id"]) == 292  # shedinja
+                        and int(v["evolution_trigger_id"]) == trigger_id
+                    ),
+                    int(max(pokemon_evolution_csv.entries.keys())[0]) + 1,
+                )
+
+                pokemon_evolution_csv.set_row(
+                    id=evolution_id,
+                    evolved_species_id=292,  # shedinja
+                    evolution_trigger_id=trigger_id,
+                    trigger_item_id="",
+                    minimum_level="",
+                    gender_id="",
+                    held_item_id="",
+                    time_of_day="",
+                    known_move_id="",
+                    known_move_type_id="",
+                    minimum_happiness="",
+                    minimum_beauty="",
+                    relative_physical_stats="",
+                    party_species_id="",
+                    party_type_id="",
+                    trade_species_id="",
+                    needs_overworld_rain=0,
+                    turn_upside_down=0,
+                )
+
+                trigger_id = 1
+
             evolution_id = next(
                 (
                     k[0]
                     for k, v in pokemon_evolution_csv.entries.items()
                     if int(v["evolved_species_id"]) == evo.species
-                    and int(v["evolution_trigger_id"]) == evo.trigger_id
+                    and int(v["evolution_trigger_id"]) == trigger_id
                     and v["time_of_day"] == evo.time_of_day
                     # and int(v["location_id"]) == evo.location_id
                     and v["gender_id"] == str(evo.gender_id or "")
@@ -1268,7 +1306,7 @@ class DumpBase:
             pokemon_evolution_csv.set_row(
                 id=evolution_id,
                 evolved_species_id=evo.species,
-                evolution_trigger_id=evo.trigger_id,
+                evolution_trigger_id=trigger_id,
                 trigger_item_id=self._get_item_id_from_game_index(evo.trigger_item_id)
                 or "",
                 minimum_level=evo.level or "",
