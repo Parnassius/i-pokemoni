@@ -1119,8 +1119,6 @@ class DumpBase:
     ) -> None:
         pokemon_moves_csv = self._open_table("pokemon_moves")
 
-        # TODO: pokemon unobtainable in let's go have their learnsets anyway, should i skip them?
-
         # level-up
         learnset = self._learnset_table.get_info_from_index(forme_index)
         order = 0
