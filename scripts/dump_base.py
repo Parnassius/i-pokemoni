@@ -186,6 +186,102 @@ class DumpBase:
         "regieleki", "regidrago", "glastrier", "spectrier", "calyrex",
     ]
     _mythical_list = ["zarude"]
+    _item_suffixes = {
+        780: "jacket",  # contest-costume
+        817: "held",  # normalium-z
+        818: "held",  # firium-z
+        819: "held",  # waterium-z
+        820: "held",  # electrium-z
+        821: "held",  # grassium-z
+        822: "held",  # icium-z
+        823: "held",  # fightinium-z
+        824: "held",  # poisonium-z
+        825: "held",  # groundium-z
+        826: "held",  # flyinium-z
+        827: "held",  # psychium-z
+        828: "held",  # buginium-z
+        829: "held",  # rockium-z
+        830: "held",  # ghostium-z
+        831: "held",  # dragonium-z
+        832: "held",  # darkinium-z
+        833: "held",  # steelium-z
+        834: "held",  # fairium-z
+        835: "held",  # pikanium-z
+        839: "held",  # decidium-z
+        840: "held",  # incinium-z
+        841: "held",  # primarium-z
+        842: "held",  # tapunium-z
+        843: "held",  # marshadium-z
+        844: "held",  # aloraichium-z
+        845: "held",  # snorlium-z
+        846: "held",  # eevium-z
+        847: "held",  # mewnium-z
+        877: "held",  # pikashunium-z
+        919: "green",  # bike
+        920: "galactic-warehouse",  # storage-key
+        921: "goldenrod",  # basement-key
+        922: "red",  # xtransceiver
+        923: "yellow",  # xtransceiver
+        924: "merge",  # dna-splicers
+        925: "split",  # dna-splicers
+        926: "red",  # dropped-item
+        927: "yellow",  # dropped-item
+        928: "green",  # holo-caster
+        929: "yellow",  # bike
+        930: "red",  # holo-caster
+        931: "new-mauville",  # basement-key
+        932: "sea-mauville",  # storage-key
+        933: "hoenn",  # ss-ticket
+        934: "dress",  # contest-costume
+        935: "2",  # meteorite
+        936: "3",  # meteorite
+        937: "4",  # meteorite
+        938: "bag",  # normalium-z
+        939: "bag",  # firium-z
+        940: "bag",  # waterium-z
+        941: "bag",  # electrium-z
+        942: "bag",  # grassium-z
+        943: "bag",  # icium-z
+        944: "bag",  # fightinium-z
+        945: "bag",  # poisonium-z
+        946: "bag",  # groundium-z
+        947: "bag",  # flyinium-z
+        948: "bag",  # psychium-z
+        949: "bag",  # buginium-z
+        950: "bag",  # rockium-z
+        951: "bag",  # ghostium-z
+        952: "bag",  # dragonium-z
+        953: "bag",  # darkinium-z
+        954: "bag",  # steelium-z
+        955: "bag",  # fairium-z
+        956: "bag",  # pikanium-z
+        957: "bag",  # decidium-z
+        958: "bag",  # incinium-z
+        959: "bag",  # primarium-z
+        960: "bag",  # tapunium-z
+        961: "bag",  # marshadium-z
+        962: "bag",  # aloraichium-z
+        963: "bag",  # snorlium-z
+        964: "bag",  # eevium-z
+        965: "bag",  # mewnium-z
+        966: "bag",  # pikashunium-z
+        967: "held",  # solganium-z
+        968: "held",  # lunalium-z
+        969: "held",  # ultranecrozium-z
+        970: "held",  # mimikium-z
+        971: "held",  # lycanium-z
+        972: "held",  # kommonium-z
+        973: "bag",  # solganium-z
+        974: "bag",  # lunalium-z
+        975: "bag",  # ultranecrozium-z
+        976: "bag",  # mimikium-z
+        977: "bag",  # lycanium-z
+        978: "bag",  # kommonium-z
+        989: "merge",  # n-solarizer
+        990: "merge",  # n-lunarizer
+        991: "split",  # n-solarizer
+        992: "split",  # n-lunarizer
+    }
     _languages = {
         "JPN": 1,
         "Korean": 3,
@@ -764,20 +860,26 @@ class DumpBase:
             if identifier == "???":
                 continue
 
-            if game_index == 626:
-                # "xtransceiver" in the game files, "xtranceiver--yellow" (without the s) in the csvs, not sure what to do here
-                continue
-
             items = {
                 int(i["item_id"])
                 for i in item_game_indices_csv.entries.values()
                 if int(i["game_index"]) == game_index
             }
-            item_id: set[int] | int = {
-                int(i["id"])
-                for i in items_csv.entries.values()
-                if int(i["id"]) in items and i["identifier"] == identifier
+            item_id: set[int] | int
+            item_id = {
+                int(i["item_id"])
+                for i in item_game_indices_csv.entries.values()
+                if int(i["generation_id"]) == self._generation_id
+                and int(i["game_index"]) == game_index
             }
+            if not item_id and game_index in self._changed_items:
+                item_id = self._changed_items[game_index]
+            if not item_id:
+                item_id = {
+                    int(i["id"])
+                    for i in items_csv.entries.values()
+                    if int(i["id"]) in items and i["identifier"] == identifier
+                }
             if not item_id:
                 item_id_and_identifier = {
                     (int(i["id"]), i["identifier"])
@@ -788,16 +890,8 @@ class DumpBase:
                 if len(item_id_and_identifier) == 1:
                     item_id, identifier = list(item_id_and_identifier)[0]
 
-            if game_index in self._changed_items:
-                item_ = self._changed_items[game_index]
-                if isinstance(item_, int):
-                    item_id = item_
-                else:
-                    item_id = item_[0]
-                    identifier = item_[1]
-
             # new items
-            if game_index in self._new_items:
+            if not item_id or game_index in self._new_items:
                 item_id = int(max(items_csv.entries.keys())[0]) + 1
 
             if isinstance(item_id, set) and len(item_id) != 1:
@@ -813,6 +907,11 @@ class DumpBase:
 
             if isinstance(item_id, set):
                 item_id = list(item_id)[0]
+
+            if item_id in self._item_suffixes:
+                identifier = (
+                    identifier.split("--")[0] + "--" + self._item_suffixes[item_id]
+                )
 
             item_info = self._item_table.get_info_from_index(game_index)
 

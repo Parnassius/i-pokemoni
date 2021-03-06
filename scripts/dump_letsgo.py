@@ -6,37 +6,12 @@ from .dump_base import DumpBase
 
 
 class DumpLetsGo(DumpBase):
-    _new_items = {
-        115,
-        121,
-        122,
-        124,
-        125,
-        126,
-        127,
-        128,
-        872,
-        873,
-        875,
-        876,
-        900,
-        901,
-        902,
-        903,
-    }
-    _new_items.update(range(861, 866 + 1))
-    _new_items.update(range(885, 896 + 1))
-    _new_items.update(range(960, 1057 + 1))
     _changed_items = {
         113: 555,  # tea
-        123: 550,  # tm case
-        873: 433,  # ss-ticket
+        123: 550,  # tm-case
         874: 548,  # silph-scope
-        875: 436,  # parcel
-        876: 475,  # card-key
         877: 546,  # gold-teeth
         878: 547,  # lift-key
-        947: 993,  # ilima-normalium-z
     }
 
     _region_id = 1

@@ -6,8 +6,6 @@ from .dump_base import DumpBase
 
 
 class DumpSwSh(DumpBase):
-    _new_items = set(range(1074, 1607 + 1))
-
     _changed_items = {
         121: 1007,  # pokemon-box => pokemon-box-link
         252: 229,  # up-grade => upgrade
