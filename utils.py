@@ -66,5 +66,5 @@ def to_id(text: str) -> str:
     text = text.replace("♀", "-f")
     text = text.replace("♂", "-m")
     text = re.sub(r"[\.’]+", "", text)
-    text = re.sub(r"[\s:]+", "-", text)
+    text = re.sub(r"[\s:,]+", "-", text)
     return text.strip("-")

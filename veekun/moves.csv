@@ -717,7 +717,7 @@ id,identifier,generation_id,type_id,power,pp,accuracy,priority,target_id,damage_
 716,zing-zap,7,13,80,10,100,0,10,2,32,30,,,
 717,natures-madness,7,18,,10,90,0,10,3,41,,,,
 718,multi-attack,7,1,120,10,100,0,10,2,269,,,,
-719,"10,000,000-volt-thunderbolt",7,13,195,1,,0,10,3,1,,,,
+719,10-000-000-volt-thunderbolt,7,13,195,1,,0,10,3,1,,,,
 720,mind-blown,7,10,150,5,100,0,9,3,420,,,,
 721,plasma-fists,7,13,100,15,100,0,10,2,1,,,,
 722,photon-geyser,7,14,100,5,100,0,10,3,1,,,,

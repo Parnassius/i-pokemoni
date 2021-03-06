@@ -33,4 +33,4 @@ class PersonalInfoLetsGo(PersonalInfoSM):
         elif self._id == 809:  # melmetal
             self.pokedex_numbers["letsgo-kanto"] = 153
 
-        self.is_present_in_game = self._id <= 151 or self._id in(808,809)
+        self.is_present_in_game = self._id <= 151 or self._id in (808, 809)
