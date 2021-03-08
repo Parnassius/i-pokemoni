@@ -15,12 +15,8 @@ class ItemInfoSwSh(ItemInfo):
     def __init__(self, table, path: str, id: int, data: bytes) -> None:
         super().__init__(table, path, id, data)
 
-        self._price = read_as_int(2, self._data, 0x00)
+        self._price = read_as_int(4, self._data, 0x00)
 
-        # 0x02 => 1 for tm20/tm28/tm44/tm52/tm59/tm83/tm92, 0 for everything else
-        # sono tutte vendute alla battle tower, ma mancano 70/71/72
-
-        # 0x03 => 0
         # 0x04 => bo son tanti non ho voglia, comunque non 0 ce l'hanno solo le tr, le palle, le pozioni, la pokedoll, e whishingpiece, forse i reward dei raid?
         # 0x05 => tr e wishing piece, forse anche questo reward dei raid?
         # 0x06 => 0
