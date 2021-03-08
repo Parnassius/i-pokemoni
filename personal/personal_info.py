@@ -49,7 +49,7 @@ class PersonalInfo(BaseInfo):
         self.height: int
         self.weight: int
 
-        self.tmhm: list[bool]
+        self.tmhm: dict[int, bool]
         self.type_tutors: list[bool]
         self.special_tutors: list[list[bool]]
 

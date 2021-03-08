@@ -61,5 +61,5 @@ class PersonalInfoBW(PersonalInfo):
         self.height = read_as_int(2, self._data, 0x24)
         self.weight = read_as_int(2, self._data, 0x26)
 
-        self.tmhm = self._get_bits(0x28, 0x10)
+        self.tmhm = dict(enumerate(self._get_bits(0x28, 0x10), start=1))
         self.type_tutors = self._get_bits(0x38, 0x04)

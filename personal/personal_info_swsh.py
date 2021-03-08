@@ -24,11 +24,12 @@ class PersonalInfoSwSh(PersonalInfoXY):
         self._form_stats_index = read_as_int(2, self._data, 0x1E)
         self._color = int(self._data[0x21] & 0x3F)
 
-        self.tmhm = [
-            get_flag(self._data, 0x28 + (i >> 3), i) for i in range(100)  # TMs
-        ] + [
-            get_flag(self._data, 0x3C + (i >> 3), i) for i in range(100)  # TRs
-        ]
+        self.tmhm = dict(
+            enumerate(
+                [get_flag(self._data, 0x28 + (i >> 3), i) for i in range(100)]  # TMs
+                + [get_flag(self._data, 0x3C + (i >> 3), i) for i in range(100)]  # TRs
+            )
+        )
 
         self.type_tutors = [get_flag(self._data, 0x38, i) for i in range(8)]
 

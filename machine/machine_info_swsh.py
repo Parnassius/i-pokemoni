@@ -74,7 +74,7 @@ class MachineInfoSwSh(MachineInfo):
     def __init__(self, table, path: str, id: int, data: bytes) -> None:
         super().__init__(table, path, id, data)
 
-        self.machine_number = id + 1
-        machine_type = "tm" if self.machine_number <= 100 else "tr"
-        self.machine_name = f"{machine_type}{str(self.machine_number)[-2:]:0>2}"
+        self.machine_number = id
+        machine_type = "tm" if self.machine_number < 100 else "tr"
+        self.machine_name = f"{machine_type}{str(self.machine_number + 1)[-2:]:0>2}"
         self.move_id = read_as_int(2, self._data)

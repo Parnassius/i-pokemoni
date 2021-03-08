@@ -63,6 +63,7 @@ def to_id(text: str) -> str:
         [c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c)]
     )
     text = text.lower()
+    text = text.replace("★", "dynamax-crystal-")
     text = text.replace("♀", "-f")
     text = text.replace("♂", "-m")
     text = re.sub(r"[\.’]+", "", text)

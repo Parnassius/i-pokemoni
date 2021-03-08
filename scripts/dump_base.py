@@ -281,6 +281,28 @@ class DumpBase:
         990: "merge",  # n-lunarizer
         991: "split",  # n-solarizer
         992: "split",  # n-lunarizer
+        1021: "letsgo",  # ss-ticket
+        1023: "letsgo",  # card-key
+        1020: "letsgo",  # secret-key
+        1022: "letsgo",  # parcel
+        1324: "water-mode",  # rotom-bike
+        1636: "sparkling-white",  # rotom-bike
+        1637: "glistening-black",  # rotom-bike
+    }
+    _identifier_overrides = {
+        "upgrade": "up-grade",
+        "leek": "stick",
+        "health-feather": "health-wing",
+        "muscle-feather": "muscle-wing",
+        "resist-feather": "resist-wing",
+        "genius-feather": "genius-wing",
+        "clever-feather": "clever-wing",
+        "swift-feather": "swift-wing",
+        "pretty-feather": "pretty-wing",
+        "adventure-guide": "adventure-rules",
+        "ilima-normalium-z": "ilimas-normalium-z",
+        "legendary-clue?": "legendary-clue-question",
+        "vise-grip": "vice-grip",
     }
     _languages = {
         "JPN": 1,
@@ -587,6 +609,9 @@ class DumpBase:
                 continue
             identifier = to_id(move[1])
 
+            if identifier in self._identifier_overrides:
+                identifier = self._identifier_overrides[identifier]
+
             move_info = self._move_table.get_info_from_index(move_id)
 
             if 622 <= move_id <= 657:  # z-moves
@@ -859,6 +884,9 @@ class DumpBase:
 
             if identifier == "???":
                 continue
+
+            if identifier in self._identifier_overrides:
+                identifier = self._identifier_overrides[identifier]
 
             items = {
                 int(i["item_id"])
@@ -1285,8 +1313,8 @@ class DumpBase:
         # machine
         machines_csv = self._open_table("machines")
         machines = {
-            int(machines_csv.entries[k + 1, self._version_group_id]["move_id"])
-            for k, v in enumerate(pokemon.tmhm)
+            int(machines_csv.entries[k, self._version_group_id]["move_id"])
+            for k, v in pokemon.tmhm.items()
             if v
         }
         for move_id in machines:
@@ -1348,6 +1376,8 @@ class DumpBase:
                 continue
 
             trigger_id = evo.trigger_id
+            gender_id = str(evo.gender_id or "")
+
             if trigger_id == 4:
                 if evo.species != 291:
                     print("non-ninjask shed")
@@ -1385,6 +1415,13 @@ class DumpBase:
 
                 trigger_id = 1
 
+            if evo.species == 678:  # meowstic
+                gender_id = ""
+                if (372,) in pokemon_evolution_csv.entries and int(
+                    pokemon_evolution_csv.entries[(372,)]["evolved_species_id"]
+                ) == 678:
+                    del pokemon_evolution_csv.entries[(372,)]
+
             evolution_id = next(
                 (
                     k[0]
@@ -1393,11 +1430,14 @@ class DumpBase:
                     and int(v["evolution_trigger_id"]) == trigger_id
                     and v["time_of_day"] == evo.time_of_day
                     # and int(v["location_id"]) == evo.location_id
-                    and v["gender_id"] == str(evo.gender_id or "")
+                    and v["gender_id"] == gender_id
+                    and bool(v["minimum_happiness"])
+                    == bool(evo.minimum_happiness or "")
                     and v["minimum_beauty"]
                     == str(
                         evo.minimum_beauty or ""
                     )  # milotic has 2 minimum_beauty rows, one with 171 and the other with 170
+                    and bool(v["minimum_affection"]) == False
                 ),
                 int(max(pokemon_evolution_csv.entries.keys())[0]) + 1,
             )
@@ -1409,7 +1449,7 @@ class DumpBase:
                 trigger_item_id=self._get_item_id_from_game_index(evo.trigger_item_id)
                 or "",
                 minimum_level=evo.level or "",
-                gender_id=evo.gender_id or "",
+                gender_id=gender_id,
                 # location_id=location_id,  # magnetic field, mossy stone, icy stone, mount lanakila
                 held_item_id=self._get_item_id_from_game_index(evo.held_item_id) or "",
                 time_of_day=evo.time_of_day,
