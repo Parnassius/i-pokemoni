@@ -19,6 +19,9 @@ class DumpSwSh(DumpBase):
         571: 612,  # pretty-wing => pretty-feather
         703: 732,  # adventure-rules => adventure-guide
     }
+    _identifier_overrides_game_index = {
+        121: "pokemon-box",
+    }
 
     _new_evolution_methods = {
         5: (

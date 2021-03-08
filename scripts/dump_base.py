@@ -285,9 +285,15 @@ class DumpBase:
         1023: "letsgo",  # card-key
         1020: "letsgo",  # secret-key
         1022: "letsgo",  # parcel
+        1033: "pikachu",  # leaf-letter
+        1034: "eevee",  # leaf-letter
         1324: "water-mode",  # rotom-bike
         1636: "sparkling-white",  # rotom-bike
         1637: "glistening-black",  # rotom-bike
+        1641: "merge",  # reins-of-unity
+        1642: "split",  # reins-of-unity
+        # 1658: "",  # reins-of-unity
+        1142: "galar",  # fishing-rod
     }
     _identifier_overrides = {
         "upgrade": "up-grade",
@@ -304,6 +310,7 @@ class DumpBase:
         "legendary-clue?": "legendary-clue-question",
         "vise-grip": "vice-grip",
     }
+    _identifier_overrides_game_index: dict[int, str] = {}
     _languages = {
         "JPN": 1,
         "Korean": 3,
@@ -875,6 +882,8 @@ class DumpBase:
         items_csv = self._open_table("items")
         item_game_indices_csv = self._open_table("item_game_indices")
 
+        lang_item_flavor_text = self._open_text_files("iteminfo")
+
         items_en = self._open_text_file("English", "itemname")
         for item in items_en:
             game_index = int(item[0][item[0].find("_") + 1 :])
@@ -887,6 +896,9 @@ class DumpBase:
 
             if identifier in self._identifier_overrides:
                 identifier = self._identifier_overrides[identifier]
+
+            if game_index in self._identifier_overrides_game_index:
+                identifier = self._identifier_overrides_game_index[game_index]
 
             items = {
                 int(i["item_id"])
