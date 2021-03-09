@@ -16,13 +16,8 @@ class ItemInfoSwSh(ItemInfo):
         super().__init__(table, path, id, data)
 
         self._price = read_as_int(4, self._data, 0x00)
-
-        # 0x04 => bo son tanti non ho voglia, comunque non 0 ce l'hanno solo le tr, le palle, le pozioni, la pokedoll, e whishingpiece, forse i reward dei raid?
-        # 0x05 => tr e wishing piece, forse anche questo reward dei raid?
-        # 0x06 => 0
-        # 0x07 => 0
-
-        # 0x08 => bp/dynite-ore price
+        self.watt_price = read_as_int(4, self._data, 0x04)
+        self.bp_dynite_price = read_as_int(4, self._data, 0x08)
         """
         "premier-ball", 1       max-lair-dynite-ore
         "hp-up", 2              max-lair-dynite-ore    hammerlocke-bp-shop
@@ -104,10 +99,6 @@ class ItemInfoSwSh(ItemInfo):
         "armorite-ore", 3       max-lair-dynite-ore
         "ability-patch", 200    max-lair-dynite-ore
         """
-
-        # 0x09 => 0
-        # 0x0A => 0
-        # 0x0B => 0
 
         self.held_effect = int(self._data[0x0C])  # 0x02
         self.held_argument = int(self._data[0x0D])  # 0x03
