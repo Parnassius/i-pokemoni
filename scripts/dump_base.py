@@ -639,16 +639,22 @@ class DumpBase:
 
             move_row = moves_csv.entries.get((move_id,))
             if move_row:
-                changed_columns = {}
-                for col in changelog_columns:
-                    if str(move_row[col]) != str(getattr(move_info, col)):
-                        changed_columns[col] = move_row[col]
-                if changed_columns:
-                    move_changelog_csv.set_row(
-                        move_id=move_id,
-                        changed_in_version_group_id=self._version_group_id,
-                        **changed_columns,
-                    )
+                rows = (
+                    i
+                    for i in move_changelog_csv.entries.keys()
+                    if i[0] == move_id and int(i[1]) >= self._version_group_id
+                )
+                if not any(rows):
+                    changed_columns = {}
+                    for col in changelog_columns:
+                        if str(move_row[col]) != str(getattr(move_info, col)):
+                            changed_columns[col] = move_row[col]
+                    if changed_columns:
+                        move_changelog_csv.set_row(
+                            move_id=move_id,
+                            changed_in_version_group_id=self._version_group_id,
+                            **changed_columns,
+                        )
 
             moves_csv.set_row(
                 id=move_id,
@@ -1132,7 +1138,7 @@ class DumpBase:
                     if identifier == "zygarde-50-power-construct":
                         forme_pokemon_id = 10119
                     if identifier == "zygarde-10":
-                        forme_pokemon_id = 0
+                        forme_pokemon_id = 10181
 
                     if forme_pokemon_id == 0:
                         if forme_id == 0:
@@ -1177,7 +1183,7 @@ class DumpBase:
                 if identifier_forme == "zygarde-50-power-construct":
                     forme_pokemon_form_id = 10221
                 if identifier_forme == "zygarde-10":
-                    forme_pokemon_form_id = 0
+                    forme_pokemon_form_id = 10340
 
                 if forme_pokemon_form_id == 0:
                     if forme_id == 0:
