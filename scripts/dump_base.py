@@ -1195,7 +1195,7 @@ class DumpBase:
 
                 is_default = int(forme_pokemon_id not in default_pokemon_list)
                 if identifier_forme.startswith("xerneas"):
-                    is_default = int(identifier_forme == "xerneas-normal")
+                    is_default = int(identifier_forme == "xerneas-neutral")
 
                 if is_default:
                     default_pokemon_list.append(forme_pokemon_id)
