@@ -113,18 +113,7 @@ class ItemInfoSwSh(ItemInfo):
 
         # 0x15 => 1 or 0
 
-        # 0x16
-        #  1 = healing items + vitamins + repels + ability capsule + ability patch + mints
-        #  2 = evo strones + "useful?" held items (genesect's drives, toxic orb, choice band, amulet coin, ...)
-        #  3 = apricorns + various food + ★-items + max honey + galarica twig/cuff/wreath + amorite/dynite ore
-        #  4 = x-items + pokedoll + max mushrooms
-        #  5 = balls
-        #  6 = nothing
-        #  7 = tm/tr
-        #  8 = berries
-        #  9 = key items
-        # 10 = treasures + fossils
-        # everything else is 255
+        self._pocket = int(self._data[0x16])
 
         self._consumable = int(self._data[0x17])  # 0x0E
         self.sort_index = int(self._data[0x18])  # 0x0F
@@ -167,3 +156,150 @@ class ItemInfoSwSh(ItemInfo):
     @property
     def fling_effect_id(self) -> int:
         return 0  # i have no idea
+
+    def category_id(self, identifier: str) -> int:
+        if (
+            self._pocket == 1
+        ):  # healing items + vitamins + repels + ability capsule + ability patch + mints
+            if identifier.startswith("exp-candy-") or identifier in (
+                "ability-patch",
+                "dynamax-candy",
+            ):
+                return 26  # medicine => vitamins
+            if identifier.endswith("-mint"):
+                return 50  # medicine => nature-mints
+
+        if (
+            self._pocket == 2
+        ):  #  evo stones + "useful?" held items (genesect's drives, toxic orb, choice band, amulet coin, ...)
+            if identifier in ("rusted-sword", "rusted-shield"):
+                return 18  # misc => species-specific
+            if self.evo_stone or identifier.endswith("-sweet"):
+                return 10  # misc => evolution
+            if identifier in (
+                "throat-spray",
+                "eject-pack",
+                "heavy-duty-boots",
+                "blunder-policy",
+                "room-service",
+                "utility-umbrella",
+            ):
+                return 12  # misc => held-items
+
+        if (
+            self._pocket == 3
+        ):  #  apricorns + various food + ★-items + max honey + galarica twig/cuff/wreath + amorite/dynite ore
+            if identifier in (
+                "wishing-piece",
+                "galarica-twig",
+                "galarica-cuff",
+                "armorite-ore",
+                "galarica-wreath",
+                "dynite-ore",
+            ):
+                return 9  # misc => collectibles
+            if identifier == "max-honey":
+                return 29  # medicines => revival
+            if identifier in (
+                "sausages",
+                "bobs-food-tin",
+                "bachs-food-tin",
+                "tin-of-beans",
+                "bread",
+                "pasta",
+                "mixed-mushrooms",
+                "smoke-poke-tail",
+                "large-leek",
+                "fancy-apple",
+                "brittle-bones",
+                "pack-of-potatoes",
+                "pungent-root",
+                "salad-mix",
+                "fried-food",
+                "boiled-egg",
+                "fruit-bunch",
+                "moomoo-cheese",
+                "spice-mix",
+                "fresh-cream",
+                "packaged-curry",
+                "coconut-milk",
+                "instant-noodles",
+                "precooked-burger",
+                "gigantamix",
+            ):
+                return 51  # misc => curry-ingredients
+            if identifier.startswith("dynamax-crystal-"):
+                return 49  # misc => dynamax-crystals
+
+        if self._pocket == 4:  #  x-items + pokedoll + max mushrooms
+            if (
+                self.boost_attack
+                or self.boost_defense
+                or self.boost_special_attack
+                or self.boost_special_defense
+                or self.boost_speed
+                or self.boost_accuracy
+                or self.boost_crit
+                or self.cure_inflict_guard_spec
+            ):
+                return 1  # battle => stat-boosts
+
+        if self._pocket == 7:  # machines
+            return 37  # all-machines
+
+        if self._pocket == 9:  # key
+            if identifier in (
+                "pokemon-box-link",
+                "fishing-rod--galar",
+                "rotom-bike",
+                "camping-gear",
+                "hi-tech-earbuds",
+                "catching-charm",
+                "rotom-catalog",
+                "style-card",
+                "exp-charm",
+                "mark-charm",
+            ):
+                return 21  # gameplay
+            if identifier in (
+                "endorsement",
+                "wishing-star",
+                "dynamax-band",
+                "old-letter",
+                "sonias-book",
+                "armor-pass",
+                "legendary-clue-1",
+                "legendary-clue-2",
+                "legendary-clue-3",
+                "legendary-clue-question",
+                "crown-pass",
+                "wooden-crown",
+                "radiant-petal",
+                "white-mane-hair",
+                "black-mane-hair",
+                "iceroot-carrot",
+                "shaderoot-carrot",
+                "carrot-seeds",
+                "reins-of-unity",
+            ):
+                return 22  # plot-advancement
+            if identifier in (
+                "band-autograph",
+                "rotom-bike--water-mode",
+                "rotom-bike--sparkling-white",
+                "rotom-bike--glistening-black",
+                "reins-of-unity--merge",
+                "reins-of-unity--split",
+            ):
+                return 23  # unused
+
+        if self._pocket == 10:  # treasures + fossils
+            if identifier.startswith("fossilized-"):
+                return 35  # misc => dex-completion
+
+        if self._pocket == 255:  # everything else
+            if identifier in ("wishing-chip"):
+                return 23  # key => unused
+
+        print("no category_id: ", self._pocket, identifier)
+        return 0

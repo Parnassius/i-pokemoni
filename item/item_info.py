@@ -77,6 +77,38 @@ class ItemInfo(BaseInfo):
         )  # https://github.com/kwsch/pkNX/blob/2c990d2b7dc2189f524417e741d46fc763f194d9/pkNX.Structures/Item/BattlePocket.cs
 
     @property
+    def cure_inflict_sleep(self) -> bool:
+        return bool((self.cure_inflict >> 0) & 0x1)
+
+    @property
+    def cure_inflict_poison(self) -> bool:
+        return bool((self.cure_inflict >> 1) & 0x1)
+
+    @property
+    def cure_inflict_burn(self) -> bool:
+        return bool((self.cure_inflict >> 2) & 0x1)
+
+    @property
+    def cure_inflict_freeze(self) -> bool:
+        return bool((self.cure_inflict >> 3) & 0x1)
+
+    @property
+    def cure_inflict_paralysis(self) -> bool:
+        return bool((self.cure_inflict >> 4) & 0x1)
+
+    @property
+    def cure_inflict_confusion(self) -> bool:
+        return bool((self.cure_inflict >> 5) & 0x1)
+
+    @property
+    def cure_inflict_infatuation(self) -> bool:
+        return bool((self.cure_inflict >> 6) & 0x1)
+
+    @property
+    def cure_inflict_guard_spec(self) -> bool:
+        return bool((self.cure_inflict >> 7) & 0x1)
+
+    @property
     def revive(self) -> bool:
         return bool((self._boost_0 >> 0) & 0x1)
 
@@ -184,3 +216,6 @@ class ItemInfo(BaseInfo):
             }
         )
         return effects[self.fling_effect]
+
+    def category_id(self, identifier: str) -> int:
+        return 0

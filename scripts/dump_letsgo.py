@@ -14,6 +14,23 @@ class DumpLetsGo(DumpBase):
         878: 547,  # lift-key
     }
 
+    _new_item_categories = {
+        47: (
+            "species-candies",
+            1,
+            {
+                9: "Species candies",
+            },
+        ),
+        48: (
+            "catching-bonus",
+            5,
+            {
+                9: "Catching bonus",
+            },
+        ),
+    }
+
     _region_id = 1
     _region_identifier = "kanto"
     _region_names = {9: "Kanto"}

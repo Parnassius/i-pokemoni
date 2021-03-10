@@ -30,19 +30,7 @@ class ItemInfoLetsGo(ItemInfo):
 
         # 0x0C => balls = 2, lots of things = 1, everything else = 0
 
-        # 0x0D
-        #  0 = main menu items (let's go)
-        #  1 = healing items + vitamins + repels + ability capsule + ability patch + mints
-        #  2 = evo strones + "useful?" items + pokemon candies + pokedoll + misc
-        #  3 = x-items
-        #  4 = key items
-        #  5 = balls
-        #  6 = mail
-        #  7 = tm/hm
-        #  8 = berries
-        #  9 = battle items (incl. megastones, z-crystals)
-        # 10 = treasures + fossils
-        # everything else is 255
+        self._pocket = int(self._data[0x0D])
 
         self._consumable = int(self._data[0x0E])
         self.sort_index = int(self._data[0x0F])
@@ -70,3 +58,63 @@ class ItemInfoLetsGo(ItemInfo):
 
         # 0x22 => 0
         # 0x23 => 0
+
+    def category_id(self, identifier: str) -> int:
+        if self._pocket == 0:  # main menu items
+            return 23  # key => unused
+
+        if self._pocket == 1:  # healing items + vitamins + repels + ability capsule
+            if identifier == "pewter-crunchies":
+                return 30  # medicine => status-cures
+
+        if (
+            self._pocket == 2
+        ):  # evo stones + "useful?" items + pokemon candies + pokedoll + misc
+            if identifier.replace("-l", "").replace("-xl", "") in (
+                "health-candy",
+                "mighty-candy",
+                "tough-candy",
+                "smart-candy",
+                "courage-candy",
+                "quick-candy",
+            ):
+                return 26  # medicine => vitamins
+            if identifier.endswith("-candy"):
+                return 47  # misc => species-candy
+            if identifier.endswith("lure"):
+                return 11  # misc => spelunking
+
+        if self._pocket == 4:  # key
+            if identifier in (
+                "secret-key--letsgo",
+                "ss-ticket--letsgo",
+                "parcel--letsgo",
+                "card-key--letsgo",
+            ):
+                return 22  # plot-advancement
+            if identifier == "autograph":
+                return 23  # unused
+
+        if self._pocket == 8:
+            if identifier[:7] in ("golden-", "silver-") and identifier[-6:] == "-berry":
+                return 48  # berries => catching-bonus
+
+        if self._pocket == 10:  # treasures
+            if identifier in (
+                "stretchy-spring",
+                "chalky-stone",
+                "marble",
+                "lone-earring",
+                "beach-glass",
+                "gold-leaf",
+                "silver-leaf",
+                "polished-mud-ball",
+                "tropical-shell",
+                "leaf-letter--pikachu",
+                "leaf-letter--eevee",
+                "small-bouquet",
+            ):
+                return 24  # misc => loot
+
+        print("no category_id: ", self._pocket, identifier)
+        return 0

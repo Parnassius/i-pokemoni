@@ -23,6 +23,30 @@ class DumpSwSh(DumpBase):
         121: "pokemon-box",
     }
 
+    _new_item_categories = {
+        49: (
+            "dynamax-crystals",
+            1,
+            {
+                9: "Dynamax crystals",
+            },
+        ),
+        50: (
+            "nature-mints",
+            2,
+            {
+                9: "Nature mints",
+            },
+        ),
+        51: (
+            "curry-ingredients",
+            1,
+            {
+                9: "Curry ingredients",
+            },
+        ),
+    }
+
     _new_evolution_methods = {
         5: (
             "spin",

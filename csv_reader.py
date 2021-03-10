@@ -16,6 +16,7 @@ class CsvReader:
             "ability_names": (0, 1),
             "evolution_trigger_prose": (0, 1),
             "generation_names": (0, 1),
+            "item_category_prose": (0, 1),
             "item_flavor_text": (0, 1, 2),
             "item_game_indices": (0, 1),
             "item_names": (0, 1),

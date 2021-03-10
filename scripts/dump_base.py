@@ -327,6 +327,8 @@ class DumpBase:
     _new_items: set[int] = set()
     _changed_items: dict[int, int] = {}
 
+    _new_item_categories: dict[int, tuple[str, int, dict[int, str]]] = {}
+
     _new_evolution_methods: dict[int, tuple[str, dict[int, str]]] = {}
 
     _new_move_meta_ailments: dict[int, tuple[str, dict[int, str]]] = {}
@@ -506,6 +508,23 @@ class DumpBase:
                     name=pokedex_name[0],
                     description=pokedex_name[1],
                 )
+
+        if self._new_item_categories:
+            item_categories_csv = self._open_table("item_categories")
+            item_category_prose_csv = self._open_table("item_category_prose")
+
+            for category_id, category_data in self._new_item_categories.items():
+                item_categories_csv.set_row(
+                    id=category_id,
+                    pocket_id=category_data[1],
+                    identifier=category_data[0],
+                )
+                for language_id, category_name in category_data[2].items():
+                    item_category_prose_csv.set_row(
+                        item_category_id=category_id,
+                        local_language_id=language_id,
+                        name=category_name,
+                    )
 
         if self._new_evolution_methods:
             evolution_triggers_csv = self._open_table("evolution_triggers")
@@ -961,10 +980,15 @@ class DumpBase:
 
             item_info = self._item_table.get_info_from_index(game_index)
 
+            category_id = 0
+            row = items_csv.entries.get((item_id,))
+            if row is None or row["category_id"] == "":
+                category_id = item_info.category_id(identifier)
+
             items_csv.set_row(
                 id=item_id,
                 identifier=identifier,
-                # category_id=category_id,  # TODO
+                category_id_fallback_=category_id or "",
                 cost=item_info.buy_price or False,
                 cost_fallback_=item_info.buy_price,
                 fling_power=item_info.fling_power or False,
@@ -980,8 +1004,6 @@ class DumpBase:
             )
 
         self._item_names()
-
-        # TODO: item_categories?
 
     def _pokemon_stats(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_stats_csv = self._open_table("pokemon_stats")
