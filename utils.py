@@ -58,14 +58,23 @@ def fbs_table(data: bytes) -> flatbuffers.table.Table:
     return flatbuffers.table.Table(data, pos)
 
 
-def to_id(text: str) -> str:
-    text = "".join(
-        [c for c in unicodedata.normalize("NFKD", text) if not unicodedata.combining(c)]
-    )
-    text = text.lower()
-    text = text.replace("★", "dynamax-crystal-")
-    text = text.replace("♀", "-f")
-    text = text.replace("♂", "-m")
-    text = re.sub(r"[\.’]+", "", text)
-    text = re.sub(r"[\s:,]+", "-", text)
-    return text.strip("-")
+def to_id(*text: str, separator: str = "--") -> str:
+    result = []
+    for t in text:
+        t = "".join(
+            [
+                c
+                for c in unicodedata.normalize("NFKD", t)
+                if not unicodedata.combining(c)
+            ]
+        )
+        t = t.lower()
+        t = t.replace("★", "dynamax-crystal-")
+        t = t.replace("♀", "-f")
+        t = t.replace("♂", "-m")
+        t = re.sub(r"[\.’]+", "", t)
+        t = re.sub(r"[\s:,]+", "-", t)
+        t = t.strip("-")
+        if t:
+            result.append(t)
+    return "--".join(result)

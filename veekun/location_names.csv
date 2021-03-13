@@ -129,34 +129,82 @@ location_id,local_language_id,name,subtitle
 65,9,Blackthorn City,
 66,5,Tour Cendrée,
 66,9,Burned Tower,
+67,1,タマムシシティ,
+67,3,무지개시티,
+67,4,玉虹市,
 67,5,Céladopole,
+67,6,Prismania City,
+67,7,Ciudad Azulona,
+67,8,Azzurropoli,
 67,9,Celadon City,
+67,11,タマムシシティ,
+67,12,玉虹市,
+68,1,ハナダシティ,
+68,3,블루시티,
+68,4,華藍市,
 68,5,Azuria,
+68,6,Azuria City,
+68,7,Ciudad Celeste,
+68,8,Celestopoli,
 68,9,Cerulean City,
+68,11,ハナダシティ,
+68,12,华蓝市,
 69,5,Ville Griotte,
 69,9,Cherrygrove City,
 70,5,Irisia,
 70,9,Cianwood City,
-71,5,Cramois'Ile,
+71,1,グレンタウン,
+71,3,홍련마을,
+71,4,紅蓮鎮,
+71,5,Cramois’Île,
+71,6,Zinnoberinsel,
+71,7,Isla Canela,
+71,8,Isola Cannella,
 71,9,Cinnabar Island,
+71,11,グレンタウン,
+71,12,红莲镇,
 72,5,Antre Noir,
 72,9,Dark Cave,
-73,5,Cave TAUPIQUEUR,
-73,9,Diglett's Cave,
+73,1,ディグダのあな,
+73,3,디그다의 굴,
+73,4,地鼠洞穴,
+73,5,Grotte Taupiqueur,
+73,6,Digda-Höhle,
+73,7,Cueva Diglett,
+73,8,Grotta Diglett,
+73,9,Diglett’s Cave,
+73,11,ディグダの穴,
+73,12,地鼠洞穴,
 74,5,Antre du Dragon,
 74,9,Dragon's Den,
 75,5,Rosalia,
 75,9,Ecruteak City,
+76,1,セキチクシティ,
+76,3,연분홍시티,
+76,4,淺紅市,
 76,5,Parmanie,
+76,6,Fuchsania City,
+76,7,Ciudad Fucsia,
+76,8,Fucsiapoli,
 76,9,Fuchsia City,
+76,11,セキチクシティ,
+76,12,浅红市,
 77,5,Route de Glace,
 77,9,Ice Path,
 78,5,Bois aux Chênes,
 78,9,Ilex Forest,
 79,5,Lac Colère,
 79,9,Lake of Rage,
+80,1,オツキミやま,
+80,3,달맞이산,
+80,4,月見山,
 80,5,Mont Sélénite,
+80,6,Mondberg,
+80,7,Monte Moon,
+80,8,Monte Luna,
 80,9,Mt. Moon,
+80,11,お月見山,
+80,12,月见山,
 81,5,Mont Creuset,
 81,9,Mt. Mortar,
 82,5,Mont Argenté,
@@ -167,44 +215,196 @@ location_id,local_language_id,name,subtitle
 84,9,New Bark Town,
 85,5,Oliville,
 85,9,Olivine City,
+86,1,マサラタウン,
+86,3,태초마을,
+86,4,真新鎮,
 86,5,Bourg Palette,
+86,6,Alabastia,
+86,7,Pueblo Paleta,
+86,8,Biancavilla,
 86,9,Pallet Town,
-87,5,Grotte,
+86,11,マサラタウン,
+86,12,真新镇,
+87,1,イワヤマトンネル,
+87,3,돌산터널,
+87,4,岩山隧道,
+87,5,Grotte Sombre,
+87,6,Felstunnel,
+87,7,Túnel Roca,
+87,8,Tunnel Roccioso,
 87,9,Rock Tunnel,
+87,11,イワヤマトンネル,
+87,12,岩山隧道,
+88,1,１ばんどうろ,
+88,3,1번도로,
+88,4,１號道路,
 88,5,Route 1,
+88,6,Route 1,
+88,7,Ruta 1,
+88,8,Percorso 1,
 88,9,Route 1,
+88,11,１番道路,
+88,12,１号道路,
+89,1,１０ばんどうろ,
+89,3,10번도로,
+89,4,10號道路,
 89,5,Route 10,
+89,6,Route 10,
+89,7,Ruta 10,
+89,8,Percorso 10,
 89,9,Route 10,
+89,11,１０番道路,
+89,12,10号道路,
+90,1,１１ばんどうろ,
+90,3,11번도로,
+90,4,11號道路,
 90,5,Route 11,
+90,6,Route 11,
+90,7,Ruta 11,
+90,8,Percorso 11,
 90,9,Route 11,
+90,11,１１番道路,
+90,12,11号道路,
+91,1,１２ばんどうろ,
+91,3,12번도로,
+91,4,12號道路,
 91,5,Route 12,
+91,6,Route 12,
+91,7,Ruta 12,
+91,8,Percorso 12,
 91,9,Route 12,
+91,11,１２番道路,
+91,12,12号道路,
+92,1,１３ばんどうろ,
+92,3,13번도로,
+92,4,13號道路,
 92,5,Route 13,
+92,6,Route 13,
+92,7,Ruta 13,
+92,8,Percorso 13,
 92,9,Route 13,
+92,11,１３番道路,
+92,12,13号道路,
+93,1,１４ばんどうろ,
+93,3,14번도로,
+93,4,14號道路,
 93,5,Route 14,
+93,6,Route 14,
+93,7,Ruta 14,
+93,8,Percorso 14,
 93,9,Route 14,
+93,11,１４番道路,
+93,12,14号道路,
+94,1,１５ばんどうろ,
+94,3,15번도로,
+94,4,15號道路,
 94,5,Route 15,
+94,6,Route 15,
+94,7,Ruta 15,
+94,8,Percorso 15,
 94,9,Route 15,
+94,11,１５番道路,
+94,12,15号道路,
+95,1,１６ばんどうろ,
+95,3,16번도로,
+95,4,16號道路,
 95,5,Route 16,
+95,6,Route 16,
+95,7,Ruta 16,
+95,8,Percorso 16,
 95,9,Route 16,
+95,11,１６番道路,
+95,12,16号道路,
+96,1,１７ばんどうろ,
+96,3,17번도로,
+96,4,17號道路,
 96,5,Route 17,
+96,6,Route 17,
+96,7,Ruta 17,
+96,8,Percorso 17,
 96,9,Route 17,
+96,11,１７番道路,
+96,12,17号道路,
+97,1,１８ばんどうろ,
+97,3,18번도로,
+97,4,18號道路,
 97,5,Route 18,
+97,6,Route 18,
+97,7,Ruta 18,
+97,8,Percorso 18,
 97,9,Route 18,
+97,11,１８番道路,
+97,12,18号道路,
+98,1,１９ばんすいどう,
+98,3,19번수로,
+98,4,19號水路,
 98,5,Chenal 19,
-98,9,Sea Route 19,
+98,6,Route 19 (Wasserweg),
+98,7,Ruta 19,
+98,8,Percorso 19,
+98,9,Route 19,
+98,11,１９番水道,
+98,12,19号水路,
+99,1,２ばんどうろ,
+99,3,2번도로,
+99,4,２號道路,
 99,5,Route 2,
+99,6,Route 2,
+99,7,Ruta 2,
+99,8,Percorso 2,
 99,9,Route 2,
+99,11,２番道路,
+99,12,２号道路,
+100,1,２０ばんすいどう,
+100,3,20번수로,
+100,4,20號水路,
 100,5,Chenal 20,
-100,9,Sea Route 20,
+100,6,Route 20 (Wasserweg),
+100,7,Ruta 20,
+100,8,Percorso 20,
+100,9,Route 20,
+100,11,２０番水道,
+100,12,20号水路,
+101,1,２１ばんすいどう,
+101,3,21번수로,
+101,4,21號水路,
 101,5,Chenal 21,
-101,9,Sea Route 21,
+101,6,Route 21 (Wasserweg),
+101,7,Ruta 21,
+101,8,Percorso 21,
+101,9,Route 21,
+101,11,２１番水道,
+101,12,21号水路,
+102,1,２２ばんどうろ,
+102,3,22번도로,
+102,4,22號道路,
 102,5,Route 22,
+102,6,Route 22,
+102,7,Ruta 22,
+102,8,Percorso 22,
 102,9,Route 22,
+102,11,２２番道路,
+102,12,22号道路,
+103,1,２４ばんどうろ,
+103,3,24번도로,
+103,4,24號道路,
 103,5,Route 24,
+103,6,Route 24,
+103,7,Ruta 24,
+103,8,Percorso 24,
 103,9,Route 24,
+103,11,２４番道路,
+103,12,24号道路,
+104,1,２５ばんどうろ,
+104,3,25번도로,
+104,4,25號道路,
 104,5,Route 25,
+104,6,Route 25,
+104,7,Ruta 25,
+104,8,Percorso 25,
 104,9,Route 25,
+104,11,２５番道路,
+104,12,25号道路,
 105,5,Route 26,
 105,9,Route 26,
 106,5,Route 27,
@@ -213,8 +413,16 @@ location_id,local_language_id,name,subtitle
 107,9,Route 28,
 108,5,Route 29,
 108,9,Route 29,
+109,1,３ばんどうろ,
+109,3,3번도로,
+109,4,３號道路,
 109,5,Route 3,
+109,6,Route 3,
+109,7,Ruta 3,
+109,8,Percorso 3,
 109,9,Route 3,
+109,11,３番道路,
+109,12,３号道路,
 110,5,Route 30,
 110,9,Route 30,
 111,5,Route 31,
@@ -235,8 +443,16 @@ location_id,local_language_id,name,subtitle
 118,9,Route 38,
 119,5,Route 39,
 119,9,Route 39,
+120,1,４ばんどうろ,
+120,3,4번도로,
+120,4,４號道路,
 120,5,Route 4,
+120,6,Route 4,
+120,7,Ruta 4,
+120,8,Percorso 4,
 120,9,Route 4,
+120,11,４番道路,
+120,12,４号道路,
 121,5,Chenal 40,
 121,9,Sea Route 40,
 122,5,Chenal 41,
@@ -255,20 +471,68 @@ location_id,local_language_id,name,subtitle
 128,9,Route 47,
 129,5,Route 48,
 129,9,Route 48,
+130,1,５ばんどうろ,
+130,3,5번도로,
+130,4,５號道路,
 130,5,Route 5,
+130,6,Route 5,
+130,7,Ruta 5,
+130,8,Percorso 5,
 130,9,Route 5,
+130,11,５番道路,
+130,12,５号道路,
+131,1,６ばんどうろ,
+131,3,6번도로,
+131,4,６號道路,
 131,5,Route 6,
+131,6,Route 6,
+131,7,Ruta 6,
+131,8,Percorso 6,
 131,9,Route 6,
+131,11,６番道路,
+131,12,６号道路,
+132,1,７ばんどうろ,
+132,3,7번도로,
+132,4,７號道路,
 132,5,Route 7,
+132,6,Route 7,
+132,7,Ruta 7,
+132,8,Percorso 7,
 132,9,Route 7,
+132,11,７番道路,
+132,12,７号道路,
+133,1,８ばんどうろ,
+133,3,8번도로,
+133,4,８號道路,
 133,5,Route 8,
+133,6,Route 8,
+133,7,Ruta 8,
+133,8,Percorso 8,
 133,9,Route 8,
+133,11,８番道路,
+133,12,８号道路,
+134,1,９ばんどうろ,
+134,3,9번도로,
+134,4,９號道路,
 134,5,Route 9,
+134,6,Route 9,
+134,7,Ruta 9,
+134,8,Percorso 9,
 134,9,Route 9,
+134,11,９番道路,
+134,12,９号道路,
 135,5,Ruines d'Alpha,
 135,9,Ruins of Alph,
-136,5,Iles Ecume,
+136,1,ふたごじま,
+136,3,쌍둥이섬,
+136,4,雙子島,
+136,5,Îles Écume,
+136,6,Seeschauminseln,
+136,7,Islas Espuma,
+136,8,Isole Spumarine,
 136,9,Seafoam Islands,
+136,11,双子島,
+136,12,双子岛,
 137,5,Puits RAMOLOSS,
 137,9,Slowpoke Well,
 138,5,Tour CHETIFLOR,
@@ -279,36 +543,108 @@ location_id,local_language_id,name,subtitle
 140,9,Tohjo Falls,
 141,5,Caves Jumelles,
 141,9,Union Cave,
+147,1,ハナダのどうくつ,
+147,3,블루시티동굴,
+147,4,華藍洞窟,
 147,5,Caverne Azurée,
+147,6,Azuria-Höhle,
+147,7,Cueva Celeste,
+147,8,Grotta Celeste,
 147,9,Cerulean Cave,
+147,11,ハナダの洞窟,
+147,12,华蓝洞窟,
 148,5,Inconnu; que des Ptitard,
 148,9,Unknown; all Poliwag,
 149,5,Inconnu; que des Rattata,
 149,9,Unknown; all Rattata,
 150,5,Inconnu; que des insectes,
 150,9,Unknown; all bugs,
+151,1,クチバシティ,
+151,3,갈색시티,
+151,4,枯葉市,
 151,5,Carmin sur Mer,
+151,6,Orania City,
+151,7,Ciudad Carmín,
+151,8,Aranciopoli,
 151,9,Vermilion City,
+151,11,クチバシティ,
+151,12,枯叶市,
+152,1,チャンピオンロード,
+152,3,챔피언로드,
+152,4,冠軍之路,
 152,5,Route Victoire,
+152,6,Siegesstraße,
+152,7,Calle Victoria,
+152,8,Via Vittoria,
 152,9,Victory Road,
+152,11,チャンピオンロード,
+152,12,冠军之路,
 153,5,Mauville,
 153,9,Violet City,
+154,1,トキワシティ,
+154,3,상록시티,
+154,4,常青市,
 154,5,Jadielle,
+154,6,Vertania City,
+154,7,Ciudad Verde,
+154,8,Smeraldopoli,
 154,9,Viridian City,
+154,11,トキワシティ,
+154,12,常青市,
+155,1,トキワのもり,
+155,3,상록숲,
+155,4,常青森林,
 155,5,Forêt de Jade,
+155,6,Vertania-Wald,
+155,7,Bosque Verde,
+155,8,Bosco Smeraldo,
 155,9,Viridian Forest,
+155,11,トキワの森,
+155,12,常青森林,
 156,5,Tourb'Iles,
 156,9,Whirl Islands,
+157,1,２３ばんどうろ,
+157,3,23번도로,
+157,4,23號道路,
 157,5,Route 23,
+157,6,Route 23,
+157,7,Ruta 23,
+157,8,Percorso 23,
 157,9,Route 23,
-158,5,Centrale,
+157,11,２３番道路,
+157,12,23号道路,
+158,1,むじんはつでんしょ,
+158,3,무인발전소,
+158,4,無人發電廠,
+158,5,Centrale abandonnée,
+158,6,Kraftwerk,
+158,7,Central de Energía,
+158,8,Centrale Elettrica,
 158,9,Power Plant,
+158,11,無人発電所,
+158,12,无人发电厂,
 159,5,Route Victoire,
 159,9,Victory Road,
+160,1,ポケモンタワー,
+160,3,포켓몬타워,
+160,4,寶可夢塔,
 160,5,Tour Pokémon,
+160,6,Pokémon-Turm,
+160,7,Torre Pokémon,
+160,8,Torre Pokémon,
 160,9,Pokémon Tower,
+160,11,ポケモンタワー,
+160,12,宝可梦塔,
+161,1,ポケモンやしき,
+161,3,포켓몬저택,
+161,4,寶可夢屋,
 161,5,Manoir Pokémon,
+161,6,Pokémon-Villa,
+161,7,Mansión Pokémon,
+161,8,Villa Pokémon,
 161,9,Pokémon Mansion,
+161,11,ポケモン屋敷,
+161,12,宝可梦屋,
 162,5,Parc Safari,
 162,9,Safari Zone,
 163,5,Littorella,
@@ -443,14 +779,46 @@ location_id,local_language_id,name,subtitle
 229,9,Goldenrod City,
 230,5,Acajou,
 230,9,Mahogany Town,
+231,1,ニビシティ,
+231,3,회색시티,
+231,4,深灰市,
 231,5,Argenta,
+231,6,Marmoria City,
+231,7,Ciudad Plateada,
+231,8,Plumbeopoli,
 231,9,Pewter City,
+231,11,ニビシティ,
+231,12,深灰市,
+232,1,シオンタウン,
+232,3,보라타운,
+232,4,紫苑鎮,
 232,5,Lavanville,
+232,6,Lavandia,
+232,7,Pueblo Lavanda,
+232,8,Lavandonia,
 232,9,Lavender Town,
+232,11,シオンタウン,
+232,12,紫苑镇,
+233,1,セキエイこうげん,
+233,3,석영고원,
+233,4,石英高原,
 233,5,Plateau Indigo,
+233,6,Indigo-Plateau,
+233,7,Meseta Añil,
+233,8,Altopiano Blu,
 233,9,Indigo Plateau,
+233,11,セキエイ高原,
+233,12,石英高原,
+234,1,ヤマブキシティ,
+234,3,노랑시티,
+234,4,金黃市,
 234,5,Safrania,
+234,6,Saffronia City,
+234,7,Ciudad Azafrán,
+234,8,Zafferanopoli,
 234,9,Saffron City,
+234,11,ヤマブキシティ,
+234,12,金黄市,
 236,5,Phare,
 236,9,Lighthouse,
 237,5,Repaire Rocket d'Acajou,
@@ -503,14 +871,30 @@ location_id,local_language_id,name,subtitle
 262,9,Riley,
 263,5,Cynthia,
 263,9,Cynthia,
-264,5,Endroit mystér.,
+264,1,なぞのばしょ,
+264,3,수수께끼의 장소,
+264,4,神秘的地方,
+264,5,Endroit mystérieux,
+264,6,Mysteriöser Ort,
+264,7,Lugar misterioso,
+264,8,Zona misteriosa,
 264,9,Mystery Zone,
+264,11,なぞの場所,
+264,12,神秘的地方,
 265,5,Endroit superbe,
 265,9,Lovely place,
 266,5,Pokémon Ranger,
 266,9,Pokémon Ranger,
+267,1,とおいばしょ,
+267,3,먼 곳,
+267,4,遙遠的地方,
 267,5,Endroit lointain,
+267,6,Ferner Ort,
+267,7,Lugar lejano,
+267,8,Luogo remoto,
 267,9,Faraway place,
+267,11,遠い場所,
+267,12,遥远的地方,
 268,5,Film Pokémon,
 268,9,Pokémon Movie,
 269,5,Film Pokémon 06,
@@ -1392,8 +1776,16 @@ location_id,local_language_id,name,subtitle
 496,9,Rixy Chamber,
 497,5,Chambre Poinsept,
 497,9,Viapos Chamber,
-498,5,L'Océane,
+498,1,サント・アンヌごう,
+498,3,상트앙느호,
+498,4,聖特安努號,
+498,5,L’Océane,
+498,6,MS Anne,
+498,7,S. S. Anne,
+498,8,Motonave Anna,
 498,9,S.S. Anne,
+498,11,サント・アンヌ号,
+498,12,圣特安努号,
 500,5,Mont Braise,
 500,9,Mt. Ember,
 501,5,Bois Baies,
@@ -3576,3 +3968,1163 @@ location_id,local_language_id,name,subtitle
 798,9,Malie City,Outer Cape
 798,11,マリエシティ,はずれの岬
 798,12,马利埃静市,市郊海角
+799,1,ロケットだんアジト,
+799,3,로켓단아지트,
+799,4,火箭隊基地,
+799,5,Repaire Rocket,
+799,6,Rocket-Versteck,
+799,7,Guarida Rocket,
+799,8,Rifugio Rocket,
+799,9,Team Rocket Hideout,
+799,11,ロケット団アジト,
+799,12,火箭队基地,
+800,1,ＧＯパーク,
+800,3,GO파크,
+800,4,GO Park,
+800,5,GO Park,
+800,6,GO Park,
+800,7,GO Park,
+800,8,GO Park,
+800,9,GO Park complex,
+800,11,ＧＯパーク,
+800,12,GO Park,
+801,1,シルフカンパニー,
+801,3,실프주식회사,
+801,4,西爾佛公司,
+801,5,Sylphe SARL,
+801,6,Silph Company,
+801,7,Silph S. A.,
+801,8,Silph S.p.A.,
+801,9,Silph Co.,
+801,11,シルフカンパニー,
+801,12,西尔佛公司,
+802,1,ポケモンリーグ,
+802,3,포켓몬리그,
+802,4,寶可夢聯盟,
+802,5,Ligue Pokémon,
+802,6,Pokémon-Liga,
+802,7,Liga Pokémon,
+802,8,Lega Pokémon,
+802,9,Pokémon League,
+802,11,ポケモンリーグ,
+802,12,宝可梦联盟,
+803,1,ハロンタウン,
+803,3,펄롱마을,
+803,4,化朗鎮,
+803,5,Paddoxton,
+803,6,Furlongham,
+803,7,Pueblo Yarda,
+803,8,Furlongham,
+803,9,Postwick,
+803,11,ハロンタウン,
+803,12,化朗镇,
+804,1,まどろみのもり,
+804,3,꾸벅졸음숲,
+804,4,微寐森林,
+804,5,Forêt de Sleepwood,
+804,6,Schlummerwald,
+804,7,Bosque Oniria,
+804,8,Bosco Assopito,
+804,9,Slumbering Weald,
+804,11,まどろみの森,
+804,12,微寐森林,
+805,1,１ばんどうろ,
+805,3,1번도로,
+805,4,１號道路,
+805,5,Route 1,
+805,6,Route 1,
+805,7,Ruta 1,
+805,8,Percorso 1,
+805,9,Route 1,
+805,11,１番道路,
+805,12,１号道路,
+806,1,ブラッシータウン,
+806,3,브래시마을,
+806,4,木桿鎮,
+806,5,Brasswick,
+806,6,Brassbury,
+806,7,Pueblo Par,
+806,8,Brassbury,
+806,9,Wedgehurst,
+806,11,ブラッシータウン,
+806,12,木杆镇,
+807,1,ブラッシータウンえき,
+807,3,브래시마을역,
+807,4,木桿鎮車站,
+807,5,Gare de Brasswick,
+807,6,Brassbury-Bahnhof,
+807,7,Estación de Par,
+807,8,Staz. di Brassbury,
+807,9,Wedgehurst Station,
+807,11,ブラッシータウン駅,
+807,12,木杆镇车站,
+808,1,２ばんどうろ,
+808,3,2번도로,
+808,4,２號道路,
+808,5,Route 2,
+808,6,Route 2,
+808,7,Ruta 2,
+808,8,Percorso 2,
+808,9,Route 2,
+808,11,２番道路,
+808,12,２号道路,
+809,1,エンジンシティ,
+809,3,엔진시티,
+809,4,機擎市,
+809,5,Motorby,
+809,6,Engine City,
+809,7,Ciudad Pistón,
+809,8,Steamington,
+809,9,Motostoke,
+809,11,エンジンシティ,
+809,12,机擎市,
+810,1,エンジンシティえき,
+810,3,엔진시티역,
+810,4,機擎市車站,
+810,5,Gare de Motorby,
+810,6,Engine-City-Bahnhof,
+810,7,Estación de Pistón,
+810,8,Staz. di Steamington,
+810,9,Motostoke Station,
+810,11,エンジンシティ駅,
+810,12,机擎市车站,
+811,1,エンジンスタジアム,
+811,3,엔진스타디움,
+811,4,機擎競技場,
+811,5,Stade de Motorby,
+811,6,Engine-Stadion,
+811,7,Estadio de Pistón,
+811,8,Stadio Steamington,
+811,9,Motostoke Stadium,
+811,11,エンジンスタジアム,
+811,12,机擎竞技场,
+812,1,３ばんどうろ,
+812,3,3번도로,
+812,4,３號道路,
+812,5,Route 3,
+812,6,Route 3,
+812,7,Ruta 3,
+812,8,Percorso 3,
+812,9,Route 3,
+812,11,３番道路,
+812,12,３号道路,
+813,1,ガラルこうざん,
+813,3,가라르광산,
+813,4,伽勒爾礦山,
+813,5,Mine de Galar,
+813,6,Galar-Mine 1,
+813,7,Mina de Galar,
+813,8,Miniera di Galar,
+813,9,Galar Mine,
+813,11,ガラル鉱山,
+813,12,伽勒尔矿山,
+814,1,４ばんどうろ,
+814,3,4번도로,
+814,4,４號道路,
+814,5,Route 4,
+814,6,Route 4,
+814,7,Ruta 4,
+814,8,Percorso 4,
+814,9,Route 4,
+814,11,４番道路,
+814,12,４号道路,
+815,1,ターフタウン,
+815,3,터프마을,
+815,4,草路鎮,
+815,5,Greenbury,
+815,6,Turffield,
+815,7,Pueblo Hoyuelo,
+815,8,Turffield,
+815,9,Turffield,
+815,11,ターフタウン,
+815,12,草路镇,
+816,1,ターフスタジアム,
+816,3,터프스타디움,
+816,4,草路競技場,
+816,5,Stade de Greenbury,
+816,6,Turffield-Stadion,
+816,7,Estadio de Hoyuelo,
+816,8,Stadio Turffield,
+816,9,Turffield Stadium,
+816,11,ターフスタジアム,
+816,12,草路竞技场,
+817,1,５ばんどうろ,
+817,3,5번도로,
+817,4,５號道路,
+817,5,Route 5,
+817,6,Route 5,
+817,7,Ruta 5,
+817,8,Percorso 5,
+817,9,Route 5,
+817,11,５番道路,
+817,12,５号道路,
+818,1,バウタウン,
+818,3,바우마을,
+818,4,水舟鎮,
+818,5,Skifford,
+818,6,Keelton,
+818,7,Pueblo Amura,
+818,8,Keelford,
+818,9,Hulbury,
+818,11,バウタウン,
+818,12,水舟镇,
+819,1,バウタウンえき,
+819,3,바우마을역,
+819,4,水舟鎮車站,
+819,5,Gare de Skifford,
+819,6,Keelton-Bahnhof,
+819,7,Estación de Amura,
+819,8,Stazione di Keelford,
+819,9,Hulbury Station,
+819,11,バウタウン駅,
+819,12,水舟镇车站,
+820,1,バウスタジアム,
+820,3,바우스타디움,
+820,4,水舟競技場,
+820,5,Stade de Skifford,
+820,6,Keelton-Stadion,
+820,7,Estadio de Amura,
+820,8,Stadio Keelford,
+820,9,Hulbury Stadium,
+820,11,バウスタジアム,
+820,12,水舟竞技场,
+821,1,エンジンシティはずれ,
+821,3,엔진시티 변두리,
+821,4,機擎市郊外,
+821,5,Abords de Motorby,
+821,6,Engine-Ortsrand,
+821,7,Afueras de Pistón,
+821,8,Perif. Steamington,
+821,9,Motostoke Outskirts,
+821,11,エンジンシティはずれ,
+821,12,机擎市郊外,
+822,1,だいにこうざん,
+822,3,제2광산,
+822,4,第二礦山,
+822,5,Mine de Galar nº 2,
+822,6,Galar-Mine 2,
+822,7,Mina de Galar n.º 2,
+822,8,Miniera 2,
+822,9,Galar Mine No. 2,
+822,11,第二鉱山,
+822,12,第二矿山,
+823,1,ナックルシティ,
+823,3,너클시티,
+823,4,拳關市,
+823,5,Kickenham,
+823,6,Claw City,
+823,7,Ciudad Artejo,
+823,8,Knuckleburgh,
+823,9,Hammerlocke,
+823,11,ナックルシティ,
+823,12,拳关市,
+824,1,ナックルシティえき,
+824,3,너클시티역,
+824,4,拳關市車站,
+824,5,Gare de Kickenham,
+824,6,Claw-City-Bahnhof,
+824,7,Estación de Artejo,
+824,8,St. di Knuckleburgh,
+824,9,Hammerlocke Station,
+824,11,ナックルシティ駅,
+824,12,拳关市车站,
+825,1,ナックルスタジアム,
+825,3,너클스타디움,
+825,4,拳關競技場,
+825,5,Stade de Kickenham,
+825,6,Claw-Stadion,
+825,7,Estadio de Artejo,
+825,8,Stadio Knuckleburgh,
+825,9,Hammerlocke Stadium,
+825,11,ナックルスタジアム,
+825,12,拳关竞技场,
+826,1,エネルギープラント,
+826,3,에너지플랜트,
+826,4,能源工廠,
+826,5,Salle du réacteur,
+826,6,Energiewerk,
+826,7,Planta Eléctrica,
+826,8,Centrale Energetica,
+826,9,Energy Plant,
+826,11,エネルギープラント,
+826,12,能源工厂,
+827,1,タワートップ,
+827,3,타워톱,
+827,4,塔頂,
+827,5,Sommet de la tour,
+827,6,Turmspitze,
+827,7,Corona de la Torre,
+827,8,Cima della Torre,
+827,9,Tower Summit,
+827,11,タワートップ,
+827,12,塔顶,
+828,1,６ばんどうろ,
+828,3,6번도로,
+828,4,６號道路,
+828,5,Route 6,
+828,6,Route 6,
+828,7,Ruta 6,
+828,8,Percorso 6,
+828,9,Route 6,
+828,11,６番道路,
+828,12,６号道路,
+829,1,ラテラルタウン,
+829,3,래터럴마을,
+829,4,溯傳鎮,
+829,5,Old Chister,
+829,6,Passbeck,
+829,7,Pueblo Ladera,
+829,8,Latermore,
+829,9,Stow-on-Side,
+829,11,ラテラルタウン,
+829,12,溯传镇,
+830,1,ラテラルスタジアム,
+830,3,래터럴스타디움,
+830,4,溯傳競技場,
+830,5,Stade d’Old Chister,
+830,6,Passbeck-Stadion,
+830,7,Estadio de Ladera,
+830,8,Stadio Latermore,
+830,9,Stow-on-Side Stadium,
+830,11,ラテラルスタジアム,
+830,12,溯传竞技场,
+831,1,ルミナスメイズのもり,
+831,3,루미너스메이즈숲,
+831,4,迷光森林,
+831,5,Forêt de Lumirinth,
+831,6,Wirrschein-Wald,
+831,7,Bosque Lumirinto,
+831,8,Bosco Brillabirinto,
+831,9,Glimwood Tangle,
+831,11,ルミナスメイズの森,
+831,12,迷光森林,
+832,1,アラベスクタウン,
+832,3,아라베스크마을,
+832,4,舞姿鎮,
+832,5,Corrifey,
+832,6,Fairballey,
+832,7,Pueblo Plié,
+832,8,Piquedilly,
+832,9,Ballonlea,
+832,11,アラベスクタウン,
+832,12,舞姿镇,
+833,1,アラベスクスタジアム,
+833,3,아라베스크스타디움,
+833,4,舞姿競技場,
+833,5,Stade de Corrifey,
+833,6,Fairballey-Stadion,
+833,7,Estadio de Plié,
+833,8,Stadio Piquedilly,
+833,9,Ballonlea Stadium,
+833,11,アラベスクスタジアム,
+833,12,舞姿竞技场,
+834,1,７ばんどうろ,
+834,3,7번도로,
+834,4,７號道路,
+834,5,Route 7,
+834,6,Route 7,
+834,7,Ruta 7,
+834,8,Percorso 7,
+834,9,Route 7,
+834,11,７番道路,
+834,12,７号道路,
+835,1,８ばんどうろ,
+835,3,8번도로,
+835,4,８號道路,
+835,5,Route 8,
+835,6,Route 8,
+835,7,Ruta 8,
+835,8,Percorso 8,
+835,9,Route 8,
+835,11,８番道路,
+835,12,８号道路,
+836,1,８ばんどうろ,ゆけむりこみち
+836,3,8번도로,모락모락 좁은 길
+836,4,８號道路,泉煙小路
+836,5,Route 8,Sentier des Sources
+836,6,Route 8,Dampfschwaden-Pfad
+836,7,Ruta 8,Senda Vaporosa
+836,8,Percorso 8,Sentiero del Vapore
+836,9,Route 8,Steamdrift Way
+836,11,８番道路,湯けむり小路
+836,12,８号道路,泉烟小路
+837,1,９ばんどうろ,
+837,3,9번도로,
+837,4,９號道路,
+837,5,Route 9,
+837,6,Route 9,
+837,7,Ruta 9,
+837,8,Percorso 9,
+837,9,Route 9,
+837,11,９番道路,
+837,12,９号道路,
+838,1,９ばんどうろ,キルクスのいりえ
+838,3,9번도로,키르쿠스만
+838,4,９號道路,戰競灣
+838,5,Route 9,Baie de Ludester
+838,6,Route 9,Circhester-Bucht
+838,7,Ruta 9,Bahía de Auriga
+838,8,Percorso 9,Baia di Circhester
+838,9,Route 9,Circhester Bay
+838,11,９番道路,キルクスの入り江
+838,12,９号道路,战竞湾
+839,1,９ばんどうろ,スパイクタウンはずれ
+839,3,9번도로,스파이크마을 변두리
+839,4,９號道路,尖釘鎮郊外
+839,5,Route 9,Abords de Smashings
+839,6,Route 9,Spikeford-Ortsrand
+839,7,Ruta 9,Afueras de Crampón
+839,8,Percorso 9,Perif. di Spikeville
+839,9,Route 9,Outer Spikemuth
+839,11,９番道路,スパイクタウンはずれ
+839,12,９号道路,尖钉镇郊外
+840,1,キルクスタウン,
+840,3,키르쿠스마을,
+840,4,戰競鎮,
+840,5,Ludester,
+840,6,Circhester,
+840,7,Pueblo Auriga,
+840,8,Circhester,
+840,9,Circhester,
+840,11,キルクスタウン,
+840,12,战竞镇,
+841,1,キルクススタジアム,
+841,3,키르쿠스스타디움,
+841,4,戰競競技場,
+841,5,Stade de Ludester,
+841,6,Circhester-Stadion,
+841,7,Estadio de Auriga,
+841,8,Stadio Circhester,
+841,9,Circhester Stadium,
+841,11,キルクススタジアム,
+841,12,战竞竞技场,
+842,1,スパイクタウン,
+842,3,스파이크마을,
+842,4,尖釘鎮,
+842,5,Smashings,
+842,6,Spikeford,
+842,7,Pueblo Crampón,
+842,8,Spikeville,
+842,9,Spikemuth,
+842,11,スパイクタウン,
+842,12,尖钉镇,
+843,1,ルートナイントンネル,
+843,3,루트나인터널,
+843,4,九路隧道,
+843,5,Tunnel de la Route 9,
+843,6,Route-9-Tunnel,
+843,7,Túnel de la Ruta 9,
+843,8,Tunnel Percorso 9,
+843,9,Route 9 Tunnel,
+843,11,ルートナイントンネル,
+843,12,九路隧道,
+844,1,１０ばんどうろ,
+844,3,10번도로,
+844,4,１０號道路,
+844,5,Route 10,
+844,6,Route 10,
+844,7,Ruta 10,
+844,8,Percorso 10,
+844,9,Route 10,
+844,11,１０番道路,
+844,12,１０号道路,
+845,1,ホワイトヒルえき,
+845,3,화이트힐역,
+845,4,白丘車站,
+845,5,Gare de White Hill,
+845,6,White-Hill-Bahnhof,
+845,7,Est. Colinablanca,
+845,8,Staz. di Collebianco,
+845,9,White Hill Station,
+845,11,ホワイトヒル駅,
+845,12,白丘车站,
+846,1,シュートシティ,
+846,3,슛시티,
+846,4,宮門市,
+846,5,Winscor,
+846,6,Score City,
+846,7,Ciudad Puntera,
+846,8,Goalwick,
+846,9,Wyndon,
+846,11,シュートシティ,
+846,12,宫门市,
+847,1,シュートシティえき,
+847,3,슛시티역,
+847,4,宮門市車站,
+847,5,Gare de Winscor,
+847,6,Score-City-Bahnhof,
+847,7,Estación de Puntera,
+847,8,Stazione di Goalwick,
+847,9,Wyndon Station,
+847,11,シュートシティ駅,
+847,12,宫门市车站,
+848,1,シュートスタジアム,ポケモンリーグほんぶ
+848,3,슛스타디움,포켓몬리그본부
+848,4,宮門競技場,寶可夢聯盟總部
+848,5,Stade de Winscor,Siège de la Ligue
+848,6,Score-Stadion,Liga-Hauptquartier
+848,7,Estadio de Puntera,Sede de la Liga
+848,8,Stadio Goalwick,Sede Lega Pokémon
+848,9,Wyndon Stadium,Pokémon League HQ
+848,11,シュートスタジアム,ポケモンリーグ本部
+848,12,宫门竞技场,宝可梦联盟总部
+849,1,シュートスタジアム,せんしゅひかえしつ
+849,3,슛스타디움,선수대기실
+849,4,宮門競技場,選手休息室
+849,5,Stade de Winscor,Vestiaires
+849,6,Score-Stadion,Wartebereich
+849,7,Estadio de Puntera,Antesala
+849,8,Stadio Goalwick,Spogliatoio
+849,9,Wyndon Stadium,Locker Room
+849,11,シュートスタジアム,選手控え室
+849,12,宫门竞技场,选手休息室
+850,1,シュートスタジアム,
+850,3,슛스타디움,
+850,4,宮門競技場,
+850,5,Stade de Winscor,
+850,6,Score-Stadion,
+850,7,Estadio de Puntera,
+850,8,Stadio Goalwick,
+850,9,Wyndon Stadium,
+850,11,シュートスタジアム,
+850,12,宫门竞技场,
+851,1,つどいのあきち,ワイルドエリア
+851,3,모임의 공터,와일드에리어
+851,4,集匯空地,曠野地帶
+851,5,Sentier de la Gare,Terres Sauvages
+851,6,Treffpunkt,Naturzone
+851,7,Punto de Encuentro,Área Silvestre
+851,8,Piazzale Adunanza,Terre Selvagge
+851,9,Meetup Spot,Wild Area
+851,11,集いの空き地,ワイルドエリア
+851,12,集汇空地,旷野地带
+852,1,うららかそうげん,ワイルドエリア
+852,3,화창한 초원,와일드에리어
+852,4,煦麗草原,曠野地帶
+852,5,Plaine Verdoyante,Terres Sauvages
+852,6,Wonnewiesen,Naturzone
+852,7,Pradera Radiante,Área Silvestre
+852,8,Pianura Serena,Terre Selvagge
+852,9,Rolling Fields,Wild Area
+852,11,うららか草原,ワイルドエリア
+852,12,煦丽草原,旷野地带
+853,1,こもれびばやし,ワイルドエリア
+853,3,햇살비추는숲,와일드에리어
+853,4,沐光森林,曠野地帶
+853,5,Bois de Clairjour,Terres Sauvages
+853,6,Wipfelscheinwald,Naturzone
+853,7,Arboleda Claroscuro,Área Silvestre
+853,8,Boschetto Ombraluce,Terre Selvagge
+853,9,Dappled Grove,Wild Area
+853,11,こもれび林,ワイルドエリア
+853,12,沐光森林,旷野地带
+854,1,みはりとうあとち,ワイルドエリア
+854,3,감시탑 유적지,와일드에리어
+854,4,瞭望塔舊址,曠野地帶
+854,5,Tour en ruines,Terres Sauvages
+854,6,Wachturmruine,Naturzone
+854,7,Antigua Atalaya,Área Silvestre
+854,8,Torre Diroccata,Terre Selvagge
+854,9,Watchtower Ruins,Wild Area
+854,11,見張り塔跡地,ワイルドエリア
+854,12,瞭望塔旧址,旷野地带
+855,1,キバこ・ひがし,ワイルドエリア
+855,3,터검니호 동쪽,와일드에리어
+855,4,牙牙湖東岸,曠野地帶
+855,5,Lac Coupenotte Est,Terres Sauvages
+855,6,Milza-See (Osten),Naturzone
+855,7,Lago Axew (este),Área Silvestre
+855,8,Lago Axew (est),Terre Selvagge
+855,9,East Lake Axewell,Wild Area
+855,11,キバ湖・東,ワイルドエリア
+855,12,牙牙湖东岸,旷野地带
+856,1,キバこ・にし,ワイルドエリア
+856,3,터검니호 서쪽,와일드에리어
+856,4,牙牙湖西岸,曠野地帶
+856,5,Lac Coupenotte Ouest,Terres Sauvages
+856,6,Milza-See (Westen),Naturzone
+856,7,Lago Axew (oeste),Área Silvestre
+856,8,Lago Axew (ovest),Terre Selvagge
+856,9,West Lake Axewell,Wild Area
+856,11,キバ湖・西,ワイルドエリア
+856,12,牙牙湖西岸,旷野地带
+857,1,キバこのひとみ,ワイルドエリア
+857,3,터검니호의 눈동자,와일드에리어
+857,4,牙牙湖之眼,曠野地帶
+857,5,Œil du Lac,Terres Sauvages
+857,6,Milza-See (Auge),Naturzone
+857,7,Ojo de Axew,Área Silvestre
+857,8,Occhio del Lago Axew,Terre Selvagge
+857,9,Axew’s Eye,Wild Area
+857,11,キバ湖の瞳,ワイルドエリア
+857,12,牙牙湖之眼,旷野地带
+858,1,ミロカロこ・みなみ,ワイルドエリア
+858,3,밀로틱호 남쪽,와일드에리어
+858,4,美納斯湖南岸,曠野地帶
+858,5,Lac Milobellus Sud,Terres Sauvages
+858,6,Milotic-See (Süden),Naturzone
+858,7,Lago Milotic (sur),Área Silvestre
+858,8,Lago Milotic (sud),Terre Selvagge
+858,9,South Lake Miloch,Wild Area
+858,11,ミロカロ湖・南,ワイルドエリア
+858,12,美纳斯湖南岸,旷野地带
+859,1,きょじんのこしかけ,ワイルドエリア
+859,3,거인의 의자,와일드에리어
+859,4,巨人凳岩,曠野地帶
+859,5,Siège du Géant,Terres Sauvages
+859,6,Sitz des Giganten,Naturzone
+859,7,Silla del Gigante,Área Silvestre
+859,8,Sedia del Gigante,Terre Selvagge
+859,9,Giant’s Seat,Wild Area
+859,11,巨人の腰かけ,ワイルドエリア
+859,12,巨人凳岩,旷野地带
+860,1,ミロカロこ・きた,ワイルドエリア
+860,3,밀로틱호 북쪽,와일드에리어
+860,4,美納斯湖北岸,曠野地帶
+860,5,Lac Milobellus Nord,Terres Sauvages
+860,6,Milotic-See (Norden),Naturzone
+860,7,Lago Milotic (norte),Área Silvestre
+860,8,Lago Milotic (nord),Terre Selvagge
+860,9,North Lake Miloch,Wild Area
+860,11,ミロカロ湖・北,ワイルドエリア
+860,12,美纳斯湖北岸,旷野地带
+861,1,エンジンリバーサイド,ワイルドエリア
+861,3,엔진 리버사이드,와일드에리어
+861,4,機擎河岸,曠野地帶
+861,5,Berges de Motorby,Terres Sauvages
+861,6,Engine-Flussufer,Naturzone
+861,7,Ribera de Pistón,Área Silvestre
+861,8,Fiume di Steamington,Terre Selvagge
+861,9,Motostoke Riverbank,Wild Area
+861,11,エンジンリバーサイド,ワイルドエリア
+861,12,机擎河岸,旷野地带
+862,1,ハシノマはらっぱ,ワイルドエリア
+862,3,다리아래 벌판,와일드에리어
+862,4,橋間空地,曠野地帶
+862,5,Prairie Entre-Ponts,Terres Sauvages
+862,6,Brückental,Naturzone
+862,7,Valle Entrepuentes,Área Silvestre
+862,8,Piana dei Ponti,Terre Selvagge
+862,9,Bridge Field,Wild Area
+862,11,ハシノマ原っぱ,ワイルドエリア
+862,12,桥间空地,旷野地带
+863,1,ストーンズげんや,ワイルドエリア
+863,3,스톤즈들판,와일드에리어
+863,4,巨石原野,曠野地帶
+863,5,Plaine Rocheuse,Terres Sauvages
+863,6,Megalithen-Ebene,Naturzone
+863,7,Llanura Pétrea,Área Silvestre
+863,8,Landa delle Pietre,Terre Selvagge
+863,9,Stony Wilderness,Wild Area
+863,11,ストーンズ原野,ワイルドエリア
+863,12,巨石原野,旷野地带
+864,1,さじんのくぼち,ワイルドエリア
+864,3,모래먼지구덩이,와일드에리어
+864,4,沙塵窪地,曠野地帶
+864,5,Fosse des Sables,Terres Sauvages
+864,6,Sandsturmkessel,Naturzone
+864,7,Cuenca Polvorienta,Área Silvestre
+864,8,Conca delle Sabbie,Terre Selvagge
+864,9,Dusty Bowl,Wild Area
+864,11,砂塵の窪地,ワイルドエリア
+864,12,沙尘洼地,旷野地带
+865,1,きょじんのかがみいけ,ワイルドエリア
+865,3,거인의 거울 연못,와일드에리어
+865,4,巨人鏡池,曠野地帶
+865,5,Miroir du Géant,Terres Sauvages
+865,6,Spiegel des Giganten,Naturzone
+865,7,Espejo del Gigante,Área Silvestre
+865,8,Specchio del Gigante,Terre Selvagge
+865,9,Giant’s Mirror,Wild Area
+865,11,巨人の鏡池,ワイルドエリア
+865,12,巨人镜池,旷野地带
+866,1,ナックルきゅうりょう,ワイルドエリア
+866,3,너클 구릉,와일드에리어
+866,4,拳關丘陵,曠野地帶
+866,5,Plateau de Kickenham,Terres Sauvages
+866,6,Claw-Plateau,Naturzone
+866,7,Cornisa de Artejo,Área Silvestre
+866,8,Colle Knuckleburgh,Terre Selvagge
+866,9,Hammerlocke Hills,Wild Area
+866,11,ナックル丘陵,ワイルドエリア
+866,12,拳关丘陵,旷野地带
+867,1,きょじんのぼうし,ワイルドエリア
+867,3,거인의 모자,와일드에리어
+867,4,巨人帽岩,曠野地帶
+867,5,Coiffe du Géant,Terres Sauvages
+867,6,Hut des Giganten,Naturzone
+867,7,Gorro del Gigante,Área Silvestre
+867,8,Berretto del Gigante,Terre Selvagge
+867,9,Giant’s Cap,Wild Area
+867,11,巨人の帽子,ワイルドエリア
+867,12,巨人帽岩,旷野地带
+868,1,げきりんのみずうみ,ワイルドエリア
+868,3,역린호수,와일드에리어
+868,4,逆鱗湖,曠野地帶
+868,5,Lac Ouragan,Terres Sauvages
+868,6,Wutanfall-See,Naturzone
+868,7,Lago del Enfado,Área Silvestre
+868,8,Lago Dragofuria,Terre Selvagge
+868,9,Lake of Outrage,Wild Area
+868,11,げきりんの湖,ワイルドエリア
+868,12,逆鳞湖,旷野地带
+869,1,ワイルドエリアえき,
+869,3,와일드에리어역,
+869,4,曠野地帶車站,
+869,5,Gare Terres Sauvages,
+869,6,Naturzonen-Bahnhof,
+869,7,Est. Área Silvestre,
+869,8,Staz. Terre Selvagge,
+869,9,Wild Area Station,
+869,11,ワイルドエリア駅,
+869,12,旷野地带车站,
+870,1,バトルタワー,
+870,3,배틀타워,
+870,4,對戰塔,
+870,5,Tour de Combat,
+870,6,Kampfturm,
+870,7,Torre Batalla,
+870,8,Torre Lotta,
+870,9,Battle Tower,
+870,11,バトルタワー,
+870,12,对战塔,
+871,1,ローズタワービル,
+871,3,로즈타워빌딩,
+871,4,洛茲大廈,
+871,5,Shehroz Tower,
+871,6,Rose Tower,
+871,7,Torre Rose,
+871,8,Rose Tower,
+871,9,Rose Tower,
+871,11,ローズタワービル,
+871,12,洛兹大厦,
+873,1,いちれいのはら,ヨロイじま
+873,3,인사의 들판,갑옷섬
+873,4,揖禮原野,鎧島
+873,5,Plaine Salutation,Isolarmure
+873,6,Grußgefilde,Rüstungsinsel
+873,7,Prado Reverencia,Isla de la Armadura
+873,8,Pianura Inchino,Isola dell’Armatura
+873,9,Fields of Honor,Isle of Armor
+873,11,一礼野原,ヨロイ島
+873,12,揖礼原野,铠岛
+874,1,せいりょうしつげん,ヨロイじま
+874,3,청량한 습지초원,갑옷섬
+874,4,清涼濕原,鎧島
+874,5,Lande Boldair,Isolarmure
+874,6,Balsamsumpf,Rüstungsinsel
+874,7,Humedal Frescor,Isla de la Armadura
+874,8,Acquitrino Fresco,Isola dell’Armatura
+874,9,Soothing Wetlands,Isle of Armor
+874,11,清涼湿原,ヨロイ島
+874,12,清凉湿原,铠岛
+875,1,しゅうちゅうのもり,ヨロイじま
+875,3,집중의 숲,갑옷섬
+875,4,專注森林,鎧島
+875,5,Forêt Flexion,Isolarmure
+875,6,Fokusforst,Rüstungsinsel
+875,7,Bosque Concentración,Isla de la Armadura
+875,8,Bosco Concentrazione,Isola dell’Armatura
+875,9,Forest of Focus,Isle of Armor
+875,11,集中の森,ヨロイ島
+875,12,专注森林,铠岛
+876,1,チャレンジビーチ,ヨロイじま
+876,3,챌린지비치,갑옷섬
+876,4,挑戰海灘,鎧島
+876,5,Plage de l’Épreuve,Isolarmure
+876,6,Strand der Prüfung,Rüstungsinsel
+876,7,Playa Desafío,Isla de la Armadura
+876,8,Spiaggia Sfida,Isola dell’Armatura
+876,9,Challenge Beach,Isle of Armor
+876,11,チャレンジビーチ,ヨロイ島
+876,12,挑战海滩,铠岛
+877,1,ファイトケイブ,ヨロイじま
+877,3,파이트케이브,갑옷섬
+877,4,戰鬥洞窟,鎧島
+877,5,Grotte du Pugilat,Isolarmure
+877,6,Kämpfergrotte,Rüstungsinsel
+877,7,Cueva Contienda,Isla de la Armadura
+877,8,Antro Scontro,Isola dell’Armatura
+877,9,Brawlers’ Cave,Isle of Armor
+877,11,ファイトケイブ,ヨロイ島
+877,12,战斗洞窟,铠岛
+878,1,チャレンジロード,ヨロイじま
+878,3,챌린지로드,갑옷섬
+878,4,挑戰之路,鎧島
+878,5,Route de l’Épreuve,Isolarmure
+878,6,Pfad der Prüfung,Rüstungsinsel
+878,7,Ruta Desafío,Isla de la Armadura
+878,8,Cammino Sfida,Isola dell’Armatura
+878,9,Challenge Road,Isle of Armor
+878,11,チャレンジロード,ヨロイ島
+878,12,挑战之路,铠岛
+879,1,とうしんのどうくつ,ヨロイじま
+879,3,투지의 동굴,갑옷섬
+879,4,鬥志洞窟,鎧島
+879,5,Caverne Pugnacité,Isolarmure
+879,6,Tapferkeitshöhle,Rüstungsinsel
+879,7,Cueva Tenacidad,Isla de la Armadura
+879,8,Grotta Grinta,Isola dell’Armatura
+879,9,Courageous Cavern,Isle of Armor
+879,11,闘心の洞窟,ヨロイ島
+879,12,斗志洞窟,铠岛
+880,1,えんかんのいりえ,ヨロイじま
+880,3,원환의 만,갑옷섬
+880,4,圓環海灣,鎧島
+880,5,Lagune Circulaire,Isolarmure
+880,6,Ringbucht,Rüstungsinsel
+880,7,Bahía Circular,Isla de la Armadura
+880,8,Baia Circolare,Isola dell’Armatura
+880,9,Loop Lagoon,Isle of Armor
+880,11,円環の入り江,ヨロイ島
+880,12,圆环海湾,铠岛
+881,1,たんれんへいげん,ヨロイじま
+881,3,단련 평원,갑옷섬
+881,4,鍛鍊平原,鎧島
+881,5,Plaine des Efforts,Isolarmure
+881,6,Fleißebene,Rüstungsinsel
+881,7,Llano Entrenamiento,Isla de la Armadura
+881,8,Piana Addestramento,Isola dell’Armatura
+881,9,Training Lowlands,Isle of Armor
+881,11,鍛錬平原,ヨロイ島
+881,12,锻炼平原,铠岛
+882,1,ならしのほらあな,ヨロイじま
+882,3,연습의 동굴,갑옷섬
+882,4,熱身洞穴,鎧島
+882,5,Voie des Étirements,Isolarmure
+882,6,Aufwärmtunnel,Rüstungsinsel
+882,7,Gruta Calentamiento,Isla de la Armadura
+882,8,Tunnel Riscaldamento,Isola dell’Armatura
+882,9,Warm-Up Tunnel,Isle of Armor
+882,11,慣らしの洞穴,ヨロイ島
+882,12,热身洞穴,铠岛
+883,1,なべぞこさばく,ヨロイじま
+883,3,냄비바닥사막,갑옷섬
+883,4,鍋底沙漠,鎧島
+883,5,Sables de Kudsac,Isolarmure
+883,6,Wüstensenke,Rüstungsinsel
+883,7,Cuenca Arenosa,Isla de la Armadura
+883,8,Deserto Paiolo,Isola dell’Armatura
+883,9,Potbottom Desert,Isle of Armor
+883,11,鍋底砂漠,ヨロイ島
+883,12,锅底沙漠,铠岛
+884,1,ワークアウトのうみ,ヨロイじま
+884,3,워크아웃 바다,갑옷섬
+884,4,健身之海,鎧島
+884,5,Mer Eau-Hisse,Isolarmure
+884,6,Fitnessmeer,Rüstungsinsel
+884,7,Mar Gimnástico,Isla de la Armadura
+884,8,Mar Ginnico,Isola dell’Armatura
+884,9,Workout Sea,Isle of Armor
+884,11,ワークアウトの海,ヨロイ島
+884,12,健身之海,铠岛
+885,1,ならぶじまのうみ,ヨロイじま
+885,3,열도 바다,갑옷섬
+885,4,列島海域,鎧島
+885,5,Mer Align’Îlots,Isolarmure
+885,6,Inselkettenmeer,Rüstungsinsel
+885,7,Mar Andana,Isla de la Armadura
+885,8,Mar Lineapelago,Isola dell’Armatura
+885,9,Stepping-Stone Sea,Isle of Armor
+885,11,並ぶ島の海,ヨロイ島
+885,12,列岛海域,铠岛
+886,1,はなれじまかいいき,ヨロイじま
+886,3,외딴섬 해역,갑옷섬
+886,4,離島海域,鎧島
+886,5,Mer Isol’Îlots,Isolarmure
+886,6,Fernarchipel,Rüstungsinsel
+886,7,Mar Islejos,Isla de la Armadura
+886,8,Mar Sperdipelago,Isola dell’Armatura
+886,9,Insular Sea,Isle of Armor
+886,11,離れ島海域,ヨロイ島
+886,12,离岛海域,铠岛
+887,1,ハニカームのうみ,ヨロイじま
+887,3,허니컴 바다,갑옷섬
+887,4,蜂巢海,鎧島
+887,5,Mer Calméole,Isolarmure
+887,6,Wabenmeer,Rüstungsinsel
+887,7,Mar Meloso,Isla de la Armadura
+887,8,Mar Quietarnia,Isola dell’Armatura
+887,9,Honeycalm Sea,Isle of Armor
+887,11,ハニカームの海,ヨロイ島
+887,12,蜂巢海,铠岛
+888,1,ハニカームじま,ヨロイじま
+888,3,허니컴섬,갑옷섬
+888,4,蜂巢島,鎧島
+888,5,Îlot Calméole,Isolarmure
+888,6,Wabeninsel,Rüstungsinsel
+888,7,Isla Melosa,Isla de la Armadura
+888,8,Isola Quietarnia,Isola dell’Armatura
+888,9,Honeycalm Island,Isle of Armor
+888,11,ハニカーム島,ヨロイ島
+888,12,蜂巢岛,铠岛
+889,1,マスターどうじょう,
+889,3,마스터 도장,
+889,4,馬師傅武館,
+889,5,Dojo de la Maîtrise,
+889,6,Master-Dojo,
+889,7,Dojo Maestro,
+889,8,Dojo Master,
+889,9,Master Dojo,
+889,11,マスター道場,
+889,12,马师傅武馆,
+890,1,あくのとう,
+890,3,악의 탑,
+890,4,惡之塔,
+890,5,Tour des Ténèbres,
+890,6,Turm des Unlichts,
+890,7,Torre de las Sombras,
+890,8,Torre Buio,
+890,9,Tower of Darkness,
+890,11,あくの塔,
+890,12,恶之塔,
+891,1,みずのとう,
+891,3,물의 탑,
+891,4,水之塔,
+891,5,Tour de l’Eau,
+891,6,Turm des Wassers,
+891,7,Torre de las Aguas,
+891,8,Torre Acqua,
+891,9,Tower of Waters,
+891,11,みずの塔,
+891,12,水之塔,
+892,1,ヨロイじまえき,
+892,3,갑옷섬역,
+892,4,鎧島驛站,
+892,5,Gare d’Isolarmure,
+892,6,Rüstungs-Station,
+892,7,Estación Armadura,
+892,8,Staz. Isola Armatura,
+892,9,Armor Station,
+892,11,ヨロイ島駅,
+892,12,铠岛驿站,
+893,1,すべりだしせつげん,カンムリせつげん
+893,3,출발의 설원,왕관설원
+893,4,起橇雪原,王冠雪原
+893,5,Plateau Beau-Gant,Couronneige
+893,6,Schlitterfeld,Kronen-Schneelande
+893,7,Campo Deslizante,Nieves de la Corona
+893,8,Nevi Primoscivolo,Landa Corona
+893,9,Slippery Slope,Crown Tundra
+893,11,滑り出し雪原,カンムリ雪原
+893,12,起橇雪原,王冠雪原
+894,1,フリーズむら,カンムリせつげん
+894,3,프리즈마을,왕관설원
+894,4,凍凝村,王冠雪原
+894,5,Hameau Gelé,Couronneige
+894,6,Freezedale,Kronen-Schneelande
+894,7,Villa Helada,Nieves de la Corona
+894,8,Freezedale,Landa Corona
+894,9,Freezington,Crown Tundra
+894,11,フリーズ村,カンムリ雪原
+894,12,冻凝村,王冠雪原
+895,1,ひょうてんせつげん,カンムリせつげん
+895,3,빙점 설원,왕관설원
+895,4,冰點雪原,王冠雪原
+895,5,Plaine Granfroy,Couronneige
+895,6,Frostfeld,Kronen-Schneelande
+895,7,Campo Bajocero,Nieves de la Corona
+895,8,Piana Sottozero,Landa Corona
+895,9,Frostpoint Field,Crown Tundra
+895,11,氷点雪原,カンムリ雪原
+895,12,冰点雪原,王冠雪原
+896,1,きょじんのねどこ,カンムリせつげん
+896,3,거인의 침소,왕관설원
+896,4,巨人睡榻,王冠雪原
+896,5,Repos du Géant,Couronneige
+896,6,Bett des Giganten,Kronen-Schneelande
+896,7,Lecho del Gigante,Nieves de la Corona
+896,8,Letto del Gigante,Landa Corona
+896,9,Giant’s Bed,Crown Tundra
+896,11,巨人の寝床,カンムリ雪原
+896,12,巨人睡榻,王冠雪原
+897,1,いにしえのぼち,カンムリせつげん
+897,3,옛 무덤,왕관설원
+897,4,遠古墓地,王冠雪原
+897,5,Cimetière Ancien,Couronneige
+897,6,Uralter Friedhof,Kronen-Schneelande
+897,7,Viejo Cementerio,Nieves de la Corona
+897,8,Cimitero Antico,Landa Corona
+897,9,Old Cemetery,Crown Tundra
+897,11,いにしえの墓地,カンムリ雪原
+897,12,远古墓地,王冠雪原
+898,1,せっちゅうけいこく,カンムリせつげん
+898,3,설중 계곡,왕관설원
+898,4,雪中溪谷,王冠雪原
+898,5,Pente Enneigée,Couronneige
+898,6,Schneeschlucht,Kronen-Schneelande
+898,7,Desfiladero Nevado,Nieves de la Corona
+898,8,Valle Innevata,Landa Corona
+898,9,Snowslide Slope,Crown Tundra
+898,11,雪中渓谷,カンムリ雪原
+898,12,雪中溪谷,王冠雪原
+899,1,とうちょうトンネル,カンムリせつげん
+899,3,등정터널,왕관설원
+899,4,登頂隧道,王冠雪原
+899,5,Galeries Monte-Pic,Couronneige
+899,6,Aufstiegstunnel,Kronen-Schneelande
+899,7,Túnel Ascensión,Nieves de la Corona
+899,8,Tunnel Scalata,Landa Corona
+899,9,Tunnel to the Top,Crown Tundra
+899,11,登頂トンネル,カンムリ雪原
+899,12,登顶隧道,王冠雪原
+900,1,いただきへのゆきみち,カンムリせつげん
+900,3,정상으로 가는 눈길,왕관설원
+900,4,通頂雪道,王冠雪原
+900,5,Sentier Blanche-Cime,Couronneige
+900,6,Schneegipfelpfad,Kronen-Schneelande
+900,7,Senda Blancacima,Nieves de la Corona
+900,8,Sentiero Biancacima,Landa Corona
+900,9,Path to the Peak,Crown Tundra
+900,11,頂への雪道,カンムリ雪原
+900,12,通顶雪道,王冠雪原
+901,1,カンムリしんでん,カンムリせつげん
+901,3,왕관신전,왕관설원
+901,4,王冠神殿,王冠雪原
+901,5,Temple Couronne,Couronneige
+901,6,Kronentempel,Kronen-Schneelande
+901,7,Templo Corona,Nieves de la Corona
+901,8,Tempio Corona,Landa Corona
+901,9,Crown Shrine,Crown Tundra
+901,11,カンムリ神殿,カンムリ雪原
+901,12,王冠神殿,王冠雪原
+902,1,きょじんのくつぞこ,カンムリせつげん
+902,3,거인의 밑창,왕관설원
+902,4,巨人鞋底,王冠雪原
+902,5,Empreinte du Géant,Couronneige
+902,6,Sohle des Giganten,Kronen-Schneelande
+902,7,Suela del Gigante,Nieves de la Corona
+902,8,Suola del Gigante,Landa Corona
+902,9,Giant’s Foot,Crown Tundra
+902,11,巨人の靴底,カンムリ雪原
+902,12,巨人鞋底,王冠雪原
+903,1,うみなりのどうくつ,カンムリせつげん
+903,3,해명 동굴,왕관설원
+903,4,海鳴洞窟,王冠雪原
+903,5,Cavernes Gronde-Mer,Couronneige
+903,6,Rauschende Höhlen,Kronen-Schneelande
+903,7,Grutas Sonamar,Nieves de la Corona
+903,8,Grotte Fragormare,Landa Corona
+903,9,Roaring-Sea Caves,Crown Tundra
+903,11,海鳴りの洞窟,カンムリ雪原
+903,12,海鸣洞窟,王冠雪原
+904,1,いてつきのうみ,カンムリせつげん
+904,3,얼어붙은 바다,왕관설원
+904,4,凍海,王冠雪原
+904,5,Mer Banquise,Couronneige
+904,6,Schollenmeer,Kronen-Schneelande
+904,7,Mar Gélido,Nieves de la Corona
+904,8,Mar Gelido,Landa Corona
+904,9,Frigid Sea,Crown Tundra
+904,11,凍てつきの海,カンムリ雪原
+904,12,冻海,王冠雪原
+905,1,みつまたがはら,カンムリせつげん
+905,3,세갈래 들판,왕관설원
+905,4,三岔平原,王冠雪原
+905,5,Croisée Trois-Voies,Couronneige
+905,6,Dreiwegpass,Kronen-Schneelande
+905,7,Encrucijada Tresvías,Nieves de la Corona
+905,8,Campo Trivio,Landa Corona
+905,9,Three-Point Pass,Crown Tundra
+905,11,三つまたヶ原,カンムリ雪原
+905,12,三岔平原,王冠雪原
+906,1,ボールレイクのこはん,カンムリせつげん
+906,3,볼레이크 호반,왕관설원
+906,4,球湖湖畔,王冠雪原
+906,5,Lac Poké Ball,Couronneige
+906,6,Ballsee-Ufer,Kronen-Schneelande
+906,7,Lago Bolaguna,Nieves de la Corona
+906,8,Riva del Lago Ball,Landa Corona
+906,9,Ballimere Lake,Crown Tundra
+906,11,ボールレイクの湖畔,カンムリ雪原
+906,12,球湖湖畔,王冠雪原
+907,1,こはんのどうくつ,カンムリせつげん
+907,3,호반 동굴,왕관설원
+907,4,湖畔洞窟,王冠雪原
+907,5,Grotte du Lac,Couronneige
+907,6,Ballsee-Höhle,Kronen-Schneelande
+907,7,Gruta del Lago,Nieves de la Corona
+907,8,Grotta Rivalago,Landa Corona
+907,9,Lakeside Cave,Crown Tundra
+907,11,湖畔の洞窟,カンムリ雪原
+907,12,湖畔洞窟,王冠雪原
+908,1,ダイぼくのおか,カンムリせつげん
+908,3,다이맥스나무 언덕,왕관설원
+908,4,巨樹丘陵,王冠雪原
+908,5,Butte du Dynarbre,Couronneige
+908,6,Hügel des Dyna-Baums,Kronen-Schneelande
+908,7,Colina del Maxiárbol,Nieves de la Corona
+908,8,Collina Dynalbero,Landa Corona
+908,9,Dyna Tree Hill,Crown Tundra
+908,11,ダイ木の丘,カンムリ雪原
+908,12,巨树丘陵,王冠雪原
+909,1,いわやまのいせき,
+909,3,바위산의 유적,
+909,4,岩山遺跡,
+909,5,Ruines Pic Roche,
+909,6,Gipfelruinen,
+909,7,Ruinas Pico Roca,
+909,8,Rovine Picco,
+909,9,Rock Peak Ruins,
+909,11,岩山の遺跡,
+909,12,岩山遗迹,
+910,1,ひょうざんのいせき,
+910,3,빙산의 유적,
+910,4,冰山遺跡,
+910,5,Ruines Iceberg,
+910,6,Eisberg-Ruinen,
+910,7,Ruinas Iceberg,
+910,8,Rovine Iceberg,
+910,9,Iceberg Ruins,
+910,11,氷山の遺跡,
+910,12,冰山遗迹,
+911,1,くろがねのいせき,
+911,3,쇠철의 유적,
+911,4,黑金遺跡,
+911,5,Ruines de Fer,
+911,6,Eisen-Ruinen,
+911,7,Ruinas Hierro,
+911,8,Rovine Ferro,
+911,9,Iron Ruins,
+911,11,黒鉄の遺跡,
+911,12,黑金遗迹,
+912,1,さだめのいせき,
+912,3,결정의 유적,
+912,4,抉擇遺跡,
+912,5,Ruines du Choix,
+912,6,Zwiespaltruinen,
+912,7,Ruinas del Dilema,
+912,8,Rovine della Scelta,
+912,9,Split-Decision Ruins,
+912,11,定めの遺跡,
+912,12,抉择遗迹,
+913,1,マックスダイすあな,
+913,3,맥스다이맥스굴,
+913,4,極巨巢穴,
+913,5,Grand Antre Dynamax,
+913,6,Dyna-Riesennest,
+913,7,Supernido Dinamax,
+913,8,Dynatana max,
+913,9,Max Lair,
+913,11,マックスダイ巣穴,
+913,12,极巨巢穴,
+914,1,カンムリせつげんえき,
+914,3,왕관설원역,
+914,4,王冠雪原車站,
+914,5,Gare de Couronneige,
+914,6,Kronen-Bahnhof,
+914,7,Estación Corona,
+914,8,Staz. Landa Corona,
+914,9,Crown Tundra Station,
+914,11,カンムリ雪原駅,
+914,12,王冠雪原车站,
+915,1,どこかのすあな,
+915,3,어딘가의 굴,
+915,4,某處的巢穴,
+915,5,Antre,
+915,6,Ein Pokémon-Nest,
+915,7,Nido Pokémon,
+915,8,Tana di Pokémon,
+915,9,Pokémon Den,
+915,11,どこかの巣穴,
+915,12,某处的巢穴,

@@ -6,7 +6,14 @@ from .dump_base import DumpBase
 
 
 class DumpLetsGo(DumpBase):
-    _SECTIONS = ["moves", "abilities", "items", "machines", "pokemon"]
+    _SECTIONS = [
+        "moves",
+        "abilities",
+        "items",
+        "machines",
+        "pokemon",
+        "locations",
+    ]
 
     _changed_items = {
         113: 555,  # tea
@@ -32,6 +39,9 @@ class DumpLetsGo(DumpBase):
             },
         ),
     }
+
+    _locations_script = False
+    _locations_subtitle = False
 
     _region_id = 1
     _region_identifier = "kanto"

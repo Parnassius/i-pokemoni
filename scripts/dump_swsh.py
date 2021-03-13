@@ -6,7 +6,14 @@ from .dump_base import DumpBase
 
 
 class DumpSwSh(DumpBase):
-    _SECTIONS = ["moves", "abilities", "items", "machines", "pokemon"]
+    _SECTIONS = [
+        "moves",
+        "abilities",
+        "items",
+        "machines",
+        "pokemon",
+        "locations",
+    ]
 
     _changed_items = {
         121: 1007,  # pokemon-box => pokemon-box-link
@@ -78,6 +85,9 @@ class DumpSwSh(DumpBase):
             },
         ),
     }
+
+    _locations_script = True
+    _locations_subtitle = True
 
     _region_id = 8
     _region_identifier = "galar"

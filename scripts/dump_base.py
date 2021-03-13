@@ -315,6 +315,10 @@ class DumpBase:
         "ilima-normalium-z": "ilimas-normalium-z",
         "legendary-clue?": "legendary-clue-question",
         "vise-grip": "vice-grip",
+        "kanto-route-19": "kanto-sea-route-19",
+        "kanto-route-20": "kanto-sea-route-20",
+        "kanto-route-21": "kanto-sea-route-21",
+        "kanto-victory-road": "kanto-victory-road-1",
     }
     _identifier_overrides_game_index: dict[int, str] = {}
     _languages = {
@@ -338,6 +342,9 @@ class DumpBase:
     _new_evolution_methods: dict[int, tuple[str, dict[int, str]]] = {}
 
     _new_move_meta_ailments: dict[int, tuple[str, dict[int, str]]] = {}
+
+    _locations_script: bool
+    _locations_subtitle: bool
 
     _region_id: int
     _region_identifier: str
@@ -390,6 +397,9 @@ class DumpBase:
         if "pokemon" in sections:
             self._dump_pokemon()
 
+        if "locations" in sections:
+            self._dump_locations()
+
         self._save_all_csvs()
 
     def _open_csv(self, table: str) -> CsvReader:
@@ -408,16 +418,24 @@ class DumpBase:
             self._tables[cls_] = t
         return self._tables[cls_]  # type: ignore[return-value]
 
-    def _open_text_files(self, filename: str) -> dict[int, list[tuple[str, str]]]:
+    def _open_text_files(
+        self, filename: str, *, script: bool = False
+    ) -> dict[int, list[tuple[str, str]]]:
         result = {}
         for language, language_id in self._languages.items():
-            result[language_id] = self._open_text_file(language, filename)
+            result[language_id] = self._open_text_file(
+                language, filename, script=script
+            )
         return result
 
-    def _open_text_file(self, language: str, filename: str) -> list[tuple[str, str]]:
+    def _open_text_file(
+        self, language: str, filename: str, *, script: bool = False
+    ) -> list[tuple[str, str]]:
         key = (language, filename)
         if key not in self._text_files:
-            f = TextFile(self._path, language, filename, self._format).lines
+            f = TextFile(
+                self._path, language, filename, self._format, script=script
+            ).lines
             self._text_files[key] = f
         return self._text_files[key]
 
@@ -1694,6 +1712,78 @@ class DumpBase:
 
         self._create_evolution_chains()
         self._update_pokemon_order()
+
+    def _dump_locations(self) -> None:
+        location_mappings = {}
+
+        locations_csv = self._open_csv("locations")
+
+        locations_en = self._open_text_file(
+            "English", "place_name", script=self._locations_script
+        )
+        for id_ in range(0, len(locations_en), int(self._locations_subtitle) + 1):
+            location = locations_en[id_]
+            location_subtitle = (
+                locations_en[id_ + 1][1] if self._locations_subtitle else ""
+            )
+            if location[0] == "MAPNAME_NOTHING" or location[1].startswith("[~ "):
+                continue
+            if location_subtitle.startswith("[~ "):
+                location_subtitle = ""
+            identifier = to_id(location[1], location_subtitle)
+
+            if identifier.startswith("route-") or identifier in (
+                "victory-road",
+                "pokemon-league",
+            ):
+                identifier = self._region_identifier + "-" + identifier
+
+            if identifier in self._identifier_overrides:
+                identifier = self._identifier_overrides[identifier]
+
+            region_id = str(self._region_id)
+            if location[0].startswith("MAPNAME_"):
+                region_id = ""
+
+            location_id = next(
+                (
+                    int(i["id"])
+                    for i in locations_csv.entries.values()
+                    if i["region_id"] == region_id and i["identifier"] == identifier
+                ),
+                int(max(locations_csv.entries.keys())[0]) + 1,
+            )
+
+            locations_csv.set_row(
+                id=location_id,
+                region_id=region_id,
+                identifier=identifier,
+            )
+
+            location_mappings[location[0]] = location_id
+
+        location_names_csv = self._open_csv("location_names")
+
+        lang_locations = self._open_text_files(
+            "place_name", script=self._locations_script
+        )
+        for language_id, locations in lang_locations.items():
+            for id_ in range(0, len(locations), int(self._locations_subtitle) + 1):
+                location = locations[id_]
+                location_id = location_mappings.get(location[0])
+                if location_id is None:
+                    continue
+                location_subtitle = (
+                    locations[id_ + 1][1] if self._locations_subtitle else ""
+                )
+                if location_subtitle.startswith("[~ "):
+                    location_subtitle = ""
+                location_names_csv.set_row(
+                    location_id=location_id,
+                    local_language_id=language_id,
+                    name=location[1],
+                    subtitle=location_subtitle,
+                )
 
 
 # TODO

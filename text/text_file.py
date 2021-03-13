@@ -13,8 +13,8 @@ class TextLine(NamedTuple):
 
 class TextFile:
     _PATHS = {
-        "letsgo": ["bin", "message", None, "common"],
-        "swsh": ["bin", "message", None, "common"],
+        "letsgo": ["bin", "message", "@lang@", "@folder@"],
+        "swsh": ["bin", "message", "@lang@", "@folder@"],
     }
 
     _KEY_TBLMAGIC = 0x42544841
@@ -29,12 +29,26 @@ class TextFile:
     _KEY_TEXTNULL = 0xBDFF
 
     def __init__(
-        self, path: str, language: str, filename: str, file_format: str
+        self,
+        path: str,
+        language: str,
+        filename: str,
+        file_format: str,
+        *,
+        script: bool = False,
     ) -> None:
         self._filename = filename
         self._format = file_format
 
-        path = join(path, *[i if i else language for i in self._PATHS[self._format]])
+        path_ = [path]
+        for i in self._PATHS[self._format]:
+            if i == "@lang@":
+                i = language
+            elif i == "@folder@":
+                i = "script" if script else "common"
+            path_.append(i)
+        path = join(*path_)
+
         with open(join(path, filename + ".tbl"), "rb") as f:
             self._labels = f.read()
         with open(join(path, filename + ".dat"), "rb") as f:
