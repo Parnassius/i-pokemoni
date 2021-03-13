@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from os.path import join
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, TypeVar
 
+from base import BaseTable
 from csv_reader import CsvReader
 from egg_move.egg_move_table import EggMoveTable
 from evolution.evolution_set import Evolution
@@ -18,7 +19,12 @@ if TYPE_CHECKING:
     from personal.personal_info import PersonalInfo
 
 
+T = TypeVar("T", bound=BaseTable)
+
+
 class DumpBase:
+    _SECTIONS: list[str]
+
     _form_names: dict[str, list[str]] = {
         # fmt: off
         "venusaur": ["", "mega"],
@@ -359,43 +365,48 @@ class DumpBase:
     _type_tutors: list[int] = []
     _special_tutors: list[list[int]] = []
 
-    def __init__(self) -> None:
+    def __init__(self, sections: list) -> None:
         self._path: str
         self._format: str
 
-        self._tables: dict[str, CsvReader] = {}
+        self._csvs: dict[str, CsvReader] = {}
+        self._tables: dict[type[BaseTable], BaseTable] = {}
         self._text_files: dict[tuple[str, ...], list[tuple[str, str]]] = {}
-
-        self._move_table = MoveTable(self._path, self._format)
-        self._item_table = ItemTable(self._path, self._format)
-        self._machine_table = MachineTable(self._path, self._format)
-        self._personal_table = PersonalTable(self._path, self._format)
-        self._learnset_table = LearnsetTable(self._path, self._format)
-        self._egg_move_table = EggMoveTable(self._path, self._format)
 
         self._create_base_records()
 
-        self._dump_moves()
+        if "moves" in sections:
+            self._dump_moves()
 
-        self._dump_abilities()
+        if "abilities" in sections:
+            self._dump_abilities()
 
-        self._dump_items()
+        if "items" in sections:
+            self._dump_items()
 
-        self._dump_machines()
+        if "machines" in sections:
+            self._dump_machines()
 
-        self._dump_pokemon()
+        if "pokemon" in sections:
+            self._dump_pokemon()
 
-        self._save_all_tables()
+        self._save_all_csvs()
 
-    def _open_table(self, table: str) -> CsvReader:
-        if table not in self._tables:
+    def _open_csv(self, table: str) -> CsvReader:
+        if table not in self._csvs:
             t = CsvReader(table)
-            self._tables[table] = t
-        return self._tables[table]
+            self._csvs[table] = t
+        return self._csvs[table]
 
-    def _save_all_tables(self) -> None:
-        for t in self._tables.values():
+    def _save_all_csvs(self) -> None:
+        for t in self._csvs.values():
             t.save()
+
+    def _open_table(self, cls_: type[T]) -> T:
+        if cls_ not in self._tables:
+            t = cls_(self._path, self._format)
+            self._tables[cls_] = t
+        return self._tables[cls_]  # type: ignore[return-value]
 
     def _open_text_files(self, filename: str) -> dict[int, list[tuple[str, str]]]:
         result = {}
@@ -411,7 +422,7 @@ class DumpBase:
         return self._text_files[key]
 
     def _get_item_id_from_game_index(self, game_index: int) -> int | None:
-        item_game_indices_csv = self._open_table("item_game_indices")
+        item_game_indices_csv = self._open_csv("item_game_indices")
         return next(
             (
                 int(i["item_id"])
@@ -423,8 +434,8 @@ class DumpBase:
         )
 
     def _create_base_records(self) -> None:
-        regions_csv = self._open_table("regions")
-        region_names_csv = self._open_table("region_names")
+        regions_csv = self._open_csv("regions")
+        region_names_csv = self._open_csv("region_names")
 
         regions_csv.set_row(
             id=self._region_id,
@@ -437,8 +448,8 @@ class DumpBase:
                 name=region_name,
             )
 
-        generations_csv = self._open_table("generations")
-        generation_names_csv = self._open_table("generation_names")
+        generations_csv = self._open_csv("generations")
+        generation_names_csv = self._open_csv("generation_names")
 
         generations_csv.set_row(
             id=self._generation_id,
@@ -452,8 +463,8 @@ class DumpBase:
                 name=generation_name,
             )
 
-        version_groups_csv = self._open_table("version_groups")
-        version_group_regions_csv = self._open_table("version_group_regions")
+        version_groups_csv = self._open_csv("version_groups")
+        version_group_regions_csv = self._open_csv("version_group_regions")
 
         version_groups_csv.set_row(
             id=self._version_group_id,
@@ -466,8 +477,8 @@ class DumpBase:
             region_id=self._region_id,
         )
 
-        versions_csv = self._open_table("versions")
-        version_names_csv = self._open_table("version_names")
+        versions_csv = self._open_csv("versions")
+        version_names_csv = self._open_csv("version_names")
 
         for version_id, version_identifier, version_names in zip(
             self._version_ids, self._version_identifiers, self._version_names
@@ -484,9 +495,9 @@ class DumpBase:
                     name=version_name,
                 )
 
-        pokedexes_csv = self._open_table("pokedexes")
-        pokedex_prose_csv = self._open_table("pokedex_prose")
-        pokedex_version_groups_csv = self._open_table("pokedex_version_groups")
+        pokedexes_csv = self._open_csv("pokedexes")
+        pokedex_prose_csv = self._open_csv("pokedex_prose")
+        pokedex_version_groups_csv = self._open_csv("pokedex_version_groups")
 
         for pokedex_id, pokedex_identifier, pokedex_names in zip(
             self._pokedex_ids, self._pokedex_identifiers, self._pokedex_names
@@ -510,8 +521,8 @@ class DumpBase:
                 )
 
         if self._new_item_categories:
-            item_categories_csv = self._open_table("item_categories")
-            item_category_prose_csv = self._open_table("item_category_prose")
+            item_categories_csv = self._open_csv("item_categories")
+            item_category_prose_csv = self._open_csv("item_category_prose")
 
             for category_id, category_data in self._new_item_categories.items():
                 item_categories_csv.set_row(
@@ -527,8 +538,8 @@ class DumpBase:
                     )
 
         if self._new_evolution_methods:
-            evolution_triggers_csv = self._open_table("evolution_triggers")
-            evolution_trigger_prose_csv = self._open_table("evolution_trigger_prose")
+            evolution_triggers_csv = self._open_csv("evolution_triggers")
+            evolution_trigger_prose_csv = self._open_csv("evolution_trigger_prose")
 
             for trigger_id, trigger_data in self._new_evolution_methods.items():
                 evolution_triggers_csv.set_row(
@@ -543,8 +554,8 @@ class DumpBase:
                     )
 
         if self._new_move_meta_ailments:
-            move_meta_ailments_csv = self._open_table("move_meta_ailments")
-            move_meta_ailment_names_csv = self._open_table("move_meta_ailment_names")
+            move_meta_ailments_csv = self._open_csv("move_meta_ailments")
+            move_meta_ailment_names_csv = self._open_csv("move_meta_ailment_names")
 
             for ailment_id, ailment_data in self._new_move_meta_ailments.items():
                 move_meta_ailments_csv.set_row(
@@ -559,7 +570,7 @@ class DumpBase:
                     )
 
     def _move_names(self) -> None:
-        move_names_csv = self._open_table("move_names")
+        move_names_csv = self._open_csv("move_names")
 
         lang_moves = self._open_text_files("wazaname")
         for language_id, moves in lang_moves.items():
@@ -574,7 +585,7 @@ class DumpBase:
                     name=move[1],
                 )
 
-        move_flavor_text_csv = self._open_table("move_flavor_text")
+        move_flavor_text_csv = self._open_csv("move_flavor_text")
 
         lang_move_flavor_text = self._open_text_files("wazainfo")
         for language_id, flavor_text in lang_move_flavor_text.items():
@@ -591,10 +602,12 @@ class DumpBase:
                 )
 
     def _dump_machines(self) -> None:
-        machines_csv = self._open_table("machines")
-        items_csv = self._open_table("items")
+        machine_table = self._open_table(MachineTable)
 
-        for machine in self._machine_table._table:
+        machines_csv = self._open_csv("machines")
+        items_csv = self._open_csv("items")
+
+        for machine in machine_table._table:
             item_id = next(
                 k[0]
                 for k, v in items_csv.entries.items()
@@ -609,13 +622,15 @@ class DumpBase:
             )
 
     def _dump_moves(self) -> None:
-        moves_csv = self._open_table("moves")
-        move_changelog_csv = self._open_table("move_changelog")
-        move_meta_csv = self._open_table("move_meta")
-        move_flag_map_csv = self._open_table("move_flag_map")
-        move_meta_stat_changes_csv = self._open_table("move_meta_stat_changes")
-        move_effects_csv = self._open_table("move_effects")
-        move_effect_prose_csv = self._open_table("move_effect_prose")
+        move_table = self._open_table(MoveTable)
+
+        moves_csv = self._open_csv("moves")
+        move_changelog_csv = self._open_csv("move_changelog")
+        move_meta_csv = self._open_csv("move_meta")
+        move_flag_map_csv = self._open_csv("move_flag_map")
+        move_meta_stat_changes_csv = self._open_csv("move_meta_stat_changes")
+        move_effects_csv = self._open_csv("move_effects")
+        move_effect_prose_csv = self._open_csv("move_effect_prose")
 
         changelog_columns = {
             "type_id",
@@ -638,7 +653,7 @@ class DumpBase:
             if identifier in self._identifier_overrides:
                 identifier = self._identifier_overrides[identifier]
 
-            move_info = self._move_table.get_info_from_index(move_id)
+            move_info = move_table.get_info_from_index(move_id)
 
             if 622 <= move_id <= 657:  # z-moves
                 identifier += (
@@ -751,7 +766,7 @@ class DumpBase:
         self._move_names()
 
     def _dump_abilities(self) -> None:
-        abilities_csv = self._open_table("abilities")
+        abilities_csv = self._open_csv("abilities")
 
         abilities_en = self._open_text_file("English", "tokusei")
         for ability in abilities_en:
@@ -773,7 +788,7 @@ class DumpBase:
                 is_main_series_fallback_=1,
             )
 
-        ability_names_csv = self._open_table("ability_names")
+        ability_names_csv = self._open_csv("ability_names")
 
         lang_abilities = self._open_text_files("tokusei")
         for language_id, abilities in lang_abilities.items():
@@ -787,7 +802,7 @@ class DumpBase:
                     name=ability[1],
                 )
 
-        ability_flavor_text_csv = self._open_table("ability_flavor_text")
+        ability_flavor_text_csv = self._open_csv("ability_flavor_text")
 
         lang_ability_flavor_text = self._open_text_files("tokuseiinfo")
         for language_id, flavor_text in lang_ability_flavor_text.items():
@@ -803,7 +818,7 @@ class DumpBase:
                 )
 
     def _item_names(self) -> None:
-        item_names_csv = self._open_table("item_names")
+        item_names_csv = self._open_csv("item_names")
 
         lang_items = self._open_text_files("itemname")
         for language_id, items in lang_items.items():
@@ -821,7 +836,7 @@ class DumpBase:
                         name=item[1],
                     )
 
-        item_flavor_text_csv = self._open_table("item_flavor_text")
+        item_flavor_text_csv = self._open_csv("item_flavor_text")
 
         lang_item_flavor_text = self._open_text_files("iteminfo")
         for language_id, flavor_text in lang_item_flavor_text.items():
@@ -904,10 +919,10 @@ class DumpBase:
             ITEMNAME_1591: キヅナのタヅナ / キズナのタヅナ
             ITEMNAME_1607: キヅナのタヅナ / キズナのタヅナ
         """
-        items_csv = self._open_table("items")
-        item_game_indices_csv = self._open_table("item_game_indices")
+        item_table = self._open_table(ItemTable)
 
-        lang_item_flavor_text = self._open_text_files("iteminfo")
+        items_csv = self._open_csv("items")
+        item_game_indices_csv = self._open_csv("item_game_indices")
 
         items_en = self._open_text_file("English", "itemname")
         for item in items_en:
@@ -978,7 +993,7 @@ class DumpBase:
                     identifier.split("--")[0] + "--" + self._item_suffixes[item_id]
                 )
 
-            item_info = self._item_table.get_info_from_index(game_index)
+            item_info = item_table.get_info_from_index(game_index)
 
             category_id = 0
             row = items_csv.entries.get((item_id,))
@@ -1006,7 +1021,7 @@ class DumpBase:
         self._item_names()
 
     def _pokemon_stats(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
-        pokemon_stats_csv = self._open_table("pokemon_stats")
+        pokemon_stats_csv = self._open_csv("pokemon_stats")
 
         for i in range(6):
             stat_id = i + 1
@@ -1018,7 +1033,7 @@ class DumpBase:
             )
 
     def _pokemon_types(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
-        pokemon_types_csv = self._open_table("pokemon_types")
+        pokemon_types_csv = self._open_csv("pokemon_types")
 
         for i in range(2):
             if i == 1 and pokemon.types[0] == pokemon.types[1]:
@@ -1030,7 +1045,7 @@ class DumpBase:
             )
 
     def _pokemon_species_names(self, pokemon_id: int) -> None:
-        pokemon_species_names_csv = self._open_table("pokemon_species_names")
+        pokemon_species_names_csv = self._open_csv("pokemon_species_names")
 
         lang_names = self._open_text_files("monsname")
         for language_id, names in lang_names.items():
@@ -1044,7 +1059,7 @@ class DumpBase:
                     continue
 
     def _pokemon_species_genera(self, pokemon_id: int) -> None:
-        pokemon_species_names_csv = self._open_table("pokemon_species_names")
+        pokemon_species_names_csv = self._open_csv("pokemon_species_names")
 
         lang_genera = self._open_text_files("zkn_type")
         for language_id, genera in lang_genera.items():
@@ -1058,9 +1073,7 @@ class DumpBase:
                     continue
 
     def _pokemon_species_flavor_text(self, pokemon_id: int) -> None:
-        pokemon_species_flavor_text_csv = self._open_table(
-            "pokemon_species_flavor_text"
-        )
+        pokemon_species_flavor_text_csv = self._open_csv("pokemon_species_flavor_text")
 
         if self._single_flavor_text:
             files = {"A": self._version_ids}
@@ -1094,7 +1107,7 @@ class DumpBase:
         ):
             return
 
-        pokemon_form_names_csv = self._open_table("pokemon_form_names")
+        pokemon_form_names_csv = self._open_csv("pokemon_form_names")
 
         lang_names = self._open_text_files("zkn_form")
         for language_id, names in lang_names.items():
@@ -1111,17 +1124,19 @@ class DumpBase:
                     continue
 
     def _pokemon_formes(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
-        names_en = self._open_text_file("English", "monsname")
-        forms_en = self._open_text_file("English", "zkn_form")
-        pokemon_forms_csv = self._open_table("pokemon_forms")
-        pokemon_csv = self._open_table("pokemon")
-        pokemon_form_generations_csv = self._open_table("pokemon_form_generations")
+        personal_table = self._open_table(PersonalTable)
+
+        pokemon_forms_csv = self._open_csv("pokemon_forms")
+        pokemon_csv = self._open_csv("pokemon")
+        pokemon_form_generations_csv = self._open_csv("pokemon_form_generations")
 
         default_pokemon_list = []
 
+        names_en = self._open_text_file("English", "monsname")
+        forms_en = self._open_text_file("English", "zkn_form")
         for forme_id in range(pokemon.forme_count):
             forme_index = pokemon.forme_index(pokemon_id, forme_id)
-            forme = self._personal_table.get_info_from_index(forme_index)
+            forme = personal_table.get_info_from_index(forme_index)
             if forme.is_present_in_game:
                 identifier = to_id(names_en[pokemon_id][1])
                 identifier_forme = identifier
@@ -1247,7 +1262,7 @@ class DumpBase:
                 )
 
     def _pokemon_dex_numbers(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
-        pokemon_dex_numbers_csv = self._open_table("pokemon_dex_numbers")
+        pokemon_dex_numbers_csv = self._open_csv("pokemon_dex_numbers")
 
         dex_ids = e = dict(zip(self._pokedex_identifiers, self._pokedex_ids))
         dex_numbers = {1: pokemon_id}
@@ -1261,7 +1276,7 @@ class DumpBase:
                 )
 
     def _pokemon_abilities(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
-        pokemon_abilities_csv = self._open_table("pokemon_abilities")
+        pokemon_abilities_csv = self._open_csv("pokemon_abilities")
 
         abilities = {1: pokemon.abilities[0]}
         if pokemon.abilities[1] not in abilities.values():
@@ -1284,10 +1299,13 @@ class DumpBase:
         pokemon_id: int,
         forme_id: int,
     ) -> None:
-        pokemon_moves_csv = self._open_table("pokemon_moves")
+        learnset_table = self._open_table(LearnsetTable)
+        egg_move_table = self._open_table(EggMoveTable)
+
+        pokemon_moves_csv = self._open_csv("pokemon_moves")
 
         # level-up
-        learnset = self._learnset_table.get_info_from_index(forme_index)
+        learnset = learnset_table.get_info_from_index(forme_index)
         order = 0
         last_level = 0
         for i, (move_id, level) in enumerate(learnset.moves):
@@ -1310,10 +1328,10 @@ class DumpBase:
             )
 
         # egg
-        if not self._egg_move_table._cls._SKIP:
-            egg_moves = self._egg_move_table.get_info_from_index(pokemon_id)
+        if not egg_move_table._cls._SKIP:
+            egg_moves = egg_move_table.get_info_from_index(pokemon_id)
             if forme_id > 0:
-                egg_moves = self._egg_move_table.get_info_from_index(
+                egg_moves = egg_move_table.get_info_from_index(
                     egg_moves.form_table_index + forme_id - 1
                 )
             for move_id in egg_moves.moves:
@@ -1351,7 +1369,7 @@ class DumpBase:
             )
 
         # machine
-        machines_csv = self._open_table("machines")
+        machines_csv = self._open_csv("machines")
         machines = {
             int(machines_csv.entries[k, self._version_group_id]["move_id"])
             for k, v in pokemon.tmhm.items()
@@ -1399,7 +1417,7 @@ class DumpBase:
             )
 
     def _pokemon_egg_groups(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
-        pokemon_egg_groups_csv = self._open_table("pokemon_egg_groups")
+        pokemon_egg_groups_csv = self._open_csv("pokemon_egg_groups")
 
         for egg_group in pokemon.egg_groups:
             pokemon_egg_groups_csv.set_row(
@@ -1408,7 +1426,7 @@ class DumpBase:
             )
 
     def _pokemon_evolutions(self, pokemon_id: int, evos: list[Evolution]) -> None:
-        pokemon_evolution_csv = self._open_table("pokemon_evolution")
+        pokemon_evolution_csv = self._open_csv("pokemon_evolution")
 
         for evo in evos:
 
@@ -1507,8 +1525,10 @@ class DumpBase:
             )
 
     def _create_evolution_chains(self) -> None:
-        pokemon_species_csv = self._open_table("pokemon_species")
-        evolution_chains_csv = self._open_table("evolution_chains")
+        personal_table = self._open_table(PersonalTable)
+
+        pokemon_species_csv = self._open_csv("pokemon_species")
+        evolution_chains_csv = self._open_csv("evolution_chains")
 
         max_chain = int(max(evolution_chains_csv.entries.keys())[0])
         for key in pokemon_species_csv.entries.keys():
@@ -1526,16 +1546,16 @@ class DumpBase:
                         ]["evolution_chain_id"]
                     )
                 entry["evolution_chain_id"] = str(chain)
-                pokemon = self._personal_table.get_info_from_index(int(key[0]))
+                pokemon = personal_table.get_info_from_index(int(key[0]))
                 for evo in pokemon.evos:
                     pokemon_species_csv.entries[(evo.species,)][
                         "evolves_from_species_id"
                     ] = str(key[0])
 
     def _update_pokemon_order(self) -> None:
-        pokemon_forms_csv = self._open_table("pokemon_forms")
-        pokemon_csv = self._open_table("pokemon")
-        pokemon_species_csv = self._open_table("pokemon_species")
+        pokemon_forms_csv = self._open_csv("pokemon_forms")
+        pokemon_csv = self._open_csv("pokemon")
+        pokemon_species_csv = self._open_csv("pokemon_species")
 
         # pokemon_forms
         ordered_pokemon_forms = sorted(
@@ -1628,11 +1648,13 @@ class DumpBase:
             pokemon_species_csv.entries[(pokemon_id,)]["order"] = str(order)
 
     def _dump_pokemon(self) -> None:
-        names_en = self._open_text_file("English", "monsname")
-        pokemon_species_csv = self._open_table("pokemon_species")
+        personal_table = self._open_table(PersonalTable)
 
-        for pokemon_id in range(1, self._personal_table.max_id + 1):
-            pokemon = self._personal_table.get_forme_entry(pokemon_id)
+        pokemon_species_csv = self._open_csv("pokemon_species")
+
+        names_en = self._open_text_file("English", "monsname")
+        for pokemon_id in range(1, personal_table.max_id + 1):
+            pokemon = personal_table.get_forme_entry(pokemon_id)
             if pokemon.is_present_in_game:
                 identifier = to_id(names_en[pokemon_id][1])
 

@@ -6,6 +6,8 @@ from .dump_base import DumpBase
 
 
 class DumpSwSh(DumpBase):
+    _SECTIONS = ["moves", "abilities", "items", "machines", "pokemon"]
+
     _changed_items = {
         121: 1007,  # pokemon-box => pokemon-box-link
         252: 229,  # up-grade => upgrade
@@ -138,8 +140,8 @@ class DumpSwSh(DumpBase):
         ]
     ]
 
-    def __init__(self) -> None:
+    def __init__(self, sections: list) -> None:
         self._path = PATHS["sword"]
         self._format = "swsh"
 
-        super().__init__()
+        super().__init__(sections)

@@ -6,6 +6,8 @@ from .dump_base import DumpBase
 
 
 class DumpLetsGo(DumpBase):
+    _SECTIONS = ["moves", "abilities", "items", "machines", "pokemon"]
+
     _changed_items = {
         113: 555,  # tea
         123: 550,  # tm-case
@@ -76,8 +78,8 @@ class DumpLetsGo(DumpBase):
         ]
     ]
 
-    def __init__(self) -> None:
+    def __init__(self, sections: list) -> None:
         self._path = PATHS["pikachu"]
         self._format = "letsgo"
 
-        super().__init__()
+        super().__init__(sections)
