@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Literal, TypeVar
 from base import BaseTable
 from csv_reader import CsvReader
 from egg_move.egg_move_table import EggMoveTable
+from encounter.encounter_table import EncounterTable
 from evolution.evolution_set import Evolution
 from item.item_table import ItemTable
 from learnset.learnset_table import LearnsetTable
@@ -400,6 +401,9 @@ class DumpBase:
 
         if "locations" in sections:
             self._dump_locations()
+
+        if "encounters" in sections:
+            self._dump_encounters()
 
         self._save_all_csvs()
 
@@ -1815,6 +1819,50 @@ class DumpBase:
                     name=location[1],
                     subtitle=location_subtitle,
                 )
+
+    def _dump_encounters(self) -> None:
+        return
+        encounter_table = self._open_table(EncounterTable)
+
+        encounters_csv = self._open_csv("encounters")
+
+        names_en = self._open_text_file("English", "monsname")
+
+        ee = set()
+        for encounter in encounter_table._table:
+            version_id = self._version_ids[encounter.game_id]
+            location_area_id = encounter.location_area_id
+            encounter_slot_id = 0
+            pokemon_id = encounter.species
+            min_level = encounter.table_level_min
+            max_level = encounter.table_level_max
+
+            encounter_id = next(
+                (
+                    int(i["id"])
+                    for i in encounters_csv.entries.values()
+                    if int(i["version_id"]) == version_id
+                    and int(i["location_area_id"]) == location_area_id
+                    and int(i["encounter_slot_id"]) == encounter_slot_id
+                    and int(i["pokemon_id"]) == pokemon_id
+                    and int(i["min_level"]) == min_level
+                    and int(i["max_level"])
+                ),
+                int(max(encounters_csv.entries.keys())[0]) + 1,
+            )
+
+            encounters_csv.set_row(
+                id=encounter_id,
+                version_id=version_id,
+                location_area_id=location_area_id,
+                encounter_slot_id=encounter_slot_id,
+                pokemon_id=pokemon_id,
+                min_level=min_level,
+                max_level=max_level,
+            )
+
+        for e in sorted(ee):
+            print(*e)
 
 
 # TODO

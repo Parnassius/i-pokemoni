@@ -13,6 +13,7 @@ class DumpLetsGo(DumpBase):
         "machines",
         "pokemon",
         "locations",
+        "encounters",
     ]
 
     _changed_items = {
