@@ -853,7 +853,7 @@ id,region_id,identifier
 869,8,wild-area-station
 870,8,battle-tower
 871,8,rose-tower
-872,8,pokemon-den--[~-163]
+872,8,pokemon-den
 873,8,fields-of-honor--isle-of-armor
 874,8,soothing-wetlands--isle-of-armor
 875,8,forest-of-focus--isle-of-armor
@@ -896,4 +896,3 @@ id,region_id,identifier
 912,8,split-decision-ruins
 913,8,max-lair
 914,8,crown-tundra-station
-915,8,pokemon-den

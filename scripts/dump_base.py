@@ -318,7 +318,7 @@ class DumpBase:
         "kanto-route-19": "kanto-sea-route-19",
         "kanto-route-20": "kanto-sea-route-20",
         "kanto-route-21": "kanto-sea-route-21",
-        "kanto-victory-road": "kanto-victory-road-1",
+        "kanto-victory-road": "kanto-victory-road-2",  # 1 = johto, 2 = kanto
     }
     _identifier_overrides_game_index: dict[int, str] = {}
     _languages = {
@@ -345,6 +345,7 @@ class DumpBase:
 
     _locations_script: bool
     _locations_subtitle: bool
+    _locations_areas_names: dict[str, list[str]] = {}
 
     _region_id: int
     _region_identifier: str
@@ -1717,6 +1718,8 @@ class DumpBase:
         location_mappings = {}
 
         locations_csv = self._open_csv("locations")
+        location_areas_csv = self._open_csv("location_areas")
+        location_area_prose_csv = self._open_csv("location_area_prose")
 
         locations_en = self._open_text_file(
             "English", "place_name", script=self._locations_script
@@ -1760,6 +1763,34 @@ class DumpBase:
                 identifier=identifier,
             )
 
+            used_area_ids = set()
+
+            for area_name in self._locations_areas_names.get(identifier, [""]):
+                area_identifier = to_id(area_name)
+                area_id = min(
+                    [
+                        int(i["id"])
+                        for i in location_areas_csv.entries.values()
+                        if int(i["location_id"]) == location_id
+                        and i["identifier"] == area_identifier
+                        and int(i["id"]) not in used_area_ids
+                    ]
+                    + [int(max(location_areas_csv.entries.keys())[0]) + 1]
+                )
+
+                location_areas_csv.set_row(
+                    id=area_id,
+                    location_id=location_id,
+                    game_index_fallback_=0,
+                    identifier=area_identifier,
+                )
+
+                location_area_prose_csv.set_row(
+                    location_area_id=area_id, local_language_id=9, name=area_name
+                )
+
+                used_area_ids.add(area_id)
+
             location_mappings[location[0]] = location_id
 
         location_names_csv = self._open_csv("location_names")
@@ -1770,8 +1801,8 @@ class DumpBase:
         for language_id, locations in lang_locations.items():
             for id_ in range(0, len(locations), int(self._locations_subtitle) + 1):
                 location = locations[id_]
-                location_id = location_mappings.get(location[0])
-                if location_id is None:
+                location_id = location_mappings.get(location[0], 0)
+                if not location_id:
                     continue
                 location_subtitle = (
                     locations[id_ + 1][1] if self._locations_subtitle else ""

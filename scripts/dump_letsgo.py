@@ -42,6 +42,23 @@ class DumpLetsGo(DumpBase):
 
     _locations_script = False
     _locations_subtitle = False
+    _locations_areas_names = {
+        "mt-moon": ["1F", "B1F", "B2F"],
+        "rock-tunnel": ["1F", "B1F"],
+        "seafoam-islands": ["1F", "B1F", "B2F", "B3F", "B3F-bis", "B4F", "B4F-bis"],
+        "kanto-victory-road-2": ["1F", "2F", "3F"],
+        "kanto-route-2": ["south, towards Viridian City", "north, towards Pewter City"],
+        "kanto-route-4": ["", "Pokemon Center"],
+        "kanto-route-10": ["", ""],  # TODO
+        "kanto-route-11": ["", ""],  # TODO
+        "kanto-route-15": ["", ""],  # TODO
+        "kanto-route-16": ["", ""],  # TODO
+        "kanto-route-18": ["", ""],  # TODO
+        "kanto-route-20": ["", ""],  # TODO maybe?
+        "cerulean-cave": ["1F", "2F", "B1F"],
+        "pokemon-tower": ["3F", "4F", "5F", "6F"],
+        "pokemon-mansion": ["1F", "2F", "3F", "B1F"],
+    }
 
     _region_id = 1
     _region_identifier = "kanto"
