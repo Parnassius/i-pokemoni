@@ -1665,7 +1665,7 @@ class DumpBase:
                     evolves_from_species_id_fallback_="_",
                     evolution_chain_id_fallback_="_",
                     color_id=pokemon.color,
-                    shape_id_fallback_="0",
+                    shape_id_fallback_="",
                     habitat_id_fallback_="",  # it's a fr/lg thing
                     gender_rate=pokemon.gender_ratio,
                     capture_rate=pokemon.catch_rate,
