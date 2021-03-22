@@ -46,16 +46,24 @@ class DumpLetsGo(DumpBase):
     _locations_areas_names = {
         "mt-moon": ["1F", "B1F", "B2F"],
         "rock-tunnel": ["1F", "B1F"],
-        "seafoam-islands": ["1F", "B1F", "B2F", "B3F", "B3F-bis", "B4F", "B4F-bis"],
+        "seafoam-islands": [
+            "1F",
+            "B1F",
+            "B2F",
+            "B3F",
+            "B3F-bis",
+            "B4F",
+            "B4F-bis",
+        ],  # TODO
         "kanto-victory-road-2": ["1F", "2F", "3F"],
         "kanto-route-2": ["south, towards Viridian City", "north, towards Pewter City"],
         "kanto-route-4": ["", "Pokemon Center"],
-        "kanto-route-10": ["", ""],  # TODO
-        "kanto-route-11": ["", ""],  # TODO
-        "kanto-route-15": ["", ""],  # TODO
-        "kanto-route-16": ["", ""],  # TODO
-        "kanto-route-18": ["", ""],  # TODO
-        "kanto-route-20": ["", ""],  # TODO maybe?
+        "kanto-route-10": ["", "bis"],  # TODO
+        "kanto-route-11": ["", "bis"],  # TODO
+        "kanto-route-15": ["", "bis"],  # TODO
+        "kanto-route-16": ["", "bis"],  # TODO
+        "kanto-route-18": ["", "bis"],  # TODO
+        "kanto-sea-route-20": ["", "bis"],  # TODO
         "cerulean-cave": ["1F", "2F", "B1F"],
         "pokemon-tower": ["3F", "4F", "5F", "6F"],
         "pokemon-mansion": ["1F", "2F", "3F", "B1F"],

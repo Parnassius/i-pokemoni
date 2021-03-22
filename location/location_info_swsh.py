@@ -11,8 +11,7 @@ from container.gfpack import GFPack
 from text.text_file import TextFile
 from utils import read_as_int
 
-from .encounter_archive_8 import EncounterArchive8
-from .encounter_info import EncounterInfo
+from .location_info import LocationInfo
 
 
 def foo(cls_: type[T], table_: BaseTable) -> list[T]:
@@ -68,7 +67,7 @@ def foo(cls_: type[T], table_: BaseTable) -> list[T]:
     return table
 
 
-class EncounterInfoSwSh(EncounterInfo):
+class LocationInfoSwSh(LocationInfo):
     _TYPE = "gfpak"
     _SIZE = 2
     _MAX_ID = 59

@@ -11,6 +11,7 @@ from evolution.evolution_set import Evolution
 from item.item_table import ItemTable
 from learnset.learnset_table import LearnsetTable
 from machine.machine_table import MachineTable
+from location.location_table import LocationTable
 from move.move_table import MoveTable
 from personal.personal_table import PersonalTable
 from text.text_file import TextFile
@@ -1718,8 +1719,22 @@ class DumpBase:
         self._create_evolution_chains()
         self._update_pokemon_order()
 
+    def _location_identifier_prepend_region(self, identifier: str) -> str:
+        if identifier.startswith("route-") or identifier in (
+            "victory-road",
+            "pokemon-league",
+        ):
+            identifier = self._region_identifier + "-" + identifier
+
+        if identifier in self._identifier_overrides:
+            identifier = self._identifier_overrides[identifier]
+
+        return identifier
+
     def _dump_locations(self) -> None:
         location_mappings = {}
+
+        self._open_table(LocationTable)
 
         locations_csv = self._open_csv("locations")
         location_areas_csv = self._open_csv("location_areas")
@@ -1739,14 +1754,7 @@ class DumpBase:
                 location_subtitle = ""
             identifier = to_id(location[1], location_subtitle)
 
-            if identifier.startswith("route-") or identifier in (
-                "victory-road",
-                "pokemon-league",
-            ):
-                identifier = self._region_identifier + "-" + identifier
-
-            if identifier in self._identifier_overrides:
-                identifier = self._identifier_overrides[identifier]
+            identifier = self._location_identifier_prepend_region(identifier)
 
             region_id = str(self._region_id)
             if location[0].startswith("MAPNAME_"):
@@ -1821,21 +1829,42 @@ class DumpBase:
                 )
 
     def _dump_encounters(self) -> None:
-        return
         encounter_table = self._open_table(EncounterTable)
 
+        locations_csv = self._open_csv("locations")
+        location_areas_csv = self._open_csv("location_areas")
         encounters_csv = self._open_csv("encounters")
 
         names_en = self._open_text_file("English", "monsname")
 
-        ee = set()
         for encounter in encounter_table._table:
             version_id = self._version_ids[encounter.game_id]
-            location_area_id = encounter.location_area_id
+
+            location_identifier, area_index = encounter.location_area
+            location_identifier = self._location_identifier_prepend_region(
+                location_identifier
+            )
+            location_id = next(
+                int(i["id"])
+                for i in locations_csv.entries.values()
+                if i["identifier"] == location_identifier
+            )
+            area_identifier = to_id(
+                self._locations_areas_names.get(location_identifier, [""])[
+                    area_index - 1
+                ]
+            )
+            location_area_id = next(
+                int(i["id"])
+                for i in location_areas_csv.entries.values()
+                if int(i["location_id"]) == location_id
+                and i["identifier"] == area_identifier
+            )
+
             encounter_slot_id = 0
             pokemon_id = encounter.species
-            min_level = encounter.table_level_min
-            max_level = encounter.table_level_max
+            min_level = encounter.level_min
+            max_level = encounter.level_max
 
             encounter_id = next(
                 (
@@ -1861,8 +1890,6 @@ class DumpBase:
                 max_level=max_level,
             )
 
-        for e in sorted(ee):
-            print(*e)
 
 
 # TODO
