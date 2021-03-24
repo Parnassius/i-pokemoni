@@ -33,7 +33,7 @@ class DumpBase:
         "beedrill": ["", "mega"],
         "pidgeot": ["", "mega"],
         "rattata": ["", "alola"],
-        "raticate": ["", "alola", "totem"],
+        "raticate": ["", "alola", "totem-alola"],
         "pikachu": ["", "original-cap", "hoenn-cap", "sinnoh-cap", "unova-cap", "kalos-cap", "alola-cap", "partner-cap", "starter", "world-cap"],
         "raichu": ["", "alola"],
         "sandshrew": ["", "alola"],
@@ -364,10 +364,13 @@ class DumpBase:
 
     _type_tutors: list[int] = []
     _special_tutors: list[list[int]] = []
+    _hardcode_tutors: dict[int, int] = {}
 
     def __init__(self, sections: list) -> None:
         self._path: str
         self._format: str
+
+        self._sections = sections
 
         self._csvs: dict[str, CsvReader] = {}
         self._tables: dict[type[BaseTable], BaseTable] = {}
@@ -375,19 +378,19 @@ class DumpBase:
 
         self._create_base_records()
 
-        if "moves" in sections:
+        if "moves" in self._sections:
             self._dump_moves()
 
-        if "abilities" in sections:
+        if "abilities" in self._sections:
             self._dump_abilities()
 
-        if "items" in sections:
+        if "items" in self._sections:
             self._dump_items()
 
-        if "machines" in sections:
+        if "machines" in self._sections:
             self._dump_machines()
 
-        if "pokemon" in sections:
+        if "pokemon" in self._sections or "learnsets" in self._sections:
             self._dump_pokemon()
 
         self._save_all_csvs()
@@ -517,7 +520,7 @@ class DumpBase:
                     pokedex_id=pokedex_id,
                     local_language_id=language_id,
                     name=pokedex_name[0],
-                    description=pokedex_name[1],
+                    description_fallback_=pokedex_name[1],
                 )
 
         if self._new_item_categories:
@@ -1185,81 +1188,83 @@ class DumpBase:
                                 int(max(pokemon_csv.entries.keys())[0]) + 1
                             )
 
-                    pokemon_csv.set_row(
-                        id=forme_pokemon_id,
-                        identifier=identifier,
-                        species_id=pokemon_id,
-                        height=forme.height // 10,
-                        weight=forme.weight,
-                        base_experience=forme.base_exp,
-                        order_fallback_=10000,
-                        is_default=int(forme_id == 0),
-                    )
+                    if "pokemon" in self._sections:
+                        pokemon_csv.set_row(
+                            id=forme_pokemon_id,
+                            identifier=identifier,
+                            species_id=pokemon_id,
+                            height=forme.height // 10,
+                            weight=forme.weight,
+                            base_experience=forme.base_exp,
+                            order_fallback_=10000,
+                            is_default=int(forme_id == 0),
+                        )
 
-                    self._pokemon_stats(forme_pokemon_id, forme)
-                    self._pokemon_types(forme_pokemon_id, forme)
-                    self._pokemon_abilities(forme_pokemon_id, forme)
+                        self._pokemon_stats(forme_pokemon_id, forme)
+                        self._pokemon_types(forme_pokemon_id, forme)
+                        self._pokemon_abilities(forme_pokemon_id, forme)
                     self._pokemon_moves(
                         forme_pokemon_id, forme, forme_index, pokemon_id, forme_id
                     )
 
-                forme_pokemon_form_id = next(
-                    (
-                        int(i["id"])
-                        for i in pokemon_forms_csv.entries.values()
-                        if i["identifier"] == identifier_forme
-                    ),
-                    0,
-                )
-
-                # hardcode new zygarde ids
-                if identifier_forme == "zygarde-50":
-                    forme_pokemon_form_id = 718
-                if identifier_forme == "zygarde-10-power-construct":
-                    forme_pokemon_form_id = 10220
-                if identifier_forme == "zygarde-50-power-construct":
-                    forme_pokemon_form_id = 10221
-                if identifier_forme == "zygarde-10":
-                    forme_pokemon_form_id = 10340
-
-                if forme_pokemon_form_id == 0:
-                    if forme_id == 0:
-                        forme_pokemon_form_id = pokemon_id
-                    else:
-                        forme_pokemon_form_id = (
-                            int(max(pokemon_forms_csv.entries.keys())[0]) + 1
-                        )
-
-                is_default = int(forme_pokemon_id not in default_pokemon_list)
-                if identifier_forme.startswith("xerneas"):
-                    is_default = int(identifier_forme == "xerneas-neutral")
-
-                if is_default:
-                    default_pokemon_list.append(forme_pokemon_id)
-
-                pokemon_forms_csv.set_row(
-                    id=forme_pokemon_form_id,
-                    identifier=identifier_forme,
-                    form_identifier=form_name.strip("_"),
-                    pokemon_id=forme_pokemon_id,
-                    introduced_in_version_group_id_fallback_=self._version_group_id,
-                    is_default=is_default,
-                    is_battle_only_fallback_=0,  # TODO
-                    is_mega_fallback_=0,
-                    form_order_fallback_=10000,
-                    order_fallback_=10000,
-                )
-
-                if pokemon.forme_count > 1:
-                    self._pokemon_form_names(
-                        pokemon_id, forme_id, forme_pokemon_form_id
+                if "pokemon" in self._sections:
+                    forme_pokemon_form_id = next(
+                        (
+                            int(i["id"])
+                            for i in pokemon_forms_csv.entries.values()
+                            if i["identifier"] == identifier_forme
+                        ),
+                        0,
                     )
 
-                pokemon_form_generations_csv.set_row(
-                    pokemon_form_id=forme_pokemon_form_id,
-                    generation_id=self._generation_id,
-                    game_index=0,
-                )
+                    # hardcode new zygarde ids
+                    if identifier_forme == "zygarde-50":
+                        forme_pokemon_form_id = 718
+                    if identifier_forme == "zygarde-10-power-construct":
+                        forme_pokemon_form_id = 10220
+                    if identifier_forme == "zygarde-50-power-construct":
+                        forme_pokemon_form_id = 10221
+                    if identifier_forme == "zygarde-10":
+                        forme_pokemon_form_id = 10340
+
+                    if forme_pokemon_form_id == 0:
+                        if forme_id == 0:
+                            forme_pokemon_form_id = pokemon_id
+                        else:
+                            forme_pokemon_form_id = (
+                                int(max(pokemon_forms_csv.entries.keys())[0]) + 1
+                            )
+
+                    is_default = int(forme_pokemon_id not in default_pokemon_list)
+                    if identifier_forme.startswith("xerneas"):
+                        is_default = int(identifier_forme == "xerneas-neutral")
+
+                    if is_default:
+                        default_pokemon_list.append(forme_pokemon_id)
+
+                    pokemon_forms_csv.set_row(
+                        id=forme_pokemon_form_id,
+                        identifier=identifier_forme,
+                        form_identifier=form_name.strip("_"),
+                        pokemon_id=forme_pokemon_id,
+                        introduced_in_version_group_id_fallback_=self._version_group_id,
+                        is_default=is_default,
+                        is_battle_only_fallback_=0,  # TODO
+                        is_mega_fallback_=0,
+                        form_order_fallback_=10000,
+                        order_fallback_=10000,
+                    )
+
+                    if pokemon.forme_count > 1:
+                        self._pokemon_form_names(
+                            pokemon_id, forme_id, forme_pokemon_form_id
+                        )
+
+                    pokemon_form_generations_csv.set_row(
+                        pokemon_form_id=forme_pokemon_form_id,
+                        generation_id=self._generation_id,
+                        game_index=0,
+                    )
 
     def _pokemon_dex_numbers(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         pokemon_dex_numbers_csv = self._open_csv("pokemon_dex_numbers")
@@ -1304,6 +1309,8 @@ class DumpBase:
 
         pokemon_moves_csv = self._open_csv("pokemon_moves")
 
+        moves = set()
+
         # level-up
         learnset = learnset_table.get_info_from_index(forme_index)
         order = 0
@@ -1317,6 +1324,14 @@ class DumpBase:
             else:
                 order = 0
                 last_level = 0
+
+            if (move_id, level) in moves:
+                # some pokemon can learn a move two times at the same level
+                # eg volcarona in sun/moon has quiver dance as a level 1 move both in
+                # the first and sixth slot
+                continue
+
+            moves.add((move_id, level))
 
             pokemon_moves_csv.set_row(
                 pokemon_id=forme_pokemon_id,
@@ -1350,12 +1365,17 @@ class DumpBase:
             for i, compatible in enumerate(pokemon.type_tutors)
             if compatible
         }
+
         for i, special_tutors in enumerate(pokemon.special_tutors):
             tutors.update(
                 int(self._special_tutors[i][j])
                 for j, compatible in enumerate(special_tutors)
                 if compatible
             )
+
+        if pokemon_id in self._hardcode_tutors:
+            tutors.add(self._hardcode_tutors[pokemon_id])
+
         for move_id in tutors:
             if not move_id:
                 continue
@@ -1658,42 +1678,45 @@ class DumpBase:
             if pokemon.is_present_in_game:
                 identifier = to_id(names_en[pokemon_id][1])
 
-                pokemon_species_csv.set_row(
-                    id=pokemon_id,
-                    identifier=identifier,
-                    generation_id_fallback_=self._generation_id,
-                    evolves_from_species_id_fallback_="_",
-                    evolution_chain_id_fallback_="_",
-                    color_id=pokemon.color,
-                    shape_id_fallback_="",
-                    habitat_id_fallback_="",  # it's a fr/lg thing
-                    gender_rate=pokemon.gender_ratio,
-                    capture_rate=pokemon.catch_rate,
-                    base_happiness=pokemon.base_friendship,
-                    is_baby=int(pokemon.is_baby),
-                    hatch_counter=pokemon.hatch_cycles,
-                    has_gender_differences_fallback_=0,  # TODO
-                    growth_rate_id=pokemon.exp_growth,
-                    forms_switchable_fallback_=0,  # TODO
-                    is_legendary_fallback_=int(identifier in self._legendary_list),
-                    is_mythical_fallback_=int(identifier in self._mythical_list),
-                    order_fallback_=10000,
-                    conquest_order_fallback_="",
-                )
+                if "pokemon" in self._sections:
+                    pokemon_species_csv.set_row(
+                        id=pokemon_id,
+                        identifier=identifier,
+                        generation_id_fallback_=self._generation_id,
+                        evolves_from_species_id_fallback_="_",
+                        evolution_chain_id_fallback_="_",
+                        color_id=pokemon.color,
+                        shape_id_fallback_="",
+                        habitat_id_fallback_="",  # it's a fr/lg thing
+                        gender_rate=pokemon.gender_ratio,
+                        capture_rate=pokemon.catch_rate,
+                        base_happiness=pokemon.base_friendship,
+                        is_baby=int(pokemon.is_baby),
+                        hatch_counter=pokemon.hatch_cycles,
+                        has_gender_differences_fallback_=0,  # TODO
+                        growth_rate_id=pokemon.exp_growth,
+                        forms_switchable_fallback_=0,  # TODO
+                        is_legendary_fallback_=int(identifier in self._legendary_list),
+                        is_mythical_fallback_=int(identifier in self._mythical_list),
+                        order_fallback_=10000,
+                        conquest_order_fallback_="",
+                    )
 
                 self._pokemon_formes(pokemon_id, pokemon)
 
-                self._pokemon_species_names(pokemon_id)
-                self._pokemon_species_genera(pokemon_id)
-                self._pokemon_species_flavor_text(pokemon_id)
+                if "pokemon" in self._sections:
+                    self._pokemon_species_names(pokemon_id)
+                    self._pokemon_species_genera(pokemon_id)
+                    self._pokemon_species_flavor_text(pokemon_id)
 
-                self._pokemon_dex_numbers(pokemon_id, pokemon)
-                self._pokemon_egg_groups(pokemon_id, pokemon)
+                    self._pokemon_dex_numbers(pokemon_id, pokemon)
+                    self._pokemon_egg_groups(pokemon_id, pokemon)
 
-                self._pokemon_evolutions(pokemon_id, pokemon.evos)
+                    self._pokemon_evolutions(pokemon_id, pokemon.evos)
 
-        self._create_evolution_chains()
-        self._update_pokemon_order()
+        if "pokemon" in self._sections:
+            self._create_evolution_chains()
+            self._update_pokemon_order()
 
 
 # TODO

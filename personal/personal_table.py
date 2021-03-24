@@ -6,11 +6,15 @@ from base import BaseTable
 
 from .personal_info import PersonalInfo
 from .personal_info_letsgo import PersonalInfoLetsGo
+from .personal_info_sm import PersonalInfoSM
 from .personal_info_swsh import PersonalInfoSwSh
+from .personal_info_usum import PersonalInfoUsUm
 
 
 class PersonalTable(BaseTable[PersonalInfo]):
     _CLASSES: Mapping[str, type[PersonalInfo]] = {
+        "sm": PersonalInfoSM,
+        "usum": PersonalInfoUsUm,
         "letsgo": PersonalInfoLetsGo,
         "swsh": PersonalInfoSwSh,
     }

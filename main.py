@@ -1,10 +1,17 @@
 import argparse
 
 from scripts.dump_letsgo import DumpLetsGo
+from scripts.dump_sm import DumpSM
 from scripts.dump_swsh import DumpSwSh
+from scripts.dump_usum import DumpUsUm
 
 if __name__ == "__main__":
-    dumpers = {"letsgo": DumpLetsGo, "swsh": DumpSwSh}
+    dumpers = {
+        "sm": DumpSM,
+        "usum": DumpUsUm,
+        "letsgo": DumpLetsGo,
+        "swsh": DumpSwSh,
+    }
 
     parser = argparse.ArgumentParser()
     for i, d in dumpers.items():

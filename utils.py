@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import struct
 import unicodedata
+from typing import BinaryIO
 
 import flatbuffers  # type: ignore
 
@@ -12,10 +13,14 @@ def get_flag(data: bytes, offset: int, bit_index: int) -> bool:
     return (data[offset] >> bit_index & 1) != 0
 
 
-def read_as_int(size: int, data: bytes, offset: int = 0, signed: bool = False) -> int:
+def read_as_int(
+    size: int, data: bytes | BinaryIO, offset: int = 0, signed: bool = False
+) -> int:
     format_ = {1: "B", 2: "H", 4: "I", 8: "Q"}[size]
     if signed:
         format_ = format_.lower()
+    if not isinstance(data, (bytes, bytearray)):
+        data = data.read(size)
     return int(struct.unpack_from("<" + format_, data, offset)[0])
 
 

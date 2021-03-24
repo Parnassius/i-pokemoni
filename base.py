@@ -6,6 +6,7 @@ from typing import Generic, Type, TypeVar, cast
 
 import lz4.block  # type: ignore
 
+from container.garc import GARC
 from utils import read_as_int
 
 
@@ -57,6 +58,8 @@ class BaseTable(Generic[T]):
             "singlefile_noheader": self._open_single_file_no_header,
             "mini": self._open_mini,
             "gfpak": self._open_gfpak,
+            "garc": self._open_garc,
+            "garc_last_file": self._open_garc_last_file,
             "nso_text": self._open_nso,
             "nso_ro": self._open_nso,
             "nso_data": self._open_nso,
@@ -171,6 +174,27 @@ class BaseTable(Generic[T]):
 
         for id, data in enumerate(entries):
             table.append(self._cls(self, self._path, id, data))
+
+        return table
+
+    def _open_garc(self) -> list[T]:
+        table = []
+
+        garc = GARC(join(self._path, self._cls._PATH))
+        for i in range(garc.file_count):
+            data = garc.get_file(i)
+            table.append(self._cls(self, self._path, i, data))
+
+        return table
+
+    def _open_garc_last_file(self) -> list[T]:
+        table = []
+
+        garc = GARC(join(self._path, self._cls._PATH))
+        data = garc.get_file(garc.file_count - 1)
+        for id, start in enumerate(range(0, len(data), self._cls._SIZE)):
+            end = start + self._cls._SIZE
+            table.append(self._cls(self, self._path, id, data[start:end]))
 
         return table
 

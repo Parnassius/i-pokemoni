@@ -98,7 +98,7 @@ class PersonalInfo(BaseInfo):
             + self.special_defense
         )
 
-    def _get_bits(self, start: int = 0, length: int = -1):
+    def _get_bits(self, start: int = 0, length: int = -1) -> list[bool]:
         if length < 0:
             length = len(self._data)
         result = []
@@ -120,6 +120,8 @@ class PersonalInfo(BaseInfo):
 
     @cached_property
     def evos(self) -> list[Evolution]:
+        if self._table._format not in EvolutionSet._PATHS:
+            return []
         return EvolutionSet(
             self._path, self._id, self._table._format
         ).possible_evolutions

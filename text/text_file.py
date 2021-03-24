@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from os.path import join
-from typing import NamedTuple
+from typing import Literal, NamedTuple
 
+from container.garc import GARC
 from utils import read_as_int
 
 
@@ -12,9 +13,96 @@ class TextLine(NamedTuple):
 
 
 class TextFile:
-    _PATHS = {
-        "letsgo": ["bin", "message", None, "common"],
-        "swsh": ["bin", "message", None, "common"],
+    _PATHS: dict[str, list[str | Literal[True] | dict[str, str]]] = {
+        "sm": [
+            "a",
+            "0",
+            "3",
+            {
+                "JPN": "0",
+                "JPN_KANJI": "1",
+                "English": "2",
+                "French": "3",
+                "Italian": "4",
+                "German": "5",
+                "Spanish": "6",
+                "Korean": "7",
+                "Simp_Chinese": "8",
+                "Trad_Chinese": "9",
+            },
+        ],
+        "usum": [
+            "a",
+            "0",
+            "3",
+            {
+                "JPN": "0",
+                "JPN_KANJI": "1",
+                "English": "2",
+                "French": "3",
+                "Italian": "4",
+                "German": "5",
+                "Spanish": "6",
+                "Korean": "7",
+                "Simp_Chinese": "8",
+                "Trad_Chinese": "9",
+            },
+        ],
+        "letsgo": ["bin", "message", True, "common"],
+        "swsh": ["bin", "message", True, "common"],
+    }
+
+    _GARC_INDICES: dict[str, dict[str, int]] = {
+        "sm": {
+            # 16: field effects names+descriptions
+            # 19: zmoves (eg z-pound), not sure if they are used
+            # 35: item descriptions
+            # 36: item names
+            # 37: item names plural
+            "monsname": 55,
+            # 65: berries
+            # 67: locations
+            # 68: event locations
+            # 69: extra locations (nursery, stranger, etc)
+            # 70: extra-region locations
+            # 81: ribbons
+            # 82: tauros charge, stoutland search, ...
+            # 87: natures
+            # 96: abilities
+            # 97: ability descriptions
+            # 103: characteristics (along with other things)
+            # 112: move descriptions
+            # 113: move names
+            "zkn_form": 114,
+            "zkn_type": 116,
+            "zukan_comment_A": 119,
+            "zukan_comment_B": 120,
+        },
+        "usum": {
+            # 16: field effects names+descriptions
+            # 19: zmoves (eg z-pound), not sure if they are used
+            # 39: item descriptions
+            # 40: item names
+            # 41: item names plural
+            "monsname": 60,
+            # 70: berries
+            # 72: locations
+            # 73: event locations
+            # 74: extra locations (nursery, stranger, etc)
+            # 75: extra-region locations
+            # 86: ribbons
+            # 87: tauros charge, stoutland search, ...
+            # 92: natures
+            # 101: abilities
+            # 102: ability descriptions
+            # 108: characteristics (along with other things)
+            # 117: move descriptions
+            # 118: move names
+            "zkn_form": 119,
+            "zkn_type": 121,
+            "zukan_comment_A": 124,
+            "zukan_comment_B": 125,
+        },
     }
 
     _KEY_TBLMAGIC = 0x42544841
@@ -33,15 +121,33 @@ class TextFile:
     ) -> None:
         self._filename = filename
         self._format = file_format
+        self._labels: bytes | None
+        self._data: bytes
 
-        path = join(path, *[i if i else language for i in self._PATHS[self._format]])
-        with open(join(path, filename + ".tbl"), "rb") as f:
-            self._labels = f.read()
-        with open(join(path, filename + ".dat"), "rb") as f:
-            self._data = f.read()
+        path_ = []
+        for i in self._PATHS[self._format]:
+            if i is True:
+                path_.append(language)
+            elif isinstance(i, dict):
+                path_.append(i[language])
+            else:
+                path_.append(i)
+        path = join(path, *path_)
 
-        if self._labels_magic != self._KEY_TBLMAGIC:
-            raise Exception("Invalid tbl magic")
+        if file_format in self._GARC_INDICES:
+            self._labels = None
+            garc = GARC(join(path))
+            file_id = self._GARC_INDICES[file_format][filename]
+            self._data = garc.get_file(file_id)
+
+        else:
+            with open(join(path, filename + ".tbl"), "rb") as f:
+                self._labels = f.read()
+            with open(join(path, filename + ".dat"), "rb") as f:
+                self._data = f.read()
+
+            if self._labels_magic != self._KEY_TBLMAGIC:
+                raise Exception("Invalid tbl magic")
 
         if self._initial_key != 0:
             raise Exception("Invalid initial key! Not 0?")
@@ -55,14 +161,17 @@ class TextFile:
 
     @property
     def _labels_magic(self) -> int:
+        assert self._labels
         return read_as_int(4, self._labels, 0x0)
 
     @property
     def _labels_line_count(self) -> int:
+        assert self._labels
         return read_as_int(4, self._labels, 0x4)
 
     @property
     def _parsed_labels(self) -> list[str]:
+        assert self._labels
         offset = 0x8
         result = []
         for _ in range(0, self._labels_line_count):
@@ -199,8 +308,11 @@ class TextFile:
 
     @property
     def lines(self) -> list[tuple[str, str]]:
-        labels = self._parsed_labels
         data = self._parsed_data
+        if self._labels:
+            labels = self._parsed_labels
+        else:
+            labels = [f"{i:0>4}" for i in range(len(data))]
         if len(labels) != len(data):
             raise Exception("tbl and dat line counts do not match")
         return list(zip(labels, data))
