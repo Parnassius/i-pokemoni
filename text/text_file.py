@@ -14,6 +14,21 @@ class TextLine(NamedTuple):
 
 class TextFile:
     _PATHS: dict[str, list[str | Literal[True] | dict[str, str]]] = {
+        "oras": [
+            "a",
+            "0",
+            "7",
+            {
+                "JPN": "1",
+                "JPN_KANJI": "2",
+                "English": "3",
+                "French": "4",
+                "Italian": "5",
+                "German": "6",
+                "Spanish": "7",
+                "Korean": "8",
+            },
+        ],
         "sm": [
             "a",
             "0",
@@ -53,6 +68,35 @@ class TextFile:
     }
 
     _GARC_INDICES: dict[str, dict[str, int]] = {
+        "oras": {
+            "zkn_type": 2,
+            "zkn_form": 5,
+            "zukan_comment_B": 6,
+            "zukan_comment_A": 7,
+            # 14: move names
+            # 15: move names (again?)
+            # 16: move descriptions
+            # 36: ability descriptions
+            # 37: ability names
+            # 51: natures
+            # 55: secret base items plural
+            # 56: secret base items
+            # 57: secret base items descriptions
+            # 64: ribbons
+            # 85: extra-region locations
+            # 86: extra locations (nursery, stranger, etc)
+            # 87: event locations
+            # 88: ['[VAR (0000)]’s Base', 'Team [VAR (0000)]’s Base']
+            # 90: locations
+            # 95: berries
+            "monsname": 98,
+            # 110: secret base items
+            # 114: item names
+            # 115: item names plural
+            # 116: item names
+            # 117: item descriptions
+            # 121: 'Pokémon Omega Ruby\nDelta Episode', 'Pokémon Alpha Sapphire\nDelta Episode'
+        },
         "sm": {
             # 16: field effects names+descriptions
             # 19: zmoves (eg z-pound), not sure if they are used
@@ -137,6 +181,16 @@ class TextFile:
         if file_format in self._GARC_INDICES:
             self._labels = None
             garc = GARC(join(path))
+
+            if not self._GARC_INDICES[file_format]:
+                file_id = 0
+                while True:
+                    self._data = garc.get_file(file_id)
+                    print(self._parsed_data)
+                    print(file_id)
+                    input()
+                    file_id += 1
+
             file_id = self._GARC_INDICES[file_format][filename]
             self._data = garc.get_file(file_id)
 

@@ -4,6 +4,8 @@ BASE_PATH = join(dirname(__file__), "..", "pokemon_data")
 
 PATHS = {
     # fmt: off
+    "omegaruby": join(BASE_PATH, "oras14", "lower", "Pokémon Omega Ruby [v1.4]", "romfs"),
+    "alphasapphire": join(BASE_PATH, "oras14", "lower", "Pokémon Alpha Sapphire [v1.4]", "romfs"),
     "sun": join(BASE_PATH, "sm12", "lower", "Pokémon Sun [v1.2]", "romfs"),
     "moon": join(BASE_PATH, "sm12", "lower", "Pokémon Moon [v1.2]", "romfs"),
     "ultrasun": join(BASE_PATH, "usum12", "lower", "Pokémon Ultra Sun [v1.2]", "romfs"),

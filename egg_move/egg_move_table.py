@@ -6,6 +6,7 @@ from base import BaseTable
 
 from .egg_move_info import EggMoveInfo
 from .egg_move_info_letsgo import EggMoveInfoLetsGo
+from .egg_move_info_oras import EggMoveInfoOrAs
 from .egg_move_info_sm import EggMoveInfoSM
 from .egg_move_info_swsh import EggMoveInfoSwSh
 from .egg_move_info_usum import EggMoveInfoUsUm
@@ -13,6 +14,7 @@ from .egg_move_info_usum import EggMoveInfoUsUm
 
 class EggMoveTable(BaseTable[EggMoveInfo]):
     _CLASSES: Mapping[str, type[EggMoveInfo]] = {
+        "oras": EggMoveInfoOrAs,
         "sm": EggMoveInfoSM,
         "usum": EggMoveInfoUsUm,
         "letsgo": EggMoveInfoLetsGo,

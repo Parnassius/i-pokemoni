@@ -1345,10 +1345,11 @@ class DumpBase:
         # egg
         if not egg_move_table._cls._SKIP:
             egg_moves = egg_move_table.get_info_from_index(pokemon_id)
-            if forme_id > 0:
+            if forme_id > 0 and egg_moves.form_table_index is not None:
                 egg_moves = egg_move_table.get_info_from_index(
                     egg_moves.form_table_index + forme_id - 1
                 )
+
             for move_id in egg_moves.moves:
                 pokemon_moves_csv.set_row(
                     pokemon_id=forme_pokemon_id,
@@ -1370,7 +1371,7 @@ class DumpBase:
             tutors.update(
                 int(self._special_tutors[i][j])
                 for j, compatible in enumerate(special_tutors)
-                if compatible
+                if compatible and self._special_tutors[i][j] > 0
             )
 
         if pokemon_id in self._hardcode_tutors:
