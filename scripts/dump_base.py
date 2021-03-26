@@ -1200,6 +1200,10 @@ class DumpBase:
                             is_default=int(forme_id == 0),
                         )
 
+                        self._pokemon_evolutions(
+                            pokemon_id, forme_pokemon_id, forme.evos
+                        )
+
                         self._pokemon_stats(forme_pokemon_id, forme)
                         self._pokemon_types(forme_pokemon_id, forme)
                         self._pokemon_abilities(forme_pokemon_id, forme)
@@ -1446,7 +1450,10 @@ class DumpBase:
                 egg_group_id=egg_group,
             )
 
-    def _pokemon_evolutions(self, pokemon_id: int, evos: list[Evolution]) -> None:
+    def _pokemon_evolutions(
+        self, pokemon_id: int, forme_pokemon_id: int, evos: list[Evolution]
+    ) -> None:
+        # TODO: handle forme_pokemon_id
         pokemon_evolution_csv = self._open_csv("pokemon_evolution")
 
         for evo in evos:
@@ -1455,6 +1462,9 @@ class DumpBase:
                 continue
 
             trigger_id = evo.trigger_id
+            trigger_item_id = str(
+                self._get_item_id_from_game_index(evo.trigger_item_id) or ""
+            )
             gender_id = str(evo.gender_id or "")
 
             if trigger_id == 4:
@@ -1507,6 +1517,7 @@ class DumpBase:
                     for k, v in pokemon_evolution_csv.entries.items()
                     if int(v["evolved_species_id"]) == evo.species
                     and int(v["evolution_trigger_id"]) == trigger_id
+                    and v["trigger_item_id"] == trigger_item_id
                     and v["time_of_day"] == evo.time_of_day
                     # and int(v["location_id"]) == evo.location_id
                     and v["gender_id"] == gender_id
@@ -1525,8 +1536,7 @@ class DumpBase:
                 id=evolution_id,
                 evolved_species_id=evo.species,
                 evolution_trigger_id=trigger_id,
-                trigger_item_id=self._get_item_id_from_game_index(evo.trigger_item_id)
-                or "",
+                trigger_item_id=trigger_item_id,
                 minimum_level=evo.level or "",
                 gender_id=gender_id,
                 # location_id=location_id,  # magnetic field, mossy stone, icy stone, mount lanakila
@@ -1567,11 +1577,18 @@ class DumpBase:
                         ]["evolution_chain_id"]
                     )
                 entry["evolution_chain_id"] = str(chain)
-                pokemon = personal_table.get_info_from_index(int(key[0]))
-                for evo in pokemon.evos:
-                    pokemon_species_csv.entries[(evo.species,)][
-                        "evolves_from_species_id"
-                    ] = str(key[0])
+
+            pokemon_id = int(key[0])
+            pokemon = personal_table.get_info_from_index(pokemon_id)
+            for forme_id in range(pokemon.forme_count):
+                forme_index = pokemon.forme_index(pokemon_id, forme_id)
+                forme = personal_table.get_info_from_index(forme_index)
+                for evo in forme.evos:
+                    pokemon_species_csv.set_row(
+                        id=evo.species,
+                        evolves_from_species_id=pokemon_id,
+                        evolution_chain_id=entry["evolution_chain_id"],
+                    )
 
     def _update_pokemon_order(self) -> None:
         pokemon_forms_csv = self._open_csv("pokemon_forms")
@@ -1712,8 +1729,6 @@ class DumpBase:
 
                     self._pokemon_dex_numbers(pokemon_id, pokemon)
                     self._pokemon_egg_groups(pokemon_id, pokemon)
-
-                    self._pokemon_evolutions(pokemon_id, pokemon.evos)
 
         if "pokemon" in self._sections:
             self._create_evolution_chains()

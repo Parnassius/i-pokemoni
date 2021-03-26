@@ -68,6 +68,18 @@ class DumpSwSh(DumpBase):
                 9: "Train in the Tower of Waters",
             },
         ),
+        8: (
+            "three-critical-hits",
+            {
+                9: "Land three critical hits in a battle",
+            },
+        ),
+        9: (
+            "runerigus",
+            {
+                9: "Runerigus evolution method",
+            },
+        ),
     }
 
     _new_move_meta_ailments = {

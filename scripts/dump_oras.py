@@ -63,6 +63,7 @@ class DumpOrAs(DumpBase):
         self._path = PATHS["omegaruby"]
         self._format = "oras"
 
+        self._form_names = self._form_names.copy()
         self._form_names["pikachu"] = [
             # TODO: check if the order is correct
             "",

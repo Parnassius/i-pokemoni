@@ -53,6 +53,9 @@ class Evolution:
         37 => level + day + game  # sun/ultrasun
         38 => level + night + game  # moon/ultramoon
         39 => level + mount lanakila
+        40 => level + dusk
+        43 => 3 crits
+        44 => travel under the stone bridge in Dusty Bowl after Yamask took at least 49 HP in damage without fainting (???????)
         45 => spin  # form should be hardcoded
         46 => level + amped nature
         47 => level + low key nature
@@ -95,6 +98,7 @@ class Evolution:
             37,
             38,
             39,
+            40,
             46,
             47,
         ):
@@ -111,6 +115,10 @@ class Evolution:
             return 6  # tower-of-darkness
         if self._method == 49:
             return 7  # tower-of-waters
+        if self._method == 43:
+            return 8  # three-critical-hits
+        if self._method == 44:
+            return 9  # runerigus
         raise Exception("missing evolution_trigger_id: " + str(self._method))
 
     @property
@@ -145,6 +153,8 @@ class Evolution:
             return "day"
         if self._method in (3, 20, 33, 38):
             return "night"
+        if self._method in (40,):
+            return "dusk"
         return ""
 
     @property
