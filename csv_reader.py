@@ -6,11 +6,13 @@ from copy import copy
 from os.path import dirname, join
 from typing import Literal
 
+from paths import VEEKUN_PATH
+
 
 class CsvReader:
     def __init__(self, table: str) -> None:
         self.table = table
-        self.file = join(dirname(__file__), "veekun", f"{self.table}.csv")
+        self.file = join(VEEKUN_PATH, f"{self.table}.csv")
         self.primary_key = {
             "ability_flavor_text": (0, 1, 2),
             "ability_names": (0, 1),

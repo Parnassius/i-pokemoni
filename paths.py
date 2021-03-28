@@ -1,5 +1,9 @@
 from os.path import dirname, join
 
+VEEKUN_PATH = join(
+    dirname(__file__), "..", "veekun", "pokedex", "pokedex", "data", "csv"
+)
+
 BASE_PATH = join(dirname(__file__), "..", "pokemon_data")
 
 PATHS = {
