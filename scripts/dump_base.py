@@ -1110,6 +1110,9 @@ class DumpBase:
         ):
             return
 
+        if pokemon_form_id == 10359:  # eternamax eternatus
+            return
+
         pokemon_form_names_csv = self._open_csv("pokemon_form_names")
 
         lang_names = self._open_text_files("zkn_form")
@@ -1119,10 +1122,7 @@ class DumpBase:
                     pokemon_form_names_csv.set_row(
                         pokemon_form_id=pokemon_form_id,
                         local_language_id=language_id,
-                        form_name=""
-                        if pokemon_form_id == 10357  # eternamax
-                        else name[1].strip(),
-                        # pokemon_name  # TODO
+                        form_name=name[1].strip(),
                     )
                     continue
 
