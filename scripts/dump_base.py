@@ -1571,6 +1571,9 @@ class DumpBase:
         max_chain = int(max(evolution_chains_csv.entries.keys())[0])
         for key in pokemon_species_csv.entries.keys():
             entry = pokemon_species_csv.entries[key]
+            if int(entry["generation_id"]) > self._generation_id:
+                continue
+
             if entry["evolution_chain_id"] == "_":
                 if entry["evolves_from_species_id"] == "_":
                     entry["evolves_from_species_id"] = ""
