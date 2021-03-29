@@ -118,7 +118,7 @@ class Evolution:
         if self._method == 43:
             return 8  # three-critical-hits
         if self._method == 44:
-            return 9  # runerigus
+            return 9  # take-damage
         raise Exception("missing evolution_trigger_id: " + str(self._method))
 
     @property

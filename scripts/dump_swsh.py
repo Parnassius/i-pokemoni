@@ -75,9 +75,9 @@ class DumpSwSh(DumpBase):
             },
         ),
         9: (
-            "runerigus",
+            "take-damage",
             {
-                9: "Runerigus evolution method",
+                9: "Go somewhere after taking damage",
             },
         ),
     }
