@@ -1124,6 +1124,13 @@ class DumpBase:
                         local_language_id=language_id,
                         form_name=name[1].strip(),
                     )
+
+                    if list(
+                        pokemon_form_names_csv.entries[
+                            pokemon_form_id, language_id
+                        ].values()
+                    )[2:] == ["", ""]:
+                        del pokemon_form_names_csv.entries[pokemon_form_id, language_id]
                     continue
 
     def _pokemon_formes(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
