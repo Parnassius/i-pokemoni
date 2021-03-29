@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
 class PersonalInfoLetsGo(PersonalInfoSM):
     _PATH = join("bin", "pokelib", "personal", "personal_total.bin")
+    _TYPE = "singlefile_noheader"
     _MAX_ID = 809
 
     def __init__(self, table: PersonalTable, path: str, id: int, data: bytes) -> None:
