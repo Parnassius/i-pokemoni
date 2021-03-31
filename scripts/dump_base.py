@@ -693,6 +693,16 @@ class DumpBase:
                             **changed_columns,
                         )
 
+            try:
+                z_power = getattr(move_info, "z_power") or ""
+                z_effect_id = getattr(move_info, "z_effect") or ""
+            except AttributeError:
+                z_power = False
+                z_effect_id = False
+            try:
+                dynamax_power = getattr(move_info, "dynamax_power") or ""
+            except AttributeError:
+                dynamax_power = False
             moves_csv.set_row(
                 id=move_id,
                 identifier=identifier,
@@ -709,6 +719,9 @@ class DumpBase:
                 # contest_type_id
                 # contest_effect_id
                 # super_contest_effect_id
+                z_power=z_power,
+                z_effect_id=z_effect_id,
+                dynamax_power=dynamax_power,
             )
 
             move_meta_csv.set_row(

@@ -6,11 +6,15 @@ from base import BaseTable
 
 from .move_info import MoveInfo
 from .move_info_letsgo import MoveInfoLetsGo
+from .move_info_sm import MoveInfoSM
 from .move_info_swsh import MoveInfoSwSh
+from .move_info_usum import MoveInfoUsUm
 
 
 class MoveTable(BaseTable[MoveInfo]):
     _CLASSES: Mapping[str, type[MoveInfo]] = {
+        "sm": MoveInfoSM,
+        "usum": MoveInfoUsUm,
         "letsgo": MoveInfoLetsGo,
         "swsh": MoveInfoSwSh,
     }

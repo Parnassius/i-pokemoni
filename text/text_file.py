@@ -115,8 +115,8 @@ class TextFile:
             # 96: abilities
             # 97: ability descriptions
             # 103: characteristics (along with other things)
-            # 112: move descriptions
-            # 113: move names
+            "wazainfo": 112,
+            "wazaname": 113,
             "zkn_form": 114,
             "zkn_type": 116,
             "zukan_comment_A": 119,
@@ -140,8 +140,8 @@ class TextFile:
             # 101: abilities
             # 102: ability descriptions
             # 108: characteristics (along with other things)
-            # 117: move descriptions
-            # 118: move names
+            "wazainfo": 117,
+            "wazaname": 118,
             "zkn_form": 119,
             "zkn_type": 121,
             "zukan_comment_A": 124,

@@ -52,18 +52,20 @@ class BaseTable(Generic[T]):
             return []
         if self._cls._CUSTOM_FUNCTION:
             return self._cls._CUSTOM_FUNCTION(self._cls, self)
-        return {
+        funcs: dict[str, Callable[..., list[T]]] = {
             "multiplefiles": self._open_multiple_files,
             "singlefile": self._open_single_file,
             "singlefile_noheader": self._open_single_file_no_header,
             "mini": self._open_mini,
             "gfpak": self._open_gfpak,
             "garc": self._open_garc,
+            "garc_mini": self._open_garc_mini,
             "garc_last_file": self._open_garc_last_file,
             "nso_text": self._open_nso,
             "nso_ro": self._open_nso,
             "nso_data": self._open_nso,
-        }[self._cls._TYPE]()
+        }
+        return funcs[self._cls._TYPE]()
 
     def _open_multiple_files(self) -> list[T]:
         table = []
@@ -110,11 +112,14 @@ class BaseTable(Generic[T]):
 
         return table
 
-    def _open_mini(self) -> list[T]:
+    def _open_mini(self, data: bytes | None = None) -> list[T]:
         table = []
 
-        with open(join(self._path, self._cls._PATH), "rb") as f:
-            self._data = f.read()
+        if data:
+            self._data = data
+        else:
+            with open(join(self._path, self._cls._PATH), "rb") as f:
+                self._data = f.read()
 
         if len(self._data) < 4:
             raise Exception
@@ -186,6 +191,11 @@ class BaseTable(Generic[T]):
             table.append(self._cls(self, self._path, i, data))
 
         return table
+
+    def _open_garc_mini(self) -> list[T]:
+        garc = GARC(join(self._path, self._cls._PATH))
+        data = garc.get_file(0)
+        return self._open_mini(data)
 
     def _open_garc_last_file(self) -> list[T]:
         table = []

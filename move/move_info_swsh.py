@@ -51,7 +51,7 @@ class MoveInfoSwSh(MoveInfo):
         self.stat_2_percent = fbs_read_as_int(1, self._tab, 64)
         self.stat_3_percent = fbs_read_as_int(1, self._tab, 66)
 
-        self.gigantamax_power = fbs_read_as_int(1, self._tab, 68)
+        self.dynamax_power = fbs_read_as_int(1, self._tab, 68)
 
     @property
     def makes_contact(self) -> bool:
