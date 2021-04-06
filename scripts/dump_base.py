@@ -810,7 +810,9 @@ class DumpBase:
         lang_gmove_flavor_text = self._open_text_files("gwazainfo")
         for language_id, flavor_text in lang_gmove_flavor_text.items():
             for flavor in flavor_text:
-                gmove_id = int(flavor[0][flavor[0].find("_") + 1 :])
+                gmove_id = (
+                    int(flavor[0][flavor[0].find("_") + 1 :]) + self._MIN_GMAX_MOVE_ID
+                )
                 if gmove_id == 0:
                     continue
 
