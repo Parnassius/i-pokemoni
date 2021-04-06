@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from os.path import join
 from typing import TYPE_CHECKING, Literal, TypeVar
 
@@ -24,6 +25,8 @@ T = TypeVar("T", bound=BaseTable)
 
 class DumpBase:
     _SECTIONS: list[str]
+
+    _MIN_GMAX_MOVE_ID = 10019
 
     _form_names: dict[str, list[str]] = {
         # fmt: off
@@ -380,6 +383,9 @@ class DumpBase:
 
         if "moves" in self._sections:
             self._dump_moves()
+
+        if "gmaxmoves" in self._sections:
+            self._dump_gmax_moves()
 
         if "abilities" in self._sections:
             self._dump_abilities()
@@ -780,6 +786,127 @@ class DumpBase:
                     del move_meta_stat_changes_csv.entries[entry]
 
         self._move_names()
+
+    def _gmove_names(self) -> None:
+        move_names_csv = self._open_csv("move_names")
+
+        lang_gmoves = self._open_text_files("gwazaname")
+        for language_id, gmoves in lang_gmoves.items():
+            for gmove in gmoves:
+                gmove_id = (
+                    int(gmove[0][gmove[0].find("_") + 1 :]) + self._MIN_GMAX_MOVE_ID
+                )
+                if gmove_id == 0:
+                    continue
+
+                move_names_csv.set_row(
+                    move_id=gmove_id,
+                    local_language_id=language_id,
+                    name=gmove[1],
+                )
+
+        move_flavor_text_csv = self._open_csv("move_flavor_text")
+
+        lang_gmove_flavor_text = self._open_text_files("gwazainfo")
+        for language_id, flavor_text in lang_gmove_flavor_text.items():
+            for flavor in flavor_text:
+                gmove_id = int(flavor[0][flavor[0].find("_") + 1 :])
+                if gmove_id == 0:
+                    continue
+
+                move_flavor_text_csv.set_row(
+                    move_id=gmove_id,
+                    version_group_id=self._version_group_id,
+                    language_id=language_id,
+                    flavor_text=flavor[1],
+                )
+
+    def _dump_gmax_moves(self) -> None:
+        moves_csv = self._open_csv("moves")
+        move_changelog_csv = self._open_csv("move_changelog")
+        move_meta_csv = self._open_csv("move_meta")
+        move_flag_map_csv = self._open_csv("move_flag_map")
+        move_meta_stat_changes_csv = self._open_csv("move_meta_stat_changes")
+        move_effects_csv = self._open_csv("move_effects")
+        move_effect_prose_csv = self._open_csv("move_effect_prose")
+        types_csv = self._open_csv("types")
+
+        gmoves_en = self._open_text_file("English", "gwazaname")
+        flavor_text_en = self._open_text_file("English", "gwazainfo")
+        for gmove, flavor_text in zip(gmoves_en, flavor_text_en):
+            gmove_id = int(gmove[0][gmove[0].find("_") + 1 :]) + self._MIN_GMAX_MOVE_ID
+            identifier = to_id(gmove[1])
+
+            type_name, pokemon_name = re.match(  # type: ignore[union-attr]
+                "An? ([A-Za-z]+)-type attack that Gigantamax ([A-Za-z]+) use.",
+                flavor_text[1],
+            ).groups()
+
+            if identifier in self._identifier_overrides:
+                identifier = self._identifier_overrides[identifier]
+
+            # move_info = move_table.get_info_from_index(gmove_id)
+
+            # TODO
+            """if (move_info.effect_id,) not in move_effects_csv.entries.keys():
+                move_effects_csv.set_row(
+                    id=move_info.effect_id,
+                )
+                move_effect_prose_csv.set_row(
+                    move_effect_id=move_info.effect_id,
+                    local_language_id=9,
+                    short_effect=f"XXX new effect for {identifier}",
+                    effect=f"XXX new effect for {identifier}",
+                )"""
+
+            type_id = next(
+                int(k[0])
+                for k, v in types_csv.entries.items()
+                if v["identifier"] == type_name.lower()
+            )
+
+            moves_csv.set_row(
+                id=gmove_id,
+                identifier=identifier,
+                generation_id_fallback_=self._generation_id,
+                type_id=type_id,
+                # power=move_info.power,
+                # pp=move_info.pp,
+                # accuracy=move_info.accuracy,
+                # priority=move_info.priority,
+                # target_id=move_info.target_id,
+                # damage_class_id=move_info.damage_class_id,
+                # effect_id=move_info.effect_id,
+                # effect_chance=move_info.effect_chance,
+            )
+
+            # TODO
+            """move_meta_csv.set_row(
+                move_id=gmove_id,
+                meta_category_id=move_info.meta_category_id,
+                meta_ailment_id=move_info.meta_ailment_id,
+                min_hits=move_info.hit_min or "",
+                max_hits=move_info.hit_max or "",
+                min_turns=move_info.turn_min or "",
+                max_turns=move_info.turn_max or "",
+                drain=move_info.recoil,
+                healing=move_info.healing,
+                crit_rate=move_info.crit_stage,
+                ailment_chance=move_info.inflict_percent,
+                flinch_chance=move_info.flinch,
+                stat_chance=move_info.stat_chance,
+            )
+
+            for flag_id in move_info.flags(identifier):
+                move_flag_map_csv.set_row(
+                    move_id=gmove_id,
+                    move_flag_id=flag_id,
+                )
+            for entry in list(move_flag_map_csv.entries):
+                if entry[0] == gmove_id and entry[1] not in move_info.flags(identifier):
+                    del move_flag_map_csv.entries[entry]"""
+
+        self._gmove_names()
 
     def _dump_abilities(self) -> None:
         abilities_csv = self._open_csv("abilities")

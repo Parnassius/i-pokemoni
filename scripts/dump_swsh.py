@@ -6,7 +6,7 @@ from .dump_base import DumpBase
 
 
 class DumpSwSh(DumpBase):
-    _SECTIONS = ["moves", "abilities", "items", "machines", "pokemon"]
+    _SECTIONS = ["moves", "gmaxmoves", "abilities", "items", "machines", "pokemon"]
 
     _changed_items = {
         121: 1007,  # pokemon-box => pokemon-box-link
