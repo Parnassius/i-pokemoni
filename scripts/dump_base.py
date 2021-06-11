@@ -1239,6 +1239,10 @@ class DumpBase:
                                 language_id=language_id,
                                 flavor_text=flavor[1],
                             )
+                            if not flavor[1].strip():
+                                del pokemon_species_flavor_text_csv.entries[
+                                    pokemon_id, version_id, language_id
+                                ]
                         continue
 
     def _pokemon_form_names(
