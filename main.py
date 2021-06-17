@@ -1,5 +1,6 @@
 import argparse
 
+from scripts.dump_home import DumpHome
 from scripts.dump_letsgo import DumpLetsGo
 from scripts.dump_oras import DumpOrAs
 from scripts.dump_sm import DumpSM
@@ -13,6 +14,7 @@ if __name__ == "__main__":
         "usum": DumpUsUm,
         "letsgo": DumpLetsGo,
         "swsh": DumpSwSh,
+        "home": DumpHome,
     }
 
     parser = argparse.ArgumentParser()

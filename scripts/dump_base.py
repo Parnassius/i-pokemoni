@@ -379,6 +379,10 @@ class DumpBase:
         self._tables: dict[type[BaseTable], BaseTable] = {}
         self._text_files: dict[tuple[str, ...], list[tuple[str, str]]] = {}
 
+        self._dump_stuff()
+        self._save_all_csvs()
+
+    def _dump_stuff(self) -> None:
         self._create_base_records()
 
         if "moves" in self._sections:
@@ -398,8 +402,6 @@ class DumpBase:
 
         if "pokemon" in self._sections or "learnsets" in self._sections:
             self._dump_pokemon()
-
-        self._save_all_csvs()
 
     def _open_csv(self, table: str) -> CsvReader:
         if table not in self._csvs:

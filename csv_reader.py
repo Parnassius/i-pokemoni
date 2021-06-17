@@ -16,6 +16,7 @@ class CsvReader:
         self.primary_key = {
             "ability_flavor_text": (0, 1, 2),
             "ability_names": (0, 1),
+            "characteristic_text": (0, 1),
             "evolution_trigger_prose": (0, 1),
             "generation_names": (0, 1),
             "item_category_prose": (0, 1),
@@ -31,9 +32,11 @@ class CsvReader:
             "move_meta_category_prose": (0, 1),
             "move_names": (0, 1),
             "move_meta_stat_changes": (0, 1),
+            "nature_names": (0, 1),
             "pokedex_prose": (0, 1),
             "pokedex_version_groups": (0, 1),
             "pokemon_abilities": (0, 3),
+            "pokemon_color_names": (0, 1),
             "pokemon_dex_numbers": (0, 1),
             "pokemon_egg_groups": (0, 1),
             "pokemon_form_generations": (0, 1),
@@ -44,6 +47,7 @@ class CsvReader:
             "pokemon_stats": (0, 1),
             "pokemon_types": (0, 2),
             "region_names": (0, 1),
+            "type_names": (0, 1),
             "version_group_regions": (0, 1),
             "version_names": (0, 1),
         }.get(table, (0,))

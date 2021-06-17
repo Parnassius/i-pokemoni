@@ -18,4 +18,6 @@ PATHS = {
     "eevee": join(BASE_PATH, "lgpe131072", "lower", "Pokémon: Let’s Go, Eevee! [v131072]", "RomFS"),
     "sword": join(BASE_PATH, "swsh458752", "lower", "Pokémon Shield [v458752]", "RomFS"),
     "shield": join(BASE_PATH, "swsh458752", "lower", "Pokémon Sword [v458752]", "RomFS"),
+
+    "home": join(BASE_PATH, "home327680", "lower", "RomFS"),
 }

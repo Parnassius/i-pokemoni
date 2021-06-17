@@ -8,6 +8,16 @@ from typing import BinaryIO
 import flatbuffers  # type: ignore
 
 
+def adjust_stat_id(stat_id: int | str) -> int:
+    if isinstance(stat_id, str):
+        stat_id = int(stat_id)
+    if stat_id == 4:
+        stat_id = 6
+    elif stat_id in (5, 6):
+        stat_id -= 1
+    return stat_id
+
+
 def get_flag(data: bytes, offset: int, bit_index: int) -> bool:
     bit_index &= 7  # ensure bit access is 0-7
     return (data[offset] >> bit_index & 1) != 0

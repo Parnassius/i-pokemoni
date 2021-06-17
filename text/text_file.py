@@ -65,6 +65,7 @@ class TextFile:
         ],
         "letsgo": ["bin", "message", True, "common"],
         "swsh": ["bin", "message", True, "common"],
+        "home": ["bin", "message", True, "megaturtle"],
     }
 
     _GARC_INDICES: dict[str, dict[str, int]] = {
