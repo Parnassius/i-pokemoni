@@ -9,7 +9,7 @@ from .dump_base import DumpBase
 
 
 class DumpSM(DumpBase):
-    _SECTIONS = ["moves", "learnsets"]
+    _SECTIONS = ["moves", "learnsets", "pokemon"]
 
     _region_id = 7
     _region_identifier = "alola"

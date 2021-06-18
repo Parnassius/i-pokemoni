@@ -60,8 +60,8 @@ class DumpHome(DumpBase):
                 version_ids = (version_ids,)
             lang_flavor_text = self._open_text_files(f"zukan_comment_{version_name}")
             for language_id, flavor_text in lang_flavor_text.items():
-                for flavor in flavor_text:
-                    parts = flavor[0].split("_")
+                for key, flavor in flavor_text:
+                    parts = key.split("_")
                     pokemon_id = int(parts[2])
                     forme_id = int(parts[3])
                     if forme_id != 0:
@@ -71,9 +71,9 @@ class DumpHome(DumpBase):
                             species_id=pokemon_id,
                             version_id=version_id,
                             language_id=language_id,
-                            flavor_text=flavor[1],
+                            flavor_text=flavor,
                         )
-                        if not flavor[1].strip():
+                        if not flavor.strip():
                             del pokemon_species_flavor_text_csv.entries[
                                 pokemon_id, version_id, language_id
                             ]

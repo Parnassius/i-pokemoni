@@ -27,3 +27,11 @@ class PersonalInfoSM(PersonalInfoXY):
         self.special_z_zmove = read_as_int(2, self._data, 0x50)
 
         self.local_variant = bool(self._data[0x52])
+
+        self.pokedex_numbers = {
+            "original-alola": 0,
+            "original-melemele": 0,
+            "original-akala": 0,
+            "original-ulaula": 0,
+            "original-poni": 0,
+        }

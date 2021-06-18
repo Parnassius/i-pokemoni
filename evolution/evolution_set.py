@@ -3,13 +3,21 @@ from __future__ import annotations
 from os.path import join
 from typing import Literal
 
+from container.garc import GARC
 from utils import read_as_int
 
 
 class Evolution:
     def __init__(
-        self, method: int, argument: int, species: int, form: int, level: int
+        self,
+        evolution_set: EvolutionSet,
+        method: int,
+        argument: int,
+        species: int,
+        form: int,
+        level: int,
     ) -> None:
+        self._evolution_set = evolution_set
         self._method = method
         self._argument = argument
         self.species = species
@@ -42,6 +50,8 @@ class Evolution:
         23 => level + male
         24 => level + female
         25 => level + magnetic field
+        26 => level + moss rock
+        27 => level + ice rock
         28 => level + upside down
         29 => level + learnt type of move + friendship
         30 => level + dark type pokemon in party
@@ -54,6 +64,8 @@ class Evolution:
         38 => level + night + game  # moon/ultramoon
         39 => level + mount lanakila
         40 => level + dusk
+        41 => level + night, unobtainable regional form
+        42 => use item, unobtainable regional form
         43 => 3 crits
         44 => travel under the stone bridge in Dusty Bowl after Yamask took at least 49 HP in damage without fainting (???????)
         45 => spin  # form should be hardcoded
@@ -87,6 +99,8 @@ class Evolution:
             23,
             24,
             25,
+            26,
+            27,
             28,
             29,
             30,
@@ -119,6 +133,8 @@ class Evolution:
             return 8  # three-critical-hits
         if self._method == 44:
             return 9  # take-damage
+        if self._method in (41, 42):
+            return 0  # unobtainable regional forms
         raise Exception("missing evolution_trigger_id: " + str(self._method))
 
     @property
@@ -172,7 +188,9 @@ class Evolution:
     @property
     def minimum_happiness(self) -> int:
         if self._method in (1, 2, 3, 29):
-            return 160
+            if self._evolution_set._format == "swsh":
+                return 160
+            return 220
         return 0
 
     @property
@@ -223,12 +241,16 @@ class Evolution:
 
 class EvolutionSet:
     _PATHS = {
+        "sm": ["a", "0", "1", "4"],
+        "usum": ["a", "0", "1", "4"],
         "letsgo": ["bin", "pokelib", "evolution", "evo_{id:0>3}.bin"],
         "swsh": ["bin", "pml", "evolution", "evo_{id:0>3}.bin"],
     }
 
-    _ENTRY_SIZES = {"letsgo": 8, "swsh": 8}
-    _ENTRY_COUNTS = {"letsgo": 8, "swsh": 9}
+    _GARC = {"sm", "usum"}
+
+    _ENTRY_SIZES = {"sm": 8, "usum": 8, "letsgo": 8, "swsh": 8}
+    _ENTRY_COUNTS = {"sm": 8, "usum": 8, "letsgo": 8, "swsh": 9}
     SIZES = {
         i[0]: i[1] * i[2]
         for i in zip(_ENTRY_SIZES.keys(), _ENTRY_SIZES.values(), _ENTRY_COUNTS.values())
@@ -238,8 +260,13 @@ class EvolutionSet:
         self._format = file_format
 
         path = join(path, *[i.format(id=pokemon_id) for i in self._PATHS[self._format]])
-        with open(path, "rb") as f:
-            self._data = f.read()
+
+        if self._format in self._GARC:
+            garc = GARC(join(path))
+            self._data = garc.get_file(pokemon_id)
+        else:
+            with open(path, "rb") as f:
+                self._data = f.read()
 
     @property
     def possible_evolutions(self) -> list[Evolution]:
@@ -247,6 +274,7 @@ class EvolutionSet:
         offset = self._ENTRY_SIZES[self._format]
         for i in range(self._ENTRY_COUNTS[self._format]):
             evo = Evolution(
+                self,
                 read_as_int(2, self._data, i * offset + 0),  # method
                 read_as_int(2, self._data, i * offset + 2),  # argument
                 read_as_int(2, self._data, i * offset + 4),  # species

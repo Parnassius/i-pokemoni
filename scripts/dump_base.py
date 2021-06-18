@@ -155,7 +155,7 @@ class DumpBase:
             "10-power-construct", "50-power-construct", "complete",  # power construct
         ],
         "diancie": ["", "mega"],
-        "hoopa": ["", "unbound"],
+        "hoopa": ["confined__", "unbound"],
         "gumshoos": ["", "totem"],
         "vikavolt": ["", "totem"],
         "oricorio": ["baile", "pom-pom", "pau", "sensu"],
@@ -585,23 +585,23 @@ class DumpBase:
 
         lang_moves = self._open_text_files("wazaname")
         for language_id, moves in lang_moves.items():
-            for move in moves:
-                move_id = int(move[0][move[0].find("_") + 1 :])
+            for key, move in moves:
+                move_id = int(key[key.find("_") + 1 :])
                 if move_id == 0:
                     continue
 
                 move_names_csv.set_row(
                     move_id=move_id,
                     local_language_id=language_id,
-                    name=move[1],
+                    name=move,
                 )
 
         move_flavor_text_csv = self._open_csv("move_flavor_text")
 
         lang_move_flavor_text = self._open_text_files("wazainfo")
         for language_id, flavor_text in lang_move_flavor_text.items():
-            for flavor in flavor_text:
-                move_id = int(flavor[0][flavor[0].find("_") + 1 :])
+            for key, flavor in flavor_text:
+                move_id = int(key[key.find("_") + 1 :])
                 if move_id == 0:
                     continue
 
@@ -609,7 +609,7 @@ class DumpBase:
                     move_id=move_id,
                     version_group_id=self._version_group_id,
                     language_id=language_id,
-                    flavor_text=flavor[1],
+                    flavor_text=flavor,
                 )
 
     def _dump_machines(self) -> None:
@@ -655,11 +655,11 @@ class DumpBase:
         }
 
         moves_en = self._open_text_file("English", "wazaname")
-        for move in moves_en:
-            move_id = int(move[0][move[0].find("_") + 1 :])
+        for key, move in moves_en:
+            move_id = int(key[key.find("_") + 1 :])
             if move_id == 0:
                 continue
-            identifier = to_id(move[1])
+            identifier = to_id(move)
 
             if identifier in self._identifier_overrides:
                 identifier = self._identifier_overrides[identifier]
@@ -794,27 +794,23 @@ class DumpBase:
 
         lang_gmoves = self._open_text_files("gwazaname")
         for language_id, gmoves in lang_gmoves.items():
-            for gmove in gmoves:
-                gmove_id = (
-                    int(gmove[0][gmove[0].find("_") + 1 :]) + self._MIN_GMAX_MOVE_ID
-                )
+            for key, gmove in gmoves:
+                gmove_id = int(key[key.find("_") + 1 :]) + self._MIN_GMAX_MOVE_ID
                 if gmove_id == 0:
                     continue
 
                 move_names_csv.set_row(
                     move_id=gmove_id,
                     local_language_id=language_id,
-                    name=gmove[1],
+                    name=gmove,
                 )
 
         move_flavor_text_csv = self._open_csv("move_flavor_text")
 
         lang_gmove_flavor_text = self._open_text_files("gwazainfo")
         for language_id, flavor_text in lang_gmove_flavor_text.items():
-            for flavor in flavor_text:
-                gmove_id = (
-                    int(flavor[0][flavor[0].find("_") + 1 :]) + self._MIN_GMAX_MOVE_ID
-                )
+            for key, flavor in flavor_text:
+                gmove_id = int(key[key.find("_") + 1 :]) + self._MIN_GMAX_MOVE_ID
                 if gmove_id == 0:
                     continue
 
@@ -822,7 +818,7 @@ class DumpBase:
                     move_id=gmove_id,
                     version_group_id=self._version_group_id,
                     language_id=language_id,
-                    flavor_text=flavor[1],
+                    flavor_text=flavor,
                 )
 
     def _dump_gmax_moves(self) -> None:
@@ -916,11 +912,11 @@ class DumpBase:
         abilities_csv = self._open_csv("abilities")
 
         abilities_en = self._open_text_file("English", "tokusei")
-        for ability in abilities_en:
-            ability_id = int(ability[0][-3:])
+        for key, ability in abilities_en:
+            ability_id = int(key[-3:])
             if ability_id == 0:
                 continue
-            identifier = to_id(ability[1])
+            identifier = to_id(ability)
 
             # hardcode as-one identifiers
             if ability_id == 266:
@@ -939,29 +935,29 @@ class DumpBase:
 
         lang_abilities = self._open_text_files("tokusei")
         for language_id, abilities in lang_abilities.items():
-            for ability in abilities:
-                ability_id = int(ability[0][-3:])
+            for key, ability in abilities:
+                ability_id = int(key[-3:])
                 if ability_id == 0:
                     continue
                 ability_names_csv.set_row(
                     ability_id=ability_id,
                     local_language_id=language_id,
-                    name=ability[1],
+                    name=ability,
                 )
 
         ability_flavor_text_csv = self._open_csv("ability_flavor_text")
 
         lang_ability_flavor_text = self._open_text_files("tokuseiinfo")
         for language_id, flavor_text in lang_ability_flavor_text.items():
-            for flavor in flavor_text:
-                ability_id = int(flavor[0][-3:])
+            for key, flavor in flavor_text:
+                ability_id = int(key[-3:])
                 if ability_id == 0:
                     continue
                 ability_flavor_text_csv.set_row(
                     ability_id=ability_id,
                     version_group_id=self._version_group_id,
                     language_id=language_id,
-                    flavor_text=flavor[1],
+                    flavor_text=flavor,
                 )
 
     def _item_names(self) -> None:
@@ -969,8 +965,8 @@ class DumpBase:
 
         lang_items = self._open_text_files("itemname")
         for language_id, items in lang_items.items():
-            for item in items:
-                game_index = int(item[0][item[0].find("_") + 1 :])
+            for key, item in items:
+                game_index = int(key[key.find("_") + 1 :])
                 if game_index == 0:
                     continue
 
@@ -980,15 +976,15 @@ class DumpBase:
                     item_names_csv.set_row(
                         item_id=item_id,
                         local_language_id=language_id,
-                        name=item[1],
+                        name=item,
                     )
 
         item_flavor_text_csv = self._open_csv("item_flavor_text")
 
         lang_item_flavor_text = self._open_text_files("iteminfo")
         for language_id, flavor_text in lang_item_flavor_text.items():
-            for flavor in flavor_text:
-                game_index = int(flavor[0][flavor[0].find("_") + 1 :])
+            for key, flavor in flavor_text:
+                game_index = int(key[key.find("_") + 1 :])
                 if game_index == 0:
                     continue
 
@@ -999,7 +995,7 @@ class DumpBase:
                         item_id=item_id,
                         version_group_id=self._version_group_id,
                         language_id=language_id,
-                        flavor_text=flavor[1],
+                        flavor_text=flavor,
                     )
 
     def _dump_items(self) -> None:
@@ -1072,11 +1068,11 @@ class DumpBase:
         item_game_indices_csv = self._open_csv("item_game_indices")
 
         items_en = self._open_text_file("English", "itemname")
-        for item in items_en:
-            game_index = int(item[0][item[0].find("_") + 1 :])
+        for key, item in items_en:
+            game_index = int(key[key.find("_") + 1 :])
             if game_index == 0:
                 continue
-            identifier = to_id(item[1])
+            identifier = to_id(item)
 
             if identifier == "???":
                 continue
@@ -1196,28 +1192,46 @@ class DumpBase:
 
         lang_names = self._open_text_files("monsname")
         for language_id, names in lang_names.items():
-            for name in names:
-                if name[0] == f"MONSNAME_{pokemon_id:0>3}":
-                    pokemon_species_names_csv.set_row(
-                        pokemon_species_id=pokemon_id,
-                        local_language_id=language_id,
-                        name=name[1],
-                    )
-                    continue
+            for key, name in names:
+                if self._format in ("sm", "usum"):
+                    if key != f"{pokemon_id:0>4}":
+                        continue
+                elif self._format in ("letsgo", "swsh"):
+                    if key != f"MONSNAME_{pokemon_id:0>3}":
+                        continue
+                else:
+                    print(f"monsname: missing key format for {self._format}")
+                    break
+
+                pokemon_species_names_csv.set_row(
+                    pokemon_species_id=pokemon_id,
+                    local_language_id=language_id,
+                    name=name,
+                )
+                break
 
     def _pokemon_species_genera(self, pokemon_id: int) -> None:
         pokemon_species_names_csv = self._open_csv("pokemon_species_names")
 
         lang_genera = self._open_text_files("zkn_type")
         for language_id, genera in lang_genera.items():
-            for genus in genera:
-                if genus[0] == f"ZKN_TYPE_{pokemon_id:0>3}":
-                    pokemon_species_names_csv.set_row(
-                        pokemon_species_id=pokemon_id,
-                        local_language_id=language_id,
-                        genus=genus[1],
-                    )
-                    continue
+            for key, genus in genera:
+                if self._format in ("sm", "usum"):
+                    if key != f"{pokemon_id:0>4}":
+                        continue
+                elif self._format in ("letsgo", "swsh"):
+                    if key != f"ZKN_TYPE_{pokemon_id:0>3}":
+                        continue
+                else:
+                    print(f"zkn_type: missing key format for {self._format}")
+                    break
+
+                pokemon_species_names_csv.set_row(
+                    pokemon_species_id=pokemon_id,
+                    local_language_id=language_id,
+                    genus=genus,
+                )
+                break
 
     def _pokemon_species_flavor_text(self, pokemon_id: int) -> None:
         pokemon_species_flavor_text_csv = self._open_csv("pokemon_species_flavor_text")
@@ -1229,26 +1243,32 @@ class DumpBase:
         for version_letter, version_ids in files.items():
             lang_flavor_text = self._open_text_files(f"zukan_comment_{version_letter}")
             for language_id, flavor_text in lang_flavor_text.items():
-                for flavor in flavor_text:
-                    if (
-                        flavor[0]
-                        == f"ZKN_COMMENT_{version_letter}_{pokemon_id:0>3}_000"
-                    ):
-                        for version_id in version_ids:
-                            pokemon_species_flavor_text_csv.set_row(
-                                species_id=pokemon_id,
-                                version_id=version_id,
-                                language_id=language_id,
-                                flavor_text=flavor[1],
-                            )
-                            if not flavor[1].strip():
-                                del pokemon_species_flavor_text_csv.entries[
-                                    pokemon_id, version_id, language_id
-                                ]
-                        continue
+                for key, flavor in flavor_text:
+                    if self._format in ("sm", "usum"):
+                        if key != f"{pokemon_id:0>4}":
+                            continue
+                    elif self._format in ("letsgo", "swsh"):
+                        if key != f"ZKN_COMMENT_{version_letter}_{pokemon_id:0>3}_000":
+                            continue
+                    else:
+                        print(f"zukan_comment: missing key format for {self._format}")
+                        break
+
+                    for version_id in version_ids:
+                        pokemon_species_flavor_text_csv.set_row(
+                            species_id=pokemon_id,
+                            version_id=version_id,
+                            language_id=language_id,
+                            flavor_text=flavor,
+                        )
+                        if not flavor.strip():
+                            del pokemon_species_flavor_text_csv.entries[
+                                pokemon_id, version_id, language_id
+                            ]
+                    break
 
     def _pokemon_form_names(
-        self, pokemon_id: int, forme_id: int, pokemon_form_id: int
+        self, pokemon_id: int, forme_id: int, forme_index: int, pokemon_form_id: int
     ) -> None:
 
         if pokemon_id in (
@@ -1265,21 +1285,29 @@ class DumpBase:
 
         lang_names = self._open_text_files("zkn_form")
         for language_id, names in lang_names.items():
-            for name in names:
-                if name[0] == f"ZKN_FORM_{pokemon_id:0>3}_{forme_id:0>3}":
-                    pokemon_form_names_csv.set_row(
-                        pokemon_form_id=pokemon_form_id,
-                        local_language_id=language_id,
-                        form_name=name[1].strip(),
-                    )
+            for key, name in names:
+                if self._format in ("sm", "usum"):
+                    break
+                elif self._format in ("letsgo", "swsh"):
+                    if key != f"ZKN_FORM_{pokemon_id:0>3}_{forme_id:0>3}":
+                        continue
+                else:
+                    print(f"zkn_form: missing key format for {self._format}")
+                    break
 
-                    if list(
-                        pokemon_form_names_csv.entries[
-                            pokemon_form_id, language_id
-                        ].values()
-                    )[2:] == ["", ""]:
-                        del pokemon_form_names_csv.entries[pokemon_form_id, language_id]
-                    continue
+                pokemon_form_names_csv.set_row(
+                    pokemon_form_id=pokemon_form_id,
+                    local_language_id=language_id,
+                    form_name=name.strip(),
+                )
+
+                if list(
+                    pokemon_form_names_csv.entries[
+                        pokemon_form_id, language_id
+                    ].values()
+                )[2:] == ["", ""]:
+                    del pokemon_form_names_csv.entries[pokemon_form_id, language_id]
+                break
 
     def _pokemon_formes(self, pokemon_id: int, pokemon: PersonalInfo) -> None:
         personal_table = self._open_table(PersonalTable)
@@ -1311,7 +1339,8 @@ class DumpBase:
                 if form_name:
                     if not form_name.endswith("_"):
                         identifier += "-" + form_name
-                    identifier_forme += "-" + form_name.strip("_")
+                    if not form_name.endswith("__"):
+                        identifier_forme += "-" + form_name.strip("_")
 
                 forme_pokemon_id = pokemon_id
 
@@ -1416,7 +1445,7 @@ class DumpBase:
 
                     if pokemon.forme_count > 1:
                         self._pokemon_form_names(
-                            pokemon_id, forme_id, forme_pokemon_form_id
+                            pokemon_id, forme_id, forme_index, forme_pokemon_form_id
                         )
 
                     pokemon_form_generations_csv.set_row(
@@ -1617,6 +1646,9 @@ class DumpBase:
                 continue
 
             trigger_id = evo.trigger_id
+            if trigger_id == 0:
+                continue
+
             trigger_item_id = str(
                 self._get_item_id_from_game_index(evo.trigger_item_id) or ""
             )

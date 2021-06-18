@@ -113,7 +113,6 @@ class PersonalInfo(BaseInfo):
             return species
         if forme >= self.forme_count:  # beyond range of species' formes
             return species
-
         return self._form_stats_index + forme - 1
 
     ###############
@@ -121,6 +120,7 @@ class PersonalInfo(BaseInfo):
     @cached_property
     def evos(self) -> list[Evolution]:
         if self._table._format not in EvolutionSet._PATHS:
+            print("missing evolution sets")
             return []
         return EvolutionSet(
             self._path, self._id, self._table._format

@@ -25,4 +25,5 @@ if __name__ == "__main__":
     for i, d in dumpers.items():
         sections = getattr(args, i, None)
         if sections is not None:
+            print(i)
             d(sections or d._SECTIONS)
