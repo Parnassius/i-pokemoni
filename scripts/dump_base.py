@@ -1188,6 +1188,7 @@ class DumpBase:
             )
 
     def _pokemon_species_names(self, pokemon_id: int) -> None:
+        # TODO: chinese names (both traditional and simplified) are broken in gen7
         pokemon_species_names_csv = self._open_csv("pokemon_species_names")
 
         lang_names = self._open_text_files("monsname")
